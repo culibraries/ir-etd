@@ -6,5 +6,5 @@ Theses / dissertations are submitted by students to ProQuest typically after the
 
 ## Authors ##
 
-Justin Van Voorst vanvoors@colorado.edu
+Justin Van Voorst vanvoors@colorado.edu  
 Fred Schumacher fred.schumacher@colorado.edu
