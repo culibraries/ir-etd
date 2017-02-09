@@ -15,7 +15,7 @@
 
 <body>
 
-<div class="container-fluid">
+<div>
     <?php
         require_once('./resources/config.php');
         require_once(TEMPLATES_PATH . '/header.php')
@@ -23,9 +23,19 @@
 </div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2 file-select-region">
             <?php
                 require_once(TEMPLATES_PATH . '/file-select.php');
+            ?>
+        </div>
+        <div class="col-md-5 xml-view-region">
+            <?php
+                require_once(TEMPLATES_PATH . '/xml-view.php');
+            ?> 
+        </div>
+        <div class="col-md-5 xml-edit-region">
+            <?php
+                require_once(TEMPLATES_PATH . '/xml-edit.php');
             ?>
         </div>
     </div>

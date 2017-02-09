@@ -19,3 +19,9 @@ header {
 .file-select-region {
     background-color: lightgrey;
 }
+.xml-edit-region {
+    background-color: lightgrey;
+}
+.xml-view-region {
+    background-color: grey;
+}
