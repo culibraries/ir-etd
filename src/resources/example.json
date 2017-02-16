@@ -1,0 +1,178 @@
+ {
+ 	"@attributes": 
+ 	{
+ 		"publishing_option": "0",
+ 		"embargo_code": "0",
+ 		"third_party_search": "N"
+ 	},
+ 	"DISS_authorship": 
+ 	{
+ 		"DISS_author": 
+ 		{
+ 			"@attributes": 
+ 			{
+ 				"type": "primary"
+ 			},
+ 			"DISS_name": 
+ 			{
+	 			"DISS_surname": "Ivancic",
+	 			"DISS_fname": "Sonia",
+	 			"DISS_middle": "Rains",
+	 			"DISS_suffix": {},
+	 			"DISS_affiliation": "University of Colorado at Boulder"
+ 			},
+	 		"DISS_contact": 
+	 		[
+	 			{ 
+			 		"@attributes":
+			 			{
+			 				"type":"current"
+			 			},
+	 				"DISS_contact_effdt": "04\/21\/2014",
+	 				"DISS_phone_fax": 
+	 				{
+						"@attributes":
+						{
+							"type":"P"
+						},
+						"DISS_cntry_cd": "1",
+						"DISS_area_code":"206",
+						"DISS_phone_num":"310-8304",
+						"DISS_phone_ext":{}
+					},
+					"DISS_address":
+					{
+						"DISS_addrline":"2800 E Aurora Ave #100",
+						"DISS_city":"Boulder",
+						"DISS_st":"CO",
+						"DISS_pcode":"80303",
+						"DISS_country":"US"
+					},
+					"DISS_email":"ivancic.sonia@gmail.com"
+				},
+				{
+					"@attributes": 
+					{
+						"type":"future"
+					},
+					"DISS_contact_effdt": "05\/12\/2014",
+					"DISS_phone_fax":
+					{
+						"@attributes":
+						{
+							"type":"P"
+						},
+						"DISS_cntry_cd":"1",
+						"DISS_area_code":"206",
+						"DISS_phone_num":"310-8304",
+						"DISS_phone_ext":{}
+					},
+					"DISS_address":
+					{
+						"DISS_addrline":"219 NE 77th St",
+						"DISS_city":"Seattle",
+						"DISS_st":"WA",
+						"DISS_pcode":"98115",
+						"DISS_country":"US"
+					},
+					"DISS_email":"ivancic.sonia@gmail.com"
+				}
+			],
+	 		"DISS_citizenship":"US"
+	 	}
+	 },
+	 "DISS_description":
+	 {
+	 	"@attributes":
+	 	{
+	 		"page_count":"176",
+	 		"type":"masters",
+	 		"external_id":"http:\/\/dissertations.umi.com\/colorado:13157",
+	 		"apply_for_copyright":"no"
+	 	},
+	 	"DISS_title":"Growing Gardens and Nourishing Communities: The Communicative Construction of Community Through Urban Agriculture",
+	 	"DISS_dates":
+	 	{
+	 		"DISS_comp_date":"2014",
+	 		"DISS_accept_date":"01\/01\/2014"
+	 	},
+ 		"DISS_degree":"M.A.",
+ 		"DISS_institution":
+ 		{
+ 			"DISS_inst_code":"0051",
+ 			"DISS_inst_name":"University of Colorado at Boulder",
+ 			"DISS_inst_contact":"Communication",
+ 			"DISS_processing_code":"N"
+ 		},
+ 		"DISS_advisor":
+ 		{
+ 			"DISS_name":
+ 			{
+ 				"DISS_surname":"Frey",
+ 				"DISS_fname":"Lawrence",
+ 				"DISS_middle":"R"
+ 			}
+ 		},
+ 		"DISS_cmte_member":
+ 		[
+ 			{
+ 				"DISS_name":
+ 				{
+ 					"DISS_surname":"Sprain",
+ 					"DISS_fname":"Leah",
+ 					"DISS_middle":{},
+ 					"DISS_suffix":{},
+ 					"DISS_affiliation":{}
+ 				}
+ 			},
+ 			{
+ 				"DISS_name":
+ 				{
+ 					"DISS_surname":"Banning",
+ 					"DISS_fname":"Marlia",
+ 					"DISS_middle":{},
+ 					"DISS_suffix":{},
+ 					"DISS_affiliation":{}
+ 				}
+ 			}
+ 		],
+ 		"DISS_categorization":
+ 		{
+ 			"DISS_category":
+ 			{
+ 				"DISS_cat_code":"0459",
+ 				"DISS_cat_desc":"Communication"
+ 			},
+ 			"DISS_keyword":"Communicative construction of community, Community gardening, Food and communication, Urban agriculture",
+ 			"DISS_language":"en"
+ 		}
+	 },
+ 	"DISS_content":
+ 	{
+ 		"DISS_abstract":
+ 		{
+ 			"DISS_para": "Community gardens recently have grown in popularity, as they are viewed as a way to address many current ills in society.  Community gardens also have been cited as having the ability to \"grow\" community among those who participate, as well as to positively affect larger communities to which they are connected.  Furthermore, the study of food has been of recent interest to communication scholars, as talk about food is consequential in people's everyday lives, and food, itself, can be conceptualized as communication.  This study employed ethnography--specifically, participant observation and interviews--to investigate how community is constructed through interactants' communicative practices at a nonprofit organization (Growing Gardens in Boulder, Colorado) that serves as both a site of urban agriculture and community gardening.  The study also explored how community gardening affects, benefits, and connects to external communities in which that organization is situated.  The Growing Gardens community is analyzed through four attributes of community that were identified by Adelman and Frey (2008): physical, support, meaning-making, and influence attributes.  The findings show that Growing Gardens is not just creating community but that it is growing a particular kind of community that both roots itself to its members and to its external environments, and, in the process, transforms the lives of its members, their palates, and the land, as well as the larger community in which it is situated.  Those findings are explained by employing a plant metaphor to explicate how organizational participants grow a \"rooted-transformative\" community.  This new concept contributes to the literature on the construction of communities, by expanding understanding of intersections among communication, food, and community.  Furthermore, food at Growing Gardens is both a tool and a mode of communication, as people gather around food and growing food as they construct relationships and community that have the power to persuade people to try new kinds of produce."
+ 		},
+		"DISS_binary":"Ivancic_colorado_0051N_13157.pdf"
+	},
+	"DISS_restriction":{},
+	"DISS_repository":
+	{
+		"DISS_version":"2012-08-07 15:18:47",
+		"DISS_agreement_decision_date":"2014-04-21 20:00:46",
+		"DISS_acceptance":"1",
+		"DISS_delayed_release":{},
+		"DISS_access_option":{}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+

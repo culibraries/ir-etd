@@ -1,26 +1,25 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
-
+// models one archive file path
 class ArchiveModel {
 
-	protected $inPath, $outPath, $files;
+	protected $inPath, $outPath, $archive;
  
-	public function __construct($files) {
-		$this->files = $files;
+	public function __construct($archive) {
+		$this->archive = $archive;
 	}
 
 	public function getOldestArchive() {
-		echo $this->files[2];
+		return $this->archive;
 	}
 
-	public function extractZip($inPath, $outPath, $file) {
+	public function extractZip($inPath, $outPath) {
 		$zip = new ZipArchive();
-		if ($zip->open($inPath . $file) === true) {
-			$zip->extractTo($outPath . substr("$file", 0, -4) . '/');
+		if ($zip->open($inPath . $this->archive) === true) {
+			$zip->extractTo($outPath . substr("$this->archive", 0, -4) . '/');
 			$zip->close();
-			echo 'ok';
+			return "file $this->archive extracted";
 		} else {
-			echo 'failed';
+			return 'file extraction failed';
 		}
 	}
 

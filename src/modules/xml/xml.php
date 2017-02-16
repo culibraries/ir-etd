@@ -2,14 +2,18 @@
 include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 include(MODULES_PATH . '/xml/models/xmlModel.php');
 
+// assign the xml file path to $file, in array
 $file = glob($config['working_dir'] . $_GET['path'] . '/*.xml');
 
-$xml = new xmlModel(simplexml_load_file($file[0]));
+// create new obj from contents of $file
+$xml = new XmlModel(simplexml_load_file($file[0]));
 
+// Ajax routes
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
-		case 'getXmlFile':
-			echo $xml->xml2js(simplexml_load_file($file[0]));
+		case 'getJsonFromXml':
+			// echo $xml->xml2js();
+			echo $xml->echoXml();
 			break;
 	}
 }

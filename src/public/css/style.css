@@ -25,3 +25,7 @@ header {
 .xml-view-region {
     background-color: grey;
 }
+
+.legend {
+    font-size: 125%;
+}

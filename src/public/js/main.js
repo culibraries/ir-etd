@@ -3,7 +3,8 @@ $(document).ready(function() {
 	// get the oldest archive
 
 	var oldestArchive;
-
+	var archiveData;
+	// scan data dir and get the oldest archive
 	$.ajax( {
 		url: 'modules/archive/archive.php',
 		type: 'GET',
@@ -18,8 +19,9 @@ $(document).ready(function() {
 	    }
 	});
 
-	// on click Loac button
+	// on click Load button
 	$('#fileSelect').click(function() {
+		// unzip to working dir
 		$.ajax( {
 			url: 'modules/archive/archive.php',
 			type: 'POST',
@@ -33,16 +35,24 @@ $(document).ready(function() {
 					url: 'modules/xml/xml.php',
 					type: 'GET',
 					data: {
-						'action': 'getXmlFile',
+						'action': 'getJsonFromXml',
 						'path': oldestArchive.substr(0, oldestArchive.length - 4)
 					},
 					success: function(res, status) {
-						console.log(res);
+						archiveData = JSON.parse(res);
+						// $('#xmlView').html(
+						// 	$.each(archiveData, function(key, value) {
+						// 		return key + value;
+						// 	}
+						// );
+						$('#surname').text(archiveData.DISS_authorship.DISS_author.DISS_name.DISS_surname);
+						$('#fname').text(archiveData.DISS_authorship.DISS_author.DISS_name.DISS_fname);
+						$('#middle').text(archiveData.DISS_authorship.DISS_author.DISS_name.DISS_middle);
 					},
 					error: function(xhr, desc, err) {
-		            console.log(xhr);
-		            console.log("Details: " + desc + "\nError: " + err);
-	        }
+			            console.log(xhr);
+			            console.log("Details: " + desc + "\nError: " + err);
+	        		}
 				});
 			},
 			error: function(xhr, desc, err) {
