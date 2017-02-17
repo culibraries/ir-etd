@@ -30,7 +30,7 @@ $(document).ready(function() {
 				'file': oldestArchive
 			},
 			success: function(res, status) {
-				console.log(res);
+				// get json object of xml data
 				$.ajax({
 					url: 'modules/xml/xml.php',
 					type: 'GET',
@@ -40,14 +40,8 @@ $(document).ready(function() {
 					},
 					success: function(res, status) {
 						archiveData = JSON.parse(res);
-						// $('#xmlView').html(
-						// 	$.each(archiveData, function(key, value) {
-						// 		return key + value;
-						// 	}
-						// );
-						$('#surname').text(archiveData.DISS_authorship.DISS_author.DISS_name.DISS_surname);
-						$('#fname').text(archiveData.DISS_authorship.DISS_author.DISS_name.DISS_fname);
-						$('#middle').text(archiveData.DISS_authorship.DISS_author.DISS_name.DISS_middle);
+						// use json2html to display json 
+						visualize(archiveData);
 					},
 					error: function(xhr, desc, err) {
 			            console.log(xhr);
