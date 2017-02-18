@@ -25,18 +25,22 @@ $(document).ready(function() {
 		$.ajax( {
 			url: 'modules/archive/archive.php',
 			type: 'POST',
+			datatype: 'JSON',
 			data: {
 				'action': 'selectArchive',
 				'file': oldestArchive
 			},
 			success: function(res, status) {
+				var data = JSON.parse(res);
+				console.log(data);
+				displayArchiveFiles(data);
 				// get json object of xml data
 				$.ajax({
 					url: 'modules/xml/xml.php',
 					type: 'GET',
 					data: {
 						'action': 'getJsonFromXml',
-						'path': oldestArchive.substr(0, oldestArchive.length - 4)
+						'path': data.folder
 					},
 					success: function(res, status) {
 						archiveData = JSON.parse(res);
@@ -56,5 +60,16 @@ $(document).ready(function() {
 		});
 		
 	});
+
+	function displayArchiveFiles(data) {
+		for (var i=2; i<data.folderContents.length; i++) {
+			var file = data.folderContents[i];
+			var ext = file.substr(file.length - 3, file.length);
+			if (ext !== 'xml') {
+				console.log(file);
+				$('#archiveFiles').html('<a target="_blank" href="' + data.root + data.folder + '/' + file + '">' + file + '</a>');
+			}
+		}
+	}
 
 });

@@ -13,7 +13,7 @@ if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
 		case 'getJsonFromXml':
 			// echo $xml->xml2js();
-			echo $xml->echoXml();
+			echo $xml->sendXml();
 			break;
 	}
 }
