@@ -11,7 +11,9 @@
 .function {color:green;}
 
 .open .children {display:block;}
-.closed .children {display:none;}
+/*.closed .children {display:none;}*/
+/* changed to display:block causes all nodes to be open */
+.open .children {display:block;}
 
 .arrow {background-image:url("../img/d.png"); background-repeat:no-repeat; background-color:transparent; height:15px; width:15px; display:inline-block;}
 
