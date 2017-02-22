@@ -1,5 +1,5 @@
 <?php
-// modesl content of an xml file
+// models content of an xml file
 class XmlModel {
 
 	protected $file;
@@ -8,7 +8,7 @@ class XmlModel {
 		$this->file = $file;
 	}
 
-	public function sendXml() {
+	public function sendJson() {
 		return json_encode($this->file);
 	}
 }
