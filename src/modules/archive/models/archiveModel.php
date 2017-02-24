@@ -14,8 +14,8 @@ class ArchiveModel {
 		$this->archiveName = substr("$archiveFileName", 0, -4);
 		$this->archiveDataPath = $config['dir']['data'] . $archiveFileName;
 		$this->archiveWorkingPath = $config['dir']['working'] . $this->archiveName;
-		$this->archiveContents = scandir($this->archiveWorkingPath);
-		$this->xmlFileName = $this->xmlFileName($this->archiveContents);
+		// $this->archiveContents = scandir($this->archiveWorkingPath);
+		// $this->xmlFileName = $this->xmlFileName($this->archiveContents);
 	}
 
 	public function extractZip() {
@@ -29,7 +29,7 @@ class ArchiveModel {
 			// return files in unzipped archive
 			$response = array(
 				'folder' => $this->archiveName,
-				'folderContents' => $this->archiveContents,
+				'folderContents' => scandir($this->archiveWorkingPath),
 				'url' => $config['dir']['workingUrl']
 			);
 			return json_encode($response);

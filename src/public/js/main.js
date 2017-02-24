@@ -38,10 +38,11 @@ $(document).ready(function() {
 						'archive': data.folder
 					},
 					success: function(res, status) {
-						var xmlData = JSON.parse(res.replace('@', ''));
-						var map = mapFunc(xmlData);
+						var xmlData = JSON.parse(replaceAll(res));
 						// use json2html to display json 
 						visualize(xmlData);
+						// using map prefill form with xmlData
+						var map = mapFunc(xmlData);
 						preFillForm(xmlData, map);
 					},
 					error: function(xhr, desc, err) {
@@ -108,3 +109,22 @@ function preFillForm(xmlData, map) {
 function calcRows(scrollHeight) {
 	return Math.round(scrollHeight/20) - 1;
 }
+
+function replaceAll(str) {
+	var mapObj = {
+		'@attributes': 'attributes',
+		'DISS_': ''
+	};
+
+	str = str.replace(/@attributes|DISS_/g, function(matched) {
+		return mapObj[matched];
+	});
+
+	return str;
+}
+
+
+
+
+
+
