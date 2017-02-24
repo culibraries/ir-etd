@@ -27,6 +27,7 @@
 
     <!-- Scripts -->
     <script type="text/javascript" src="public/js/main.js"></script>
+    <script type="text/javascript" src="public/js/map.js"></script>
 </head>
 
 <body>
@@ -41,7 +42,7 @@
     <div class="row">
         <div class="col-md-2 file-select-region">
             <?php
-                require_once(TEMPLATES_PATH . '/file-select-template.php');
+                require_once(TEMPLATES_PATH . '/sidebar-nav-template.php');
             ?>
         </div>
         <div class="col-md-5 xml-view-region">

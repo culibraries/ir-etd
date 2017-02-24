@@ -3,7 +3,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 include(MODULES_PATH . '/xml/models/xmlModel.php');
 
 // assign the xml file path to $file, in array
-$file = glob($config['working_dir'] . $_GET['archive'] . '/*.xml');
+$file = glob($config['dir']['working'] . $_GET['archive'] . '/*.xml');
 
 // create new obj from contents of $file
 $xml = new XmlModel(simplexml_load_file($file[0]));

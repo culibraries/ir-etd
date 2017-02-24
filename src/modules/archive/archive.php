@@ -3,7 +3,7 @@ include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 include(MODULES_PATH . '/archive/models/archiveModel.php');
 
 // array of all archive names in data directory
-$archives = scandir($config['data_dir']);
+$archives = scandir($config['dir']['data']);
 
 // creates archive object for oldest archive
 $oldestArchive = new ArchiveModel($archives[2]);
