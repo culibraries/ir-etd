@@ -5,17 +5,14 @@ include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 
 class ArchiveModel {
 
-	// protected $inPath, $outPath, $archive;
- 
-
-	public function __construct($archiveFileName) {
+	public function __construct($archiveName) {
 		global $config;
-		$this->archiveFileName = $archiveFileName;
-		$this->archiveName = substr("$archiveFileName", 0, -4);
-		$this->archiveDataPath = $config['dir']['data'] . $archiveFileName;
+		// the folder name of the archive
+		$this->archiveName = $archiveName;
 		$this->archiveWorkingPath = $config['dir']['working'] . $this->archiveName;
-		// $this->archiveContents = scandir($this->archiveWorkingPath);
-		// $this->xmlFileName = $this->xmlFileName($this->archiveContents);
+		// the zip file name of the archive
+		$this->archiveFileName = $archiveName . '.zip';
+		$this->archiveDataPath = $config['dir']['data'] . $this->archiveFileName;
 	}
 
 	public function extractZip() {
@@ -30,7 +27,8 @@ class ArchiveModel {
 			$response = array(
 				'folder' => $this->archiveName,
 				'folderContents' => scandir($this->archiveWorkingPath),
-				'url' => $config['dir']['workingUrl']
+				'url' => $config['dir']['workingUrl'],
+				'readyUrl' => $config['dir']['readyUrl']
 			);
 			return json_encode($response);
 		} else {
@@ -38,9 +36,17 @@ class ArchiveModel {
 		}
 	}
 
-	// private function removeAtFromXml($file) {
-	// 	$fileContents = file_get_contents()
-	// }
+	public function moveToPending() {
+		global $config;
+
+		 return rename($this->archiveWorkingPath . '/', $config['dir']['pending'] . $this->archiveName . '/');
+	}
+
+	public function moveToProblems() {
+		global $config;
+
+		return rename($this->archiveWorkingPath . '/', $config['dir']['problems'] . $this->archiveName . '/');
+	}
 
 	private function xmlFileName($contents) {
 		for ($i = 2; $i < sizeof($contents); $i++) {

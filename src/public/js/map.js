@@ -1,4 +1,4 @@
-function mapFunc(xmlData) {
+function mapFunc(xmlData, readyUrl, pdfFile) {
 	return [
 		{
 			"name": "Title",
@@ -9,7 +9,7 @@ function mapFunc(xmlData) {
 		{
 			"name": "Full Text Url",
 			"id": "fullTextUrl",
-			"data": "will be internet accessable url",
+			"data": readyUrl + pdfFile,
 			"type": "url"
 		},
 		{
@@ -21,7 +21,7 @@ function mapFunc(xmlData) {
 		{
 			"name": "Abstract",
 			"id": "abstract",
-			"data": xmlData.content.abstract.para,
+			"data": concatParas(xmlData.content.abstract.para),
 			"type": "text-long",
 		},
 		{
@@ -33,7 +33,7 @@ function mapFunc(xmlData) {
 		{
 			"name": "Author1 MName",
 			"id": "mName",
-			"data": xmlData.authorship.author.name.middle,
+			"data": (xmlData.authorship.author.name.middle[0]) ? xmlData.authorship.author.name.middle : undefined,
 			"type": "text"
 		},
 		{
@@ -51,7 +51,7 @@ function mapFunc(xmlData) {
 		{
 			"name": "Author1 Email",
 			"id": "email",
-			"data": xmlData.authorship.author.contact[0].email,
+			"data": xmlData.authorship.author.contact[1].email || xmlData.authorship.author.contact[0].email,
 			"type": "email"
 		},
 		{
@@ -93,13 +93,13 @@ function mapFunc(xmlData) {
 		{
 			"name": "Disciplines",
 			"id": "disciplines",
-			"data": "???",
+			"data": xmlData.description.institution.inst_contact,
 			"type": "text"
 		},
 		{
 			"name": "Comments",
 			"id": "comments",
-			"data": "???",
+			"data": "",
 			"type": "text"
 		},
 		{
@@ -123,13 +123,13 @@ function mapFunc(xmlData) {
 		{
 			"name": "Embargo Date",
 			"id": "embargoDate",
-			"data": "xmlData.description.title",
+			"data": embargoDate(xmlData.attributes.embargo_code),
 			"type": "date"
 		},
 		{
 			"name": "Publication Date",
 			"id": "pubDate",
-			"data": xmlData.description.dates.comp_date,
+			"data": xmlData.description.dates.comp_date + '-01-01',
 			"type": "date"
 		},
 		{
@@ -165,4 +165,26 @@ String.prototype.toTitleCase = function() {
 
   return str;
 };
+
+var embargoDate = function(code) {
+	// get todays date and format for HTML5 date format ie yyyy-mm-dd
+	var now = new Date();
+	var day = ("0" + now.getDate()).slice(-2);
+	var month = ("0" + (now.getMonth() + 1)).slice(-2);
+	var today = now.getFullYear()+"-"+(month)+"-"+(day);
+
+	if (code === '0') {
+		return today;
+	}
+
+};
+
+// concat the paragraphs under abstract adding <p></p> tags
+var concatParas = function(paras) {
+	var str = '';
+	for (var i = 0; i < paras.length; i++) {
+		str += '<p>' + paras[i] + '</p>';
+	}
+	return str;
+}
 
