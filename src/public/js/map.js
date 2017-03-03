@@ -135,7 +135,7 @@ function mapFunc(xmlData, readyUrl, pdfFile) {
 		{
 			"name": "Season",
 			"id": "season",
-			"data": "???",
+			"data": "Spring",
 			"type": "text"
 		}
 	];
@@ -179,12 +179,16 @@ var embargoDate = function(code) {
 
 };
 
-// concat the paragraphs under abstract adding <p></p> tags
+// concat the paragraphs under abstract adding <p></p> tags if multiple paragraphs
 var concatParas = function(paras) {
-	var str = '';
-	for (var i = 0; i < paras.length; i++) {
-		str += '<p>' + paras[i] + '</p>';
+	if (typeof(paras) === 'object') {
+		var str = '';
+		for (var i = 0; i < paras.length; i++) {
+			str += '<p>' + paras[i] + '</p>';
+		}
+		return str;
+	} else {
+		return paras;
 	}
-	return str;
 }
 

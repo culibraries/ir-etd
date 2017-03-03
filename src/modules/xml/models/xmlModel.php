@@ -1,5 +1,8 @@
 <?php
 // models content of an xml file
+
+include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+
 class XmlModel {
 
 	protected $file;
@@ -9,7 +12,12 @@ class XmlModel {
 	}
 
 	public function sendJson() {
-		return json_encode($this->file);
+		global $config;
+		$data = array(
+			'json' => $this->file,
+			'readyUrl' => $config['dir']['readyUrl']
+		);
+		return json_encode($data);
 	}
 }
 

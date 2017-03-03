@@ -3,7 +3,7 @@
 	<div>
 		<p>Next oldest file:</p>
 		<p id="oldestArchive"></p>
-		<button type="button" id="fileSelect" class="btn btn-primary btn-large btn-block">Load</button>
+		<button type="button" id="loadOldestArchive" class="btn btn-primary btn-large btn-block">Load</button>
 	</div>
 
 	<h4>Files in Archive</h4>
@@ -22,5 +22,3 @@
 	<h3>Problems</h3>
 </div>
 
-
-	
