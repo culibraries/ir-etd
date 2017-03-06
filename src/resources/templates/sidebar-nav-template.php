@@ -1,5 +1,5 @@
 <div>
-	<h3>Archive Select</h3>
+	<h3>Select</h3>
 	<div>
 		<p>Next oldest file:</p>
 		<p id="oldestArchive"></p>
@@ -10,15 +10,18 @@
 	<div id="archiveFiles"></div>
 </div>
 
-<div id="workingArchives">
+<div>
 	<h3>Working</h3>
+	<div id="workingArchives"></div>
 </div>
 
-<div id="pendingArchives">
+<div>
 	<h3>Pending Batch Upload</h3>
+	<div id="pendingArchives"></div>
 </div>
 
-<div id="problemsArchives">
+<div>
 	<h3>Problems</h3>
+	<div id="problemsArchives"></div>
 </div>
 

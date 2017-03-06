@@ -139,6 +139,7 @@ function preFillForm(xmlData, map) {
 
 // append archive files in working, pending, and problems to sidebar
 function displayArchives(archives) {
+	$('#workingArchives').empty();
 	for (var item in archives) {
 		for (var i = 0; i < archives[item].length; i++) {
 			var data = '<a href="#" class="getme" itemtype="' + item + '">' + archives[item][i] + '</a><br>';
