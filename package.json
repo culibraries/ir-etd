@@ -1,0 +1,26 @@
+{
+  "name": "etd",
+  "version": "1.0.0",
+  "description": "ETD Reviewer is a productivity application for library staff to assist them with the review and updating of electronic theses and dissertations (ETD) prior to uploading to CU Scholar.",
+  "main": "index.php",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://vanvoors@stash.int.colorado.edu/scm/litd/etd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-if": "^2.0.2",
+    "gulp-prompt": "^0.2.0",
+    "gulp-rsync": "0.0.7",
+    "gulp-util": "^3.0.8",
+    "minimist": "^1.2.0"
+  }
+}

@@ -1,1 +1,3 @@
-/src/resources/config.php
+src/resources/config.php
+node_modules/
+src/data/
