@@ -50,7 +50,7 @@ if (isset($_POST['action'])) {
 			break;
 		case 'submitForUpload':
 			$submission = new SubmissionModel;
-			if (!$submission->insert()) {echo "INSERT failed";}
+			if (!$submission->insert($_POST['archive'])) {echo "INSERT failed";}
 			break;
 	}
 
