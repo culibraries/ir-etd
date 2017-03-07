@@ -8,8 +8,75 @@ var gulp   = require('gulp'),
 	uglify = require('gulp-uglify'),
 	rename = require('gulp-rename'),
 	concat = require('gulp-concat'),
-	cleanCSS = require('gulp-clean-css');
+	cleanCSS = require('gulp-clean-css'),
+	htmlmin = require('gulp-htmlmin'),
+	del = require('del'),
+	sourcemaps = require('gulp-sourcemaps');
 
+// Default =====================================================================
+gulp.task('default', ['watch']);
+
+// Watch =======================================================================
+gulp.task('watch', function() {
+	gulp.watch('src/**/*', ['build']);
+});
+
+// Build =======================================================================
+// tasks that will be included in build
+gulp.task('javascript', function() {
+	return gulp.src('src/public/js/*.js')
+		.pipe(sourcemaps.init())
+		.pipe(uglify())
+		.pipe(concat('bundle.min.js'))
+		.pipe(sourcemaps.write('map'))
+		.pipe(gulp.dest('build/public/js/'));
+});
+
+gulp.task('css', function(cb) {
+	pump([
+		gulp.src('src/public/css/*.css'),
+		cleanCSS(),
+		concat('style.min.css'),
+		gulp.dest('build/public/css/')
+	],
+	cb
+	);
+});
+
+gulp.task('html', function(cb) {
+	pump([
+		gulp.src('src/resources/templates/*.html'),
+		htmlmin({collapseWhitespace: true}),
+		rename({suffix: '.min'}),
+		gulp.dest('build/resources/templates/')
+	],
+	cb
+	);
+});
+
+gulp.task('cleanData', function() {
+	return del([
+		'build/data/**/*'
+	]);
+});
+
+var files = [
+	'src/public/img/**',
+	'src/modules/**/**',
+	'src/resources/config.php',
+	'src/index.php',
+	'src/data/**/**'
+];
+
+gulp.task('move', ['cleanData'], function() {
+	return gulp.src(files, {base: 'src/'})
+		.pipe(gulp.dest('build/'));
+});
+
+gulp.task('build', ['javascript', 'css', 'html', 'cleanData', 'move']);
+
+
+// Deploy ======================================================================
 gulp.task('deploy', function() {
 
 		conf = {
@@ -33,28 +100,3 @@ function throwError(taskName, msg) {
       message: msg
     });
 }
-
-gulp.task('javascript', function(cb) {
-	pump([
-		gulp.src('src/public/js/*.js'),
-		uglify(),
-		concat('main.min.js'),
-		gulp.dest('build/public/js/')
-	],
-	cb
-	);
-});
-
-gulp.task('css', function(cb) {
-	pump([
-		gulp.src('src/public/css/*.css'),
-		cleanCSS(),
-		concat('style.min.css'),
-		gulp.dest('build/public/css/')
-	],
-	cb
-	);
-});
-
-gulp.task('build', ['javascript', 'css']);
-

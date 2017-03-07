@@ -1,6 +1,6 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
-include(MODULES_PATH . '/archive/models/archiveModel.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+require(MODULES_PATH . '/archive/models/archiveModel.php');
 
 
 if (isset($_GET['action'])) {
@@ -42,7 +42,7 @@ if (isset($_POST['action'])) {
 		case 'moveToPending':
 			echo 'move to pending';
 			// add $_POST['data'] to database, mark as pending ?????????????????????????
-			$archive = new ArchiveModel($_POST['archive'], );
+			$archive = new ArchiveModel($_POST['archive']);
 			echo $archive->moveToPending();
 			break;
 		case 'moveToProblems':

@@ -241,6 +241,7 @@ function getOneArchive(status, archive) {
 			'archive': archive
 		},
 		success: function(res, status) {
+			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {

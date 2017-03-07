@@ -1,7 +1,7 @@
 <?php
 // models content of an xml file
 
-include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 
 class XmlModel {
 
