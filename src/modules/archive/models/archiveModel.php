@@ -1,7 +1,7 @@
 <?php
 // models one archive
 
-include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 
 class ArchiveModel {
 

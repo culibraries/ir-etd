@@ -1,6 +1,6 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
-include(MODULES_PATH . '/xml/models/xmlModel.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+require(MODULES_PATH . '/xml/models/xmlModel.php');
 
 // assign the xml file path to $file, in array
 $file = glob($config['dir']['working'] . $_GET['archive'] . '/*.xml');
