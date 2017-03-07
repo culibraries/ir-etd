@@ -1,6 +1,6 @@
 <?php
-include($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
-include(MODULES_PATH . '/archive/models/archiveModel.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+require(MODULES_PATH . '/archive/models/archiveModel.php');
 
 
 if (isset($_GET['action'])) {
@@ -48,8 +48,12 @@ if (isset($_POST['action'])) {
 			$archive = new ArchiveModel($_POST['archive']);
 			echo $archive->moveToProblems();
 			break;
+		case 'submitForUpload':
+			$submission = new SubmissionModel;
+			if (!$submission->insert()) {echo "INSERT failed";}
+			break;
 	}
-	
+
 }
 
 // finds oldest archive in ftp dir and creates archive object
@@ -66,7 +70,7 @@ function extractZip($archive) {
 	global $config;
 
 	$archiveFolder = substr("$archive", 0, -4);
-	
+
 	$zip = new ZipArchive();
 
 	if ($zip->open($config['dir']['ftp'] . $archive) === true) {
