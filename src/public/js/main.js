@@ -3,6 +3,19 @@ var currentArchive;
 // Initial data gets for sidebar ===================================================================
 
 function refreshSideBar() {
+	// hide edit buttons
+	$('#xmlEditBtns').hide();
+	// empty working, pending, and problems views
+	$('#workingArchives').empty();
+	$('#pendingArchives').empty();
+	$('#problemsArchives').empty();
+	// empty edit view
+	$('#xmlEdit').empty();
+	// empty view view
+	$('#top').empty();
+	// empty files in archive view
+	$('#archiveFiles').empty();
+
 	// call API get function getOldestArchive to get oldest archive in data dir
 	getOldestArchive().done(function(res) {
 		$('#oldestArchive').text(res);
@@ -45,6 +58,7 @@ $(document).ready(function() {
 	$('#submitToBatch').click(function() {
 		// move to ready dir
 		postPending(currentArchive).done(function(res) {
+			refreshSideBar();
 			console.log(res);
 		});
 		
@@ -54,11 +68,12 @@ $(document).ready(function() {
 	$('#moveToProblems').click(function() {
 		// move to problems dir
 		postProblem(currentArchive).done(function(res) {
+			refreshSideBar();
 			console.log(res);
 		});
 	});
 });
-// since these elements are created dynamically create event watchers that will atach to these 
+// since these elements are created dynamically create event watchers that will attach to these 
 $(document).on('click', '.getme', function(event) {
 	var status = event.target.attributes.itemtype.textContent;
 	var archive = event.target.text;
@@ -139,7 +154,7 @@ function preFillForm(xmlData, map) {
 
 // append archive files in working, pending, and problems to sidebar
 function displayArchives(archives) {
-	$('#workingArchives').empty();
+	
 	for (var item in archives) {
 		for (var i = 0; i < archives[item].length; i++) {
 			var data = '<a href="#" class="getme" itemtype="' + item + '">' + archives[item][i] + '</a><br>';
@@ -172,7 +187,7 @@ function stripChars(str) {
 
 // API CALLS =======================================================================================
 
-// get oldest archive from data directory
+// get oldest archive from ftp directory
 function getOldestArchive() {
 	var dfd = $.Deferred();
 
@@ -269,7 +284,8 @@ function postPending(archive) {
 		type: 'POST',
 		data: {
 			'action': 'moveToPending',
-			'archive': archive
+			'archive': archive,
+			'data': $('xmlEdit').serialize(),  
 		},
 		success: function(res, status) {
 			dfd.resolve(res);

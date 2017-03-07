@@ -3,7 +3,12 @@ var gulp   = require('gulp'),
 	argv   = require('minimist')(process.argv),
 	gulpif = require('gulp-if'),
 	prompt = require('gulp-prompt'),
-	rsync  = require('gulp-rsync');
+	rsync  = require('gulp-rsync'),
+	pump   = require('pump'),
+	uglify = require('gulp-uglify'),
+	rename = require('gulp-rename'),
+	concat = require('gulp-concat'),
+	cleanCSS = require('gulp-clean-css');
 
 gulp.task('deploy', function() {
 
@@ -28,3 +33,28 @@ function throwError(taskName, msg) {
       message: msg
     });
 }
+
+gulp.task('javascript', function(cb) {
+	pump([
+		gulp.src('src/public/js/*.js'),
+		uglify(),
+		concat('main.min.js'),
+		gulp.dest('build/public/js/')
+	],
+	cb
+	);
+});
+
+gulp.task('css', function(cb) {
+	pump([
+		gulp.src('src/public/css/*.css'),
+		cleanCSS(),
+		concat('style.min.css'),
+		gulp.dest('build/public/css/')
+	],
+	cb
+	);
+});
+
+gulp.task('build', ['javascript', 'css']);
+
