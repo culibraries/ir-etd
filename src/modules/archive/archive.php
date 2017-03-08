@@ -50,8 +50,12 @@ if (isset($_POST['action'])) {
 			$archive = new ArchiveModel($_POST['archive']);
 			echo $archive->moveToProblems();
 			break;
+		case 'submitForUpload':
+			$submission = new SubmissionModel;
+			if (!$submission->insert($_POST['archive'])) {echo "INSERT failed";}
+			break;
 	}
-	
+
 }
 
 // finds oldest archive in ftp dir and creates archive object
@@ -68,7 +72,7 @@ function extractZip($archive) {
 	global $config;
 
 	$archiveFolder = substr("$archive", 0, -4);
-	
+
 	$zip = new ZipArchive();
 
 	if ($zip->open($config['dir']['ftp'] . $archive) === true) {

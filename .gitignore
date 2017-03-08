@@ -1,3 +1,4 @@
 src/resources/config.php
 node_modules/
 src/data/
+build/data/
