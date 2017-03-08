@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="public/css/style.min.css">
 
     <!-- Scripts -->
-    <script type="text/javascript" src="public/js/main.min.js"></script>
+    <script type="text/javascript" src="public/js/bundle.min.js"></script>
     <!-- <script type="text/javascript" src="public/js/map.js"></script> -->
 </head>
 
