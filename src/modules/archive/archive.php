@@ -39,20 +39,9 @@ if (isset($_GET['action'])) {
 
 if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
-		case 'moveToPending':
-			echo 'move to pending';
-			// add $_POST['data'] to database, mark as pending ?????????????????????????
-			$archive = new ArchiveModel($_POST['archive']);
-			echo $archive->moveToPending();
-			break;
-		case 'moveToProblems':
-			// mark archive as problem ?????????????????????????????????????????????????
-			$archive = new ArchiveModel($_POST['archive']);
-			echo $archive->moveToProblems();
-			break;
-		case 'submitForUpload':
-			$submission = new SubmissionModel;
-			if (!$submission->insert($_POST['archive'])) {echo "INSERT failed";}
+		case 'postFormData':
+			$archive = new ArchiveModel($_POST['archive'], $_POST['status']);
+			echo $archive->insertFormData($_POST['data']);
 			break;
 	}
 
@@ -88,10 +77,6 @@ function extractZip($archive) {
 function getArchives() {
 	global $config;
 	// get all records from database not marked ready ????????????????????????????????????
-	// get all folders excluding .files
-	$working = array_values(preg_grep('/^([^.])/', scandir($config['dir']['working'])));
-	$problems = array_values(preg_grep('/^([^.])/', scandir($config['dir']['problems'])));
-	$pending = array_values(preg_grep('/^([^.])/', scandir($config['dir']['pending'])));
 
 	$res = array(
 		'working' => $working,

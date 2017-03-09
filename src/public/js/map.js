@@ -8,7 +8,7 @@ function mapFunc(xmlData, readyUrl, pdfFile) {
 		},
 		{
 			"name": "Full Text Url",
-			"id": "fullTextUrl",
+			"id": "fulltext_url",
 			"data": readyUrl + pdfFile,
 			"type": "url"
 		},
@@ -26,37 +26,37 @@ function mapFunc(xmlData, readyUrl, pdfFile) {
 		},
 		{
 			"name": "Author1 FName",
-			"id": "fName",
+			"id": "author1_fname",
 			"data": xmlData.authorship.author.name.fname,
 			"type": "text"
 		},
 		{
 			"name": "Author1 MName",
-			"id": "mName",
+			"id": "author1_mname",
 			"data": (xmlData.authorship.author.name.middle[0]) ? xmlData.authorship.author.name.middle : undefined,
 			"type": "text"
 		},
 		{
 			"name": "Author1 LName",
-			"id": "lname",
+			"id": "author1_lname",
 			"data": xmlData.authorship.author.name.surname,
 			"type": "text"
 		},
 		{
 			"name": "Author1 Suffix",
-			"id": "suffix",
+			"id": "author1_suffix",
 			"data": (xmlData.authorship.author.name.suffix[0]) ? xmlData.authorship.author.name.suffix : undefined,
 			"type": "text"
 		},
 		{
 			"name": "Author1 Email",
-			"id": "email",
+			"id": "author1_email",
 			"data": xmlData.authorship.author.contact[1].email || xmlData.authorship.author.contact[0].email,
 			"type": "email"
 		},
 		{
 			"name": "Author1 Institution",
-			"id": "institution",
+			"id": "author1_institution",
 			"data": xmlData.description.institution.inst_name,
 			"type": "text"
 		},
@@ -104,7 +104,7 @@ function mapFunc(xmlData, readyUrl, pdfFile) {
 		},
 		{
 			"name": "Degree Name",
-			"id": "degreeName",
+			"id": "degree_name",
 			"data": xmlData.description.degree.replace(/\./g, ''),
 			"type": "text"
 		},
@@ -116,19 +116,19 @@ function mapFunc(xmlData, readyUrl, pdfFile) {
 		},
 		{
 			"name": "Document Type",
-			"id": "docType",
+			"id": "document_type",
 			"data": (xmlData.description.attributes.type === 'doctoral') ? 'Dissertation' : 'Thesis',
 			"type": "text"
 		},
 		{
 			"name": "Embargo Date",
-			"id": "embargoDate",
+			"id": "embargo_date",
 			"data": embargoDate(xmlData.attributes.embargo_code),
 			"type": "date"
 		},
 		{
 			"name": "Publication Date",
-			"id": "pubDate",
+			"id": "publication_date",
 			"data": xmlData.description.dates.comp_date + '-01-01',
 			"type": "date"
 		},
