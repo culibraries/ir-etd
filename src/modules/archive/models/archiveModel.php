@@ -28,23 +28,23 @@ class ArchiveModel {
 		return json_encode($response);
 	}
 
-	public function insertFormData($data) {
+	public function insertFormData($archive, $data) {
 		parse_str($data, $formDataArray);
 		$formDataArray['workflow_status'] = $this->archiveStatus;
 		$submission = new SubmissionModel();
 		if ($this->archiveStatus === 'W') {
 			echo $submission->insert($formDataArray);
 		} else {
-			echo $submission->update($formDataArray);
+			echo $submission->update($archive, $formDataArray);
 		}
 	}
 
-	public function updateFormData($data) {
-		parse_str($data, $formDataArray);
-		$formDataArray['workflow_status'] = $this->archiveStatus;
-		$submission = new SubmissionModel();
-		echo $submission->update($formDataArray);
-	}
+	// public function updateFormData($data) {
+	// 	parse_str($data, $formDataArray);
+	// 	$formDataArray['workflow_status'] = $this->archiveStatus;
+	// 	$submission = new SubmissionModel();
+	// 	echo $submission->update($formDataArray);
+	// }
 
 }
 

@@ -58,7 +58,7 @@ $(document).ready(function() {
 
 	// submit for batch upload button click
 	$('#submitToBatch').click(function() {
-		// move to ready dir
+		// submit updated data and mark Pending
 		postFormData(currentArchive, 'P').done(function(res) {
 			refreshSideBar();
 			console.log(res);
@@ -68,7 +68,7 @@ $(document).ready(function() {
 
 	// move to problems button click
 	$('#moveToProblems').click(function() {
-		// move to problems dir
+		// submit updated data and mark problem
 		postFormData(currentArchive, 'L').done(function(res) {
 			refreshSideBar();
 			console.log(res);
@@ -148,7 +148,8 @@ function preFillForm(xmlData, map) {
 			//add value and type to input
 			$('#' + map[i].id)
 				.attr('type', map[i].type)
-				.val(map[i].data);
+				.val(map[i].data)
+				.attr('readonly', map[i].readonly);
 		}
 	}
 	dfd.resolve();

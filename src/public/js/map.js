@@ -1,142 +1,181 @@
 function mapFunc(xmlData, readyUrl, pdfFile) {
+
+	
 	return [
+		{
+			"name": "Editor",
+			"id": "identikey",
+			"data": uid,
+			"type": "text",
+			"readonly": true
+		},
+		{
+			"name": "Archive Name",
+			"id": "sequence_num",
+			"data": currentArchive,
+			"type": "text",
+			"readonly": true
+		},
 		{
 			"name": "Title",
 			"id": "title",
 			"data": xmlData.description.title.toTitleCase(),
-			"type": "text-long"
+			"type": "text-long",
+			"readonly": false
 		},
 		{
 			"name": "Full Text Url",
 			"id": "fulltext_url",
 			"data": readyUrl + pdfFile,
-			"type": "url"
+			"type": "url",
+			"readonly": true
 		},
 		{
 			"name": "Keywords",
 			"id": "keywords",
 			"data": xmlData.description.categorization.keyword,
-			"type": "text-long"
+			"type": "text-long",
+			"readonly": false
 		},
 		{
 			"name": "Abstract",
 			"id": "abstract",
 			"data": concatParas(xmlData.content.abstract.para),
 			"type": "text-long",
+			"readonly": false
 		},
 		{
 			"name": "Author1 FName",
 			"id": "author1_fname",
 			"data": xmlData.authorship.author.name.fname,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Author1 MName",
 			"id": "author1_mname",
 			"data": (xmlData.authorship.author.name.middle[0]) ? xmlData.authorship.author.name.middle : undefined,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Author1 LName",
 			"id": "author1_lname",
 			"data": xmlData.authorship.author.name.surname,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Author1 Suffix",
 			"id": "author1_suffix",
 			"data": (xmlData.authorship.author.name.suffix[0]) ? xmlData.authorship.author.name.suffix : undefined,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Author1 Email",
 			"id": "author1_email",
 			"data": xmlData.authorship.author.contact[1].email || xmlData.authorship.author.contact[0].email,
-			"type": "email"
+			"type": "email",
+			"readonly": false
 		},
 		{
 			"name": "Author1 Institution",
 			"id": "author1_institution",
 			"data": xmlData.description.institution.inst_name,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Advisor1",
 			"id": "advisor1",
 			"data": (xmlData.description.cmte_member[0]) ? xmlData.description.cmte_member[0].name.surname + ', ' + xmlData.description.cmte_member[0].name.fname : undefined,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Advisor2",
 			"id": "advisor2",
 			"data": (xmlData.description.cmte_member[1]) ? xmlData.description.cmte_member[1].name.surname + ', ' + xmlData.description.cmte_member[1].name.fname : undefined,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Advisor3",
 			"id": "advisor3",
 			"data": (xmlData.description.cmte_member[2]) ? xmlData.description.cmte_member[2].name.surname + ', ' + xmlData.description.cmte_member[2].name.fname : undefined,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Advisor4",
 			"id": "advisor4",
 			"data": (xmlData.description.cmte_member[3]) ? xmlData.description.cmte_member[3].name.surname + ', ' + xmlData.description.cmte_member[3].name.fname : undefined,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Advisor5",
 			"id": "advisor5",
 			"data": (xmlData.description.cmte_member[4]) ? xmlData.description.cmte_member[4].name.surname + ', ' + xmlData.description.cmte_member[4].name.fname : undefined,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Disciplines",
 			"id": "disciplines",
 			"data": xmlData.description.institution.inst_contact,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Comments",
 			"id": "comments",
 			"data": "",
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Degree Name",
 			"id": "degree_name",
 			"data": xmlData.description.degree.replace(/\./g, ''),
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Department",
 			"id": "department",
 			"data": xmlData.description.institution.inst_contact,
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Document Type",
 			"id": "document_type",
 			"data": (xmlData.description.attributes.type === 'doctoral') ? 'Dissertation' : 'Thesis',
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		},
 		{
 			"name": "Embargo Date",
 			"id": "embargo_date",
 			"data": embargoDate(xmlData.attributes.embargo_code),
-			"type": "date"
+			"type": "date",
+			"readonly": false
 		},
 		{
 			"name": "Publication Date",
 			"id": "publication_date",
 			"data": xmlData.description.dates.comp_date + '-01-01',
-			"type": "date"
+			"type": "date",
+			"readonly": false
 		},
 		{
 			"name": "Season",
 			"id": "season",
 			"data": "Spring",
-			"type": "text"
+			"type": "text",
+			"readonly": false
 		}
 	];
 }

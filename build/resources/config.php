@@ -19,6 +19,7 @@ if (isset($_SERVER['APPLICATION_ENV']) && $_SERVER['APPLICATION_ENV'] === 'docke
 			'dataRoot' => 'http://docker.dev/etd/data/',
 			'archive' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/archive/'
 		),
+		'uid' => 'someone'
 	);
 // Production environment
 } else {
@@ -39,7 +40,8 @@ if (isset($_SERVER['APPLICATION_ENV']) && $_SERVER['APPLICATION_ENV'] === 'docke
 			'readyUrl' => '????',
 			'dataRoot' => '????',
 			'archvie' => '????'
-		)
+		),
+		'uid' => $_SERVER['uid']
 	);
 }
 
