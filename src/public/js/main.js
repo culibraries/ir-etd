@@ -36,8 +36,8 @@ $(document).ready(function() {
 
 	// Load button click (oldest archive)
 	$('#loadOldestArchive').click(function() {
-		// call API get function getOneArchive(status, archive) to get data about archive 
-		getOneArchive('oldest', '').done(function(res) {
+		// call API get function getOneArchive(archive, status) to get data about archive 
+		getOneArchive('', 'oldest').done(function(res) {
 			currentArchive = res.name;
 			var pdfFile = parseArchiveFiles(res);
 
@@ -48,7 +48,9 @@ $(document).ready(function() {
 				// call map function that maps xml data to the edit form's fields
 				var map = mapFunc(res.json, res.readyUrl, pdfFile);
 				// prefill the form
-				preFillForm(res.json, map);
+				preFillForm(res.json, map).done(function(res) {
+					postFormData(currentArchive, 'W');
+				});
 			});
 		});
 		refreshSideBar();
@@ -57,7 +59,7 @@ $(document).ready(function() {
 	// submit for batch upload button click
 	$('#submitToBatch').click(function() {
 		// move to ready dir
-		postPending(currentArchive).done(function(res) {
+		postFormData(currentArchive, 'P').done(function(res) {
 			refreshSideBar();
 			console.log(res);
 		});
@@ -67,18 +69,19 @@ $(document).ready(function() {
 	// move to problems button click
 	$('#moveToProblems').click(function() {
 		// move to problems dir
-		postProblem(currentArchive).done(function(res) {
+		postFormData(currentArchive, 'L').done(function(res) {
 			refreshSideBar();
 			console.log(res);
 		});
 	});
 });
+
 // since these elements are created dynamically create event watchers that will attach to these 
 $(document).on('click', '.getme', function(event) {
 	var status = event.target.attributes.itemtype.textContent;
 	var archive = event.target.text;
 
-	getOneArchive(status, archive).done(function(res) {
+	getOneArchive(archive, status).done(function(res) {
 		currentArchive = res.name;
 		var pdfFile = parseArchiveFiles(res);
 
@@ -118,6 +121,7 @@ function parseArchiveFiles(data) {
 
 // prefills the xml edit form with data from xmlData using map.js as a map
 function preFillForm(xmlData, map) {
+	var dfd = $.Deferred();
 
 	$('#xmlEdit').empty();
 
@@ -131,7 +135,7 @@ function preFillForm(xmlData, map) {
 		// if type is test-long create textarea, else create input
 		if (map[i].type === 'text-long') {
 			//append textarea afer label
-			$('label:last').after('<textarea class="form-control" id="' + map[i].id + '"></textarea>');
+			$('label:last').after('<textarea class="form-control" id="' + map[i].id + '" name="' + map[i].id + '"></textarea>');
 			//add value to <textarea>
 			$('#' + map[i].id).val(map[i].data);
 			//calculate how many rows based in scrollHeight
@@ -140,27 +144,30 @@ function preFillForm(xmlData, map) {
 			$('#' + map[i].id).attr('rows', rows);
 		} else {
 			// append <input> after label
-			$('label:last').after('<input class="form-control" id="' + map[i].id + '">');
+			$('label:last').after('<input class="form-control" id="' + map[i].id + '" name="' + map[i].id + '">');
 			//add value and type to input
 			$('#' + map[i].id)
 				.attr('type', map[i].type)
 				.val(map[i].data);
 		}
 	}
-
+	dfd.resolve();
 	// show submit and move buttons
 	$('#xmlEditBtns').show();
+	return dfd.promise();
 }
 
 // append archive files in working, pending, and problems to sidebar
 function displayArchives(archives) {
+
+	// update to parse data from database and refer to insert_id ?????????????????????????????????????????
 	
-	for (var item in archives) {
-		for (var i = 0; i < archives[item].length; i++) {
-			var data = '<a href="#" class="getme" itemtype="' + item + '">' + archives[item][i] + '</a><br>';
-			$('#' + item + 'Archives').append(data);
-		}
-	}
+	// for (var item in archives) {
+	// 	for (var i = 0; i < archives[item].length; i++) {
+	// 		var data = '<a href="#" class="getme" itemtype="' + item + '">' + archives[item][i] + '</a><br>';
+	// 		$('#' + item + 'Archives').append(data);
+	// 	}
+	// }
 }
 
 // Helper Functions ================================================================================
@@ -228,7 +235,7 @@ function getArchives() {
 }
 
 // get one archive's properties
-function getOneArchive(status, archive) {
+function getOneArchive(archive, status) {
 	var dfd = $.Deferred();
 
 	$.ajax( {
@@ -241,7 +248,6 @@ function getOneArchive(status, archive) {
 			'archive': archive
 		},
 		success: function(res, status) {
-			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
@@ -277,18 +283,21 @@ function getJsonFromXml(archive) {
 }
 
 // move archive to pending dir
-function postPending(archive) {
+function postFormData(archive, status) {
+
 	var dfd = $.Deferred();
 
 	$.ajax( {
 		url: 'modules/archive/archive.php',
 		type: 'POST',
 		data: {
-			'action': 'moveToPending',
+			'action': 'postFormData',
 			'archive': archive,
-			'data': $('xmlEdit').serialize(),  
+			'status': status,
+			'data': $('#xmlEdit').serialize(),  
 		},
 		success: function(res, status) {
+			console.log(JSON.parse(res));
 			dfd.resolve(res);
 		},
 		error: function(xhr, desc, err) {
@@ -300,28 +309,9 @@ function postPending(archive) {
 	return dfd.promise();
 }
 
-// move archive to problem dir
-function postProblem(archive) {
-	var dfd = $.Deferred();
 
-	$.ajax( {
-			url: 'modules/archive/archive.php',
-			type: 'POST',
-			data: {
-				'action': 'moveToProblems',
-				'archive': currentArchive
-			},
-			success: function(res, status) {
-				dfd.resolve(res);
-			},
-			error: function(xhr, desc, err) {
-	            console.log(xhr);
-	            console.log("Details: " + desc + "\nError: " + err);
-	        }
-		});
 
-	return dfd.promise();
-}
+
 
 
 

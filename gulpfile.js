@@ -23,13 +23,17 @@ gulp.task('watch', function() {
 
 // Build =======================================================================
 // tasks that will be included in build
-gulp.task('javascript', function() {
-	return gulp.src('src/public/js/*.js')
-		.pipe(sourcemaps.init())
-		.pipe(uglify())
-		.pipe(concat('bundle.min.js'))
-		.pipe(sourcemaps.write('map'))
-		.pipe(gulp.dest('build/public/js/'));
+gulp.task('javascript', function(cb) {
+	pump([
+		gulp.src('src/public/js/*.js'),
+		sourcemaps.init(),
+		uglify(),
+		concat('bundle.min.js'),
+		sourcemaps.write('map'),
+		gulp.dest('build/public/js/')
+	],
+	cb
+	);
 });
 
 gulp.task('css', function(cb) {

@@ -3,10 +3,10 @@
 if (isset($_SERVER['APPLICATION_ENV']) && $_SERVER['APPLICATION_ENV'] === 'docker') {
 	$config = array(
 		'db' => array(
-			'dbName' => 'etd',
-			'user' => 'user',
-			'password' => 'secret',
-			'host' => 'mysql'
+			'database' => 'etd',
+			'username' => 'etd_service',
+			'password' => 'cuboulder',
+			'hostname' => 'mysql'
 		),
 		'dir' => array(
 			'ftp' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/ftp/',

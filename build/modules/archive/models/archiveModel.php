@@ -2,14 +2,16 @@
 // models one archive
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+require(MODULES_PATH . '/archive/models/submissionModel.php');
 
 class ArchiveModel {
 
-	public function __construct($archiveName, $folder) {
+	public function __construct($archiveName, $status) {
 		global $config;
 		$this->archiveName = $archiveName;
-		$this->archivePath = $config['dir'][$folder] . $archiveName;
-		$this->archiveUrl = $config['dir']['dataRoot'] . $folder . '/' . $archiveName . '/';
+		$this->archivePath = $config['dir']['working'] . $archiveName;
+		$this->archiveUrl = $config['dir']['dataRoot'] . '/working/' . $archiveName . '/';
+		$this->archiveStatus = $status;
 	}
 
 	public function getOneArchive() {
@@ -21,20 +23,27 @@ class ArchiveModel {
 			'path' => $this->archivePath,
 			'contents' => scandir($this->archivePath),
 			'archiveUrl' => $this->archiveUrl,
+			'status' => $this->archiveStatus
 		);
 		return json_encode($response);
 	}
 
-	public function moveToPending() {
-		global $config;
-
-		 return rename($config['dir']['working'] . $this->archiveName . '/', $config['dir']['pending'] . $this->archiveName . '/');
+	public function insertFormData($data) {
+		parse_str($data, $formDataArray);
+		$formDataArray['workflow_status'] = $this->archiveStatus;
+		$submission = new SubmissionModel();
+		if ($this->archiveStatus === 'W') {
+			echo $submission->insert($formDataArray);
+		} else {
+			echo $submission->update($formDataArray);
+		}
 	}
 
-	public function moveToProblems() {
-		global $config;
-
-		return rename($config['dir']['working'] . $this->archiveName . '/', $config['dir']['problems'] . $this->archiveName . '/');
+	public function updateFormData($data) {
+		parse_str($data, $formDataArray);
+		$formDataArray['workflow_status'] = $this->archiveStatus;
+		$submission = new SubmissionModel();
+		echo $submission->update($formDataArray);
 	}
 
 }
