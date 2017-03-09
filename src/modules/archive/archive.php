@@ -41,7 +41,7 @@ if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
 		case 'postFormData':
 			$archive = new ArchiveModel($_POST['archive'], $_POST['status']);
-			echo $archive->insertFormData($_POST['data']);
+			echo $archive->insertFormData($_POST['archive'], $_POST['data']);
 			break;
 	}
 
@@ -60,14 +60,18 @@ function getOldestArchive() {
 function extractZip($archive) {
 	global $config;
 
-	$archiveFolder = substr("$archive", 0, -4);
+	// strip .zip and split by '_' and return the last array item or just the sequence num
+	$archiveFolder = explode('_', substr("$archive", 0, -4))[2];
 
 	$zip = new ZipArchive();
 
 	if ($zip->open($config['dir']['ftp'] . $archive) === true) {
 		$zip->extractTo($config['dir']['working'] . $archiveFolder);
 		$zip->close();
+
+		// move zip file to archive dir
 		rename($config['dir']['ftp'] . $archive, $config['dir']['archive'] . $archive);
+
 		return $archiveFolder;
 	} else {
 		return 'zip extract failed';

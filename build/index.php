@@ -23,12 +23,19 @@
 
 <body>
 
+
 <div>
     <?php
         require_once('./resources/config.php');
         require(TEMPLATES_PATH . '/header-template.min.html');
     ?>
 </div>
+
+<!-- get sibboleth identikey attribute into JS variable -->
+<script type="text/javascript">
+    var uid = "<?php echo $config['uid'] ?>";
+</script>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 file-select-region">
