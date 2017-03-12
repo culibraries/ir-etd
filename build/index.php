@@ -33,7 +33,7 @@
 
 <!-- get sibboleth identikey attribute into JS variable -->
 <script type="text/javascript">
-    var uid = "<?php echo $config['uid'] ?>";
+    var identikey = "<?php echo $config['uid'] ?>";
 </script>
 
 <div class="container-fluid">
