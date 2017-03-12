@@ -1,16 +1,36 @@
+var currentArchive;
+
 // object holding info about archive currently being edited
-var currentArchive = {};
+function Archive(data) {
+	console.log(data);
+	this.name = data.name;
+	this.status = data.status;
+	this.contents = data.contents;
+	this.archiveUrl = data.archiveUrl;
+	this.readyUrl = data.readyUrl;
+	this.getPdf = function() {
+		for (var i = 0; i < this.contents.length; i++) {
+			if (this.contents[i].substr(-3) === 'pdf') {
+				return this.contents[i];
+			}
+		}
+	};
+	this.pdf = this.getPdf();
+	this.json = JSON.parse(stripChars(data.json));
+	this.db = data.db;
+}
 
 
 // Initial data gets for sidebar ===================================================================
 
 function refreshSideBar() {
 	// hide edit buttons
-	$('#xmlEditBtns').hide();
+	// $('#xmlEditBtns').hide();
+
 	// empty working, pending, and problems views
-	$('#W').empty();
-	$('#P').empty();
-	$('#L').empty();
+	// $('#W').empty();
+	// $('#P').empty();
+	// $('#L').empty();
 
 	// call API get function getOldestArchive to get oldest archive in currentArchive dir
 	getOldestArchive().done(function(res) {
@@ -32,28 +52,22 @@ $(document).ready(function() {
 
 	// Load button click (oldest archive)
 	$('#loadOldestArchive').click(function() {
-		currentArchive = {};
 		// call API get function getOneArchive(archive, id, status) to get data about archive 
 		getOneArchive('', '', '').done(function(res) {
-			currentArchive.name = res.name;
-			currentArchive.status = res.status;
-			currentArchive.contents = res.contents;
-			currentArchive.archiveUrl = res.archiveUrl;
-			currentArchive.pdf = parseArchiveFiles(currentArchive);
-			currentArchive.readyUrl = res.readyUrl;
+			// create currentArchive object from response
+			currentArchive = new Archive(res);
 
-			// call API get function getJsonFromXml to get the json data from current archive
-			getJsonFromXml(currentArchive).done(function(res) {
-				currentArchive.json = res;
-				// use json2html to display json 
-				visualize(currentArchive.json);
-				// prefill the form using function mapJson
-				preFillForm(mapJson(currentArchive)).done(function(res) {
-					// once form is filled post this to database and set the subId
-					postFormData(currentArchive).done(function(res) {
-						currentArchive.subId = res.id;
-						refreshSideBar();
-					});
+			// use json2html to display json 
+			visualize(currentArchive.json);
+
+			displayArchiveFiles(currentArchive);
+
+			// prefill the form using function mapJson
+			preFillForm(mapJson(currentArchive)).done(function(res) {
+				// once form is filled post this to database and set the subId
+				postFormData(currentArchive).done(function(res) {
+					currentArchive.subId = res.id;
+					refreshSideBar();
 				});
 			});
 		});
@@ -65,7 +79,7 @@ $(document).ready(function() {
 		currentArchive.status = 'P';
 		postFormData(currentArchive).done(function(res) {
 			refreshSideBar();
-			clearEditView();
+			// clearEditView();
 		});
 		
 	});
@@ -76,7 +90,7 @@ $(document).ready(function() {
 		currentArchive.status = 'L';
 		postFormData(currentArchive).done(function(res) {
 			refreshSideBar();
-			clearEditView();
+			// clearEditView();
 		});
 	});
 });
@@ -84,29 +98,21 @@ $(document).ready(function() {
 // click handlers for archive links in working, pending, and problems on sidebar
 // since these elements are created dynamically create event watchers that will attach to these 
 $(document).on('click', '.getme', function(event) {
-	currentArchive = {};
-	currentArchive.subId = event.target.attributes.subId.textContent;
+	var subId = event.target.attributes.subId.textContent;
 	var archive = event.target.attributes.archive.textContent;
 
-	console.log(currentArchive.subId);
+	getOneArchive(archive, subId, '').done(function(res) {
 
-	getOneArchive(archive, currentArchive.subId, '').done(function(res) {
-		currentArchive.name = res.name;
-		currentArchive.status = res.status;
-		currentArchive.contents = res.contents;
-		currentArchive.pdf = parseArchiveFiles(res);
-		currentArchive.db = res.data[0];
-		currentArchive.readyUrl = res.readyUrl;
+		currentArchive = new Archive(res);
 
+		// call map function that maps database data to the edit form's fields
 		preFillForm(mapDb(currentArchive));
 
-		// call API get function getJsonFromXml to get the json data from current archive
-		getJsonFromXml(currentArchive).done(function(res) {
-			currentArchive.json = res;
-			// use json2html to display json 
-			visualize(currentArchive.json);
-			// call map function that maps database data to the edit form's fields
-		});
+		// use json2html to display json 
+		visualize(currentArchive.json);
+
+		displayArchiveFiles(currentArchive);
+
 	});
 
 });
@@ -114,23 +120,21 @@ $(document).on('click', '.getme', function(event) {
 // Display Functions ===============================================================================
 
 // parse archive folder contents displaying to DOM if not xml and returning the pdf file
-function parseArchiveFiles(data) {
-	$('#archiveFiles').empty();
-	var pdfFile;
+function displayArchiveFiles(archive) {
+	var html = '';
+
 	// loop through array of files in archive
-	for (var i=2; i<data.length; i++) {
-		var file = data[i];
-		var ext = file.substr(file.length - 3, file.length);
+	for (var i = 2; i <  archive.contents.length; i++) {
+		var file = archive.contents[i];
+		var ext = file.substr(-3);
 
 		// display files that are not xml
 		if (ext !== 'xml') {
-			$('#archiveFiles').html('<a target="_blank" href="' + data.archiveUrl + file + '">' + file + '</a>');
-			if (ext === 'pdf') {
-				pdfFile = file;
-			}
+			html += '<a target="_blank" href="' + archive.archiveUrl + file + '">' + file + '</a><br>';
 		}
 	}
-	return pdfFile;
+
+	$('#archiveFiles').html(html);
 }
 
 // prefills the xml edit form with data from xmlData using map.js as a map
@@ -174,19 +178,27 @@ function preFillForm(map) {
 
 // append archive files in working, pending, and problems to sidebar
 function displayArchives(archives) {
+	var workingHtml = '',
+		pendingHtml = '',
+		problemHtml = '';
 
 	for (var i = 0; i < archives.length; i++) {
-		var data = '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
-		$('#' + archives[i].workflow_status).append(data);
+		switch (archives[i].workflow_status) {
+			case 'W':
+				workingHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
+				break;
+			case 'P':
+				pendingHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
+				break;
+			case 'L':
+				problemHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
+				break;
+		}
 	}
-}
-
-function refreshEditView() {
-	// empty edit and view views
-	$('#xmlEdit').empty();
-	$('#top').empty();
-
-
+	
+	$('#working').html(workingHtml);
+	$('#pending').html(pendingHtml);
+	$('#problem').html(problemHtml);
 }
 
 // Helper Functions ================================================================================
@@ -268,36 +280,12 @@ function getOneArchive(archive, id, status) {
 			'archive': archive
 		},
 		success: function(res, status) {
-			console.log(JSON.parse(res));
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
             console.log(xhr);
             console.log("Details: " + desc + "\nError: " + err);
         }
-	});
-
-	return dfd.promise();
-}
-
-// get contents of XML file in json
-function getJsonFromXml(archive) {
-	var dfd = $.Deferred();
-
-	$.ajax({
-		url: 'modules/xml/xml.php',
-		type: 'GET',
-		data: {
-			'action': 'getJsonFromXml',
-			'archive': archive.name
-		},
-		success: function(res, status) {
-			dfd.resolve(JSON.parse(stripChars(res)));
-		},
-		error: function(xhr, desc, err) {
-            console.log(xhr);
-            console.log("Details: " + desc + "\nError: " + err);
-		}
 	});
 
 	return dfd.promise();
@@ -322,8 +310,6 @@ function postFormData(archive) {
 			'data': $('#xmlEdit').serialize()
 		},
 		success: function(res, status) {
-			console.log(res);
-			console.log(JSON.parse(res));
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {

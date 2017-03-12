@@ -25,7 +25,8 @@ class ArchiveModel {
 				'contents' => scandir($this->archivePath),
 				'archiveUrl' => $this->archiveUrl,
 				'status' => 'W',
-				'readyUrl' => $config['dir']['readyUrl']
+				'readyUrl' => $config['dir']['readyUrl'],
+				'json' => $this->getJson()
 			);
 			return json_encode($response);
 		} else {
@@ -35,9 +36,10 @@ class ArchiveModel {
 				'name' => $this->archiveName,
 				'contents' => scandir($this->archivePath),
 				'archiveUrl' => $this->archiveUrl,
-				'data' => $submission->selectOne($this->archiveId),
+				'db' => $submission->selectOne($this->archiveId)[0],
 				'status' => $this->archiveStatus,
-				'readyUrl' => $config['dir']['readyUrl']
+				'readyUrl' => $config['dir']['readyUrl'],
+				'json' => $this->getJson()
 			);
 			return json_encode($response);
 		}
@@ -57,6 +59,15 @@ class ArchiveModel {
 			echo $submission->update($this->archiveId, $formDataArray);
 		}
 	}
+
+	private function getJson() {
+		global $config;
+
+		$file = glob($config['dir']['working'] . $this->archiveName . '/*.xml');
+		$xml = simplexml_load_file($file[0]);
+		return json_encode($xml);
+	}
+
 }
 
 ?>
