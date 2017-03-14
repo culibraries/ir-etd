@@ -6,58 +6,46 @@ require(MODULES_PATH . '/archive/models/submissionModel.php');
 
 class ArchiveModel {
 
-	public function __construct($archive, $id, $status) {
+	public function __construct($archive, $subId, $status) {
 		global $config;
 		$this->archiveName = $archive;
 		$this->archivePath = $config['dir']['working'] . $archive;
 		$this->archiveUrl = $config['dir']['dataRoot'] . '/working/' . $archive . '/';
-		$this->archiveId = $id;
+		$this->archiveSubId = $subId;
 		$this->archiveStatus = $status;
 	}
 
 	public function getOneArchive() {
 		global $config;
 
-		if (!$this->archiveId) {
-			// return properties of archive
-			$response = array(
-				'name' => $this->archiveName,
-				'contents' => scandir($this->archivePath),
-				'archiveUrl' => $this->archiveUrl,
-				'status' => 'W',
-				'readyUrl' => $config['dir']['readyUrl'],
-				'json' => $this->getJson()
-			);
-			return json_encode($response);
-		} else {
-			$submission = new SubmissionModel();
-
-			$response = array(
-				'name' => $this->archiveName,
-				'contents' => scandir($this->archivePath),
-				'archiveUrl' => $this->archiveUrl,
-				'db' => $submission->selectOne($this->archiveId)[0],
-				'status' => $this->archiveStatus,
-				'readyUrl' => $config['dir']['readyUrl'],
-				'json' => $this->getJson()
-			);
-			return json_encode($response);
-		}
-
-		
-	}
-
-	public function insertFormData($data) {
-		parse_str($data, $formDataArray);
-		$formDataArray['workflow_status'] = $this->archiveStatus;
-
 		$submission = new SubmissionModel();
 
-		if ($this->archiveStatus === 'W') {
-			echo $submission->insert($formDataArray);
-		} else {
-			echo $submission->update($this->archiveId, $formDataArray);
-		}
+		$response = array(
+			'name' => $this->archiveName,
+			'contents' => scandir($this->archivePath),
+			'archiveUrl' => $this->archiveUrl,
+			'db' => $submission->selectOne($this->archiveSubId)[0],
+			'status' => $this->archiveStatus,
+			'readyUrl' => $config['dir']['readyUrl'],
+			'json' => $this->getJson(),
+			'subId' => $this->archiveSubId
+		);
+		return json_encode($response);
+	}
+
+	public function getExtractOldestArchive() {
+		global $config;
+
+		$response = array(
+			'name' => $this->archiveName,
+			'contents' => scandir($this->archivePath),
+			'archiveUrl' => $this->archiveUrl,
+			'status' => $this->archiveStatus,
+			'readyUrl' => $config['dir']['readyUrl'],
+			'json' => $this->getJson()
+		);
+
+		return json_encode($response);
 	}
 
 	private function getJson() {

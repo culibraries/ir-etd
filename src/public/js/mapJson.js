@@ -1,4 +1,4 @@
-function mapJson(archive) {
+Archive.prototype.mapJson = function() {
 
 	
 	return [
@@ -12,119 +12,126 @@ function mapJson(archive) {
 		{
 			"name": "Archive Name",
 			"id": "sequence_num",
-			"data": archive.name,
+			"data": this.name,
 			"type": "text",
+			"readonly": true
+		},
+		{
+			"name": "Workflow Status",
+			"id": "workflow_status",
+			"data": this.status,
+			"type": "drop-down",
 			"readonly": true
 		},
 		{
 			"name": "Title",
 			"id": "title",
-			"data": archive.json.description.title.toTitleCase(),
+			"data": this.json.description.title.toTitleCase(),
 			"type": "text-long",
 			"readonly": false
 		},
 		{
 			"name": "Full Text Url",
 			"id": "fulltext_url",
-			"data": archive.readyUrl + archive.pdf,
+			"data": this.readyUrl + this.pdf,
 			"type": "url",
 			"readonly": true
 		},
 		{
 			"name": "Keywords",
 			"id": "keywords",
-			"data": archive.json.description.categorization.keyword,
+			"data": this.json.description.categorization.keyword,
 			"type": "text-long",
 			"readonly": false
 		},
 		{
 			"name": "Abstract",
 			"id": "abstract",
-			"data": concatParas(archive.json.content.abstract.para),
+			"data": concatParas(this.json.content.abstract.para),
 			"type": "text-long",
 			"readonly": false
 		},
 		{
 			"name": "Author1 FName",
 			"id": "author1_fname",
-			"data": archive.json.authorship.author.name.fname,
+			"data": this.json.authorship.author.name.fname,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Author1 MName",
 			"id": "author1_mname",
-			"data": (archive.json.authorship.author.name.middle[0]) ? archive.json.authorship.author.name.middle : undefined,
+			"data": (this.json.authorship.author.name.middle[0]) ? this.json.authorship.author.name.middle : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Author1 LName",
 			"id": "author1_lname",
-			"data": archive.json.authorship.author.name.surname,
+			"data": this.json.authorship.author.name.surname,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Author1 Suffix",
 			"id": "author1_suffix",
-			"data": (archive.json.authorship.author.name.suffix[0]) ? archive.json.authorship.author.name.suffix : undefined,
+			"data": (this.json.authorship.author.name.suffix[0]) ? this.json.authorship.author.name.suffix : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Author1 Email",
 			"id": "author1_email",
-			"data": archive.json.authorship.author.contact[1].email || archive.json.authorship.author.contact[0].email,
+			"data": this.json.authorship.author.contact[1].email || this.json.authorship.author.contact[0].email,
 			"type": "email",
 			"readonly": false
 		},
 		{
 			"name": "Author1 Institution",
 			"id": "author1_institution",
-			"data": archive.json.description.institution.inst_name,
+			"data": this.json.description.institution.inst_name,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor1",
 			"id": "advisor1",
-			"data": (archive.json.description.cmte_member[0]) ? archive.json.description.cmte_member[0].name.surname + ', ' + archive.json.description.cmte_member[0].name.fname : undefined,
+			"data": (this.json.description.cmte_member[0]) ? this.json.description.cmte_member[0].name.surname + ', ' + this.json.description.cmte_member[0].name.fname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor2",
 			"id": "advisor2",
-			"data": (archive.json.description.cmte_member[1]) ? archive.json.description.cmte_member[1].name.surname + ', ' + archive.json.description.cmte_member[1].name.fname : undefined,
+			"data": (this.json.description.cmte_member[1]) ? this.json.description.cmte_member[1].name.surname + ', ' + this.json.description.cmte_member[1].name.fname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor3",
 			"id": "advisor3",
-			"data": (archive.json.description.cmte_member[2]) ? archive.json.description.cmte_member[2].name.surname + ', ' + archive.json.description.cmte_member[2].name.fname : undefined,
+			"data": (this.json.description.cmte_member[2]) ? this.json.description.cmte_member[2].name.surname + ', ' + this.json.description.cmte_member[2].name.fname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor4",
 			"id": "advisor4",
-			"data": (archive.json.description.cmte_member[3]) ? archive.json.description.cmte_member[3].name.surname + ', ' + archive.json.description.cmte_member[3].name.fname : undefined,
+			"data": (this.json.description.cmte_member[3]) ? this.json.description.cmte_member[3].name.surname + ', ' + this.json.description.cmte_member[3].name.fname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor5",
 			"id": "advisor5",
-			"data": (archive.json.description.cmte_member[4]) ? archive.json.description.cmte_member[4].name.surname + ', ' + archive.json.description.cmte_member[4].name.fname : undefined,
+			"data": (this.json.description.cmte_member[4]) ? this.json.description.cmte_member[4].name.surname + ', ' + this.json.description.cmte_member[4].name.fname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Disciplines",
 			"id": "disciplines",
-			"data": archive.json.description.institution.inst_contact,
+			"data": this.json.description.institution.inst_contact,
 			"type": "text",
 			"readonly": false
 		},
@@ -138,35 +145,35 @@ function mapJson(archive) {
 		{
 			"name": "Degree Name",
 			"id": "degree_name",
-			"data": archive.json.description.degree.replace(/\./g, ''),
+			"data": this.json.description.degree.replace(/\./g, ''),
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Department",
 			"id": "department",
-			"data": archive.json.description.institution.inst_contact,
+			"data": this.json.description.institution.inst_contact,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Document Type",
 			"id": "document_type",
-			"data": (archive.json.description.attributes.type === 'doctoral') ? 'Dissertation' : 'Thesis',
+			"data": (this.json.description.attributes.type === 'doctoral') ? 'Dissertation' : 'Thesis',
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Embargo Date",
 			"id": "embargo_date",
-			"data": embargoDate(archive.json.attributes.embargo_code),
+			"data": embargoDate(this.json.attributes.embargo_code),
 			"type": "date",
 			"readonly": false
 		},
 		{
 			"name": "Publication Date",
 			"id": "publication_date",
-			"data": archive.json.description.dates.comp_date + '-01-01',
+			"data": this.json.description.dates.comp_date + '-01-01',
 			"type": "date",
 			"readonly": false
 		},
@@ -178,7 +185,7 @@ function mapJson(archive) {
 			"readonly": false
 		}
 	];
-}
+};
 
 String.prototype.toTitleCase = function() {
   var i, j, str, lowers, uppers;
@@ -229,5 +236,5 @@ var concatParas = function(paras) {
 	} else {
 		return paras;
 	}
-}
+};
 
