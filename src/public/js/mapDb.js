@@ -5,7 +5,7 @@ Archive.prototype.mapDb = function() {
 			"name": "Editor",
 			"id": "identikey",
 			"data": identikey,
-			"type": "drop",
+			"type": "text",
 			"readonly": true
 		},
 		{
