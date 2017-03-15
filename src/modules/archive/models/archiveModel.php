@@ -6,45 +6,55 @@ require(MODULES_PATH . '/archive/models/submissionModel.php');
 
 class ArchiveModel {
 
-	public function __construct($archiveName, $status) {
+	public function __construct($archive, $subId, $status) {
 		global $config;
-		$this->archiveName = $archiveName;
-		$this->archivePath = $config['dir']['working'] . $archiveName;
-		$this->archiveUrl = $config['dir']['dataRoot'] . '/working/' . $archiveName . '/';
+		$this->archiveName = $archive;
+		$this->archivePath = $config['dir']['working'] . $archive;
+		$this->archiveUrl = $config['dir']['dataRoot'] . '/working/' . $archive . '/';
+		$this->archiveSubId = $subId;
 		$this->archiveStatus = $status;
 	}
 
 	public function getOneArchive() {
 		global $config;
-		
-		// return properties of archive
+
+		$submission = new SubmissionModel();
+
 		$response = array(
 			'name' => $this->archiveName,
-			'path' => $this->archivePath,
 			'contents' => scandir($this->archivePath),
 			'archiveUrl' => $this->archiveUrl,
-			'status' => $this->archiveStatus
+			'db' => $submission->selectOne($this->archiveSubId)[0],
+			'status' => $this->archiveStatus,
+			'readyUrl' => $config['dir']['readyUrl'],
+			'json' => $this->getJson(),
+			'subId' => $this->archiveSubId
 		);
 		return json_encode($response);
 	}
 
-	public function insertFormData($archive, $data) {
-		parse_str($data, $formDataArray);
-		$formDataArray['workflow_status'] = $this->archiveStatus;
-		$submission = new SubmissionModel();
-		if ($this->archiveStatus === 'W') {
-			echo $submission->insert($formDataArray);
-		} else {
-			echo $submission->update($archive, $formDataArray);
-		}
+	public function getExtractOldestArchive() {
+		global $config;
+
+		$response = array(
+			'name' => $this->archiveName,
+			'contents' => scandir($this->archivePath),
+			'archiveUrl' => $this->archiveUrl,
+			'status' => $this->archiveStatus,
+			'readyUrl' => $config['dir']['readyUrl'],
+			'json' => $this->getJson()
+		);
+
+		return json_encode($response);
 	}
 
-	// public function updateFormData($data) {
-	// 	parse_str($data, $formDataArray);
-	// 	$formDataArray['workflow_status'] = $this->archiveStatus;
-	// 	$submission = new SubmissionModel();
-	// 	echo $submission->update($formDataArray);
-	// }
+	private function getJson() {
+		global $config;
+
+		$file = glob($config['dir']['working'] . $this->archiveName . '/*.xml');
+		$xml = simplexml_load_file($file[0]);
+		return json_encode($xml);
+	}
 
 }
 

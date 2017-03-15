@@ -12,36 +12,21 @@ if (isset($_GET['action'])) {
 		case 'getArchives':
 			echo getArchives();
 			break;
-		case 'getOneArchive':
-
-			switch ($_GET[status]) {
-				case 'oldest':
-					$archive = new ArchiveModel(extractZip(getOldestArchive()), 'working');
-					echo $archive->getOneArchive();
-					break;
-				case 'working':
-					$archive = new ArchiveModel($_GET['archive'], 'working');
-					echo $archive->getOneArchive();
-					break;
-				case 'pending':
-					$archive = new ArchiveModel($_GET['archive'], 'pending');
-					echo $archive->getOneArchive();
-					break;
-				case 'problems':
-					$archive = new ArchiveModel($_GET['archive'], 'problems');
-					echo $archive->getOneArchive();
-					break;
-			}
-
+		case 'getExtractOldestArchive':
+			$archive = new ArchiveModel(extractZip(getOldestArchive()), null, 'W');
+			echo $archive->getExtractOldestArchive();
 			break;
+		case 'getOneArchive':
+			$archive = new ArchiveModel($_GET['archive'], $_GET['subId'], $_GET['status']);
+			echo $archive->getOneArchive();
 	}
 }
 
 if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
 		case 'postFormData':
-			$archive = new ArchiveModel($_POST['archive'], $_POST['status']);
-			echo $archive->insertFormData($_POST['archive'], $_POST['data']);
+			// $archive = new ArchiveModel($_POST['archive'], $_POST['subId'], $_POST['status']);
+			echo insertFormData($_POST['data'], $_POST['subId']);
 			break;
 	}
 
@@ -53,7 +38,6 @@ function getOldestArchive() {
 	// array of all archive names in data directory
 	$archives = array_values(preg_grep('/\.(zip)$/', scandir($config['dir']['ftp'])));
 	// oldest is first
-	// $oldestArchive = substr("$archives[0]", 0, -4);
 	return $archives[0];
 }
 
@@ -80,14 +64,23 @@ function extractZip($archive) {
 
 function getArchives() {
 	global $config;
-	// get all records from database not marked ready ????????????????????????????????????
+	// get all records from database not marked ready
+	$submission = new SubmissionModel();
+	$res = $submission->select();
 
-	$res = array(
-		'working' => $working,
-		'problems' => $problems,
-		'pending' => $pending
-	);
-	return json_encode($res);
+	return $res;
+}
+
+function insertFormData($data, $id) {
+	parse_str($data, $formDataArray);
+
+	$submission = new SubmissionModel();
+
+	if (!$id) {
+		echo $submission->insert($formDataArray);
+	} else {
+		echo $submission->update($id, $formDataArray);
+	}
 }
 
 exit();

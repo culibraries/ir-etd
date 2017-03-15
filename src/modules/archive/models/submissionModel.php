@@ -57,9 +57,10 @@ class SubmissionModel
 
 	public function insert($values)
 	{
-		assignValues($values);
+		$this->assignValues($values);
 
 		$sql = "INSERT INTO submission VALUES (
+				NULL,
 				'$this->sequence_num',
 				'$this->title',
 				'$this->fulltext_url',
@@ -85,7 +86,10 @@ class SubmissionModel
 				'$this->publication_date',
 				'$this->season',
 				'$this->workflow_status',
-				'$this->identikey')";
+				'$this->identikey',
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP)";
+				
 
 		$response = array(
 			'success' => $this->conn->query($sql),
@@ -98,7 +102,7 @@ class SubmissionModel
 
 	function update($id, $values)
 	{
-		assignValues($values);
+		$this->assignValues($values);
 
 		$sql = "UPDATE submission SET
 			title = '$this->title',
@@ -138,16 +142,37 @@ class SubmissionModel
 
 	function select()
 	{
-		$sql = "SELECT * FROM submission WHERE workflow_status <> 'R'";
+		$sql = "SELECT workflow_status, sequence_num, identikey, submission_id FROM submission WHERE workflow_status != 'R'";
 		$result = $this->conn->query($sql);
-		$rows = $result->num_rows;
 
-		$response = array(
-			'result' => $result,
-			'rows' => $rows
-		);
+		$res = array();
 
-		return json_encode($response);
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+			$res[] = $row;
+		}
+
+		return json_encode($res);
+
+	}
+
+	function selectOne($id)
+	{
+		$sql = "SELECT * FROM submission WHERE submission_id = $id";
+
+		$result = $this->conn->query($sql);
+
+		$res = array();
+
+		if ($result) {
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+				$res[] = $row;
+			}
+
+			return $res;
+		} else {
+			return $this->conn->error;
+		}
+
 	}
 
 	private function assignValues($values)
