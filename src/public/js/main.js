@@ -152,7 +152,13 @@ $(document).ready(function() {
 			refreshSideBar();
 			clearViews();
 		});
-		
+	});
+
+	// API call to have backend prepare batch uplaod spreadsheets
+	$('#prepBatch').click(function() {
+		prepBatch().done(function(res) {
+			// ?????????????????????????????????????????????????????????
+		});
 	});
 
 });
@@ -176,11 +182,6 @@ $(document).on('click', '.getme', function(event) {
 
 		// call map function that maps database data to the edit form's fields
 		currentArchive.preFillForm(currentArchive.mapDb());
-
-		console.log(res);
-
-
-
 	});
 
 });
@@ -338,6 +339,24 @@ function getOneArchive(archive, subId, status) {
 	        }
 		});
 	}
+
+	return dfd.promise();
+}
+
+function prepBatch() {
+	var dfd = $.Deferred();
+	$.ajax( {
+		url: 'modules/archive/archive.php',
+		type: 'POST',
+		data: {'action': 'prepBatch'},
+		success: function(res, status) {
+			dfd.resolve(JSON.parse(res));
+		},
+		error: function(xhr, desc, err) {
+            console.log(xhr);
+            console.log("Details: " + desc + "\nError: " + err);
+        }
+	});
 
 	return dfd.promise();
 }

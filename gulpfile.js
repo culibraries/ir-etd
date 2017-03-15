@@ -83,18 +83,36 @@ gulp.task('build', ['javascript', 'css', 'html', 'cleanData', 'move']);
 // Deploy ======================================================================
 gulp.task('deploy', function() {
 
-		conf = {
+	var paths = ['build/modules', 'build/public', 'build/resources', 'build/index.php'];
+
+	var conf = {
 		progress: true,
 		incremental: true,
-		recursive: true,
+		relative: true,
 		emptyDirectories: true,
-		root: 'src',
-		hostname: 'culibraries01.colorado.edu',
-		username: 'vanvoors',
-		destination: '/data/web/htdocs/culibraries/etd',
+		recursive: true,
+		clean: true,
+		root: 'build',
 	};
 
-	return gulp.src('src/')
+	if (argv.staging) {
+		conf.hostname = 'culibraries03.colorado.edu';
+		conf.username = 'vanvoors';
+		conf.destination = '/data/web/htdocs/culibraries/etd';
+	} else if (argv.production) {
+		conf.hostname = 'culibraries01.colorado.edu';
+		conf.username = 'vanvoors';
+		conf.destination = '/data/web/htdocs/culibraries/etd';
+	} else {
+		throwError('deploy', gutil.colors.red('Missing or Invalid Target'));
+	}
+
+	return gulp.src(paths)
+		.pipe(gulpif(argv.production, prompt.confirm({
+				message: 'Are you sure you want to push to PRODUCTION?',
+				default: false
+			})
+		))
 		.pipe(rsync(conf));
 });
 
