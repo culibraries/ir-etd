@@ -37,7 +37,7 @@
 </script>
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row match-my-cols">
         <div class="col-md-2 file-select-region">
             <?php
                 require(TEMPLATES_PATH . '/sidebar-nav-template.min.html');
