@@ -86,9 +86,10 @@ class SubmissionModel
 				'$this->publication_date',
 				'$this->season',
 				'$this->workflow_status',
-				NULL,
-				NULL,
-				'$this->identikey')";
+				'$this->identikey',
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP)";
+				
 
 		$response = array(
 			'success' => $this->conn->query($sql),
