@@ -33,8 +33,8 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Full Text Url",
 			"id": "fulltext_url",
-			"data": this.readyUrl + this.pdf,
-			"type": "url",
+			"data": this.batchUrl + this.name + '/' + this.pdf,
+			"type": "text",
 			"readonly": true
 		},
 		{

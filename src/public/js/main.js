@@ -7,7 +7,7 @@ function Archive(data) {
 	this.status = data.status;
 	this.contents = data.contents;
 	this.archiveUrl = data.archiveUrl;
-	this.readyUrl = data.readyUrl;
+	this.batchUrl = data.batchUrl;
 	this.getPdf = function() {
 		for (var i = 0; i < this.contents.length; i++) {
 			if (this.contents[i].substr(-3) === 'pdf') {

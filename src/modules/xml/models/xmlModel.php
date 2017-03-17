@@ -13,10 +13,7 @@ class XmlModel {
 
 	public function sendJson() {
 		global $config;
-		// $data = array(
-		// 	'json' => $this->file,
-		// 	'readyUrl' => $config['dir']['readyUrl']
-		// );
+		
 		return json_encode($this->file);
 	}
 }
