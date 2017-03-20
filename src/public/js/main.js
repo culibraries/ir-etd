@@ -191,12 +191,18 @@ $(document).on('click', '.getme', function(event) {
 // Initial data gets for sidebar 
 function refreshSideBar() {
 
-	// call API get function getOldestArchive to get oldest archive in currentArchive dir
+	// call API get function getOldestArchive to get oldest archives in ftp dir
 	getOldestArchive().done(function(res) {
-		$('#oldestArchive').text(res);
+		if (res.numArchives) {
+			$('#oldestArchive').text(res.oldestArchive);
+			$('#numArchives').text(res.numArchives);
+		} else {
+			$('#oldestArchive').text('No more archives');
+			$('#loadOldestArchive').hide();
+		}
 	});
 
-	// call API get function getArchives to get archives in working, pending, and problems dirs
+	// call API get function getArchives to get archives in working dir and their status
 	getArchives().done(function(res) {
 		//display in sidebar
 		displayArchives(res);
@@ -219,7 +225,6 @@ function displayArchives(archives) {
 				break;
 			case 'L':
 				problemHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '" status="' + archives[i].workflow_status + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
-				break;
 		}
 	}
 	
@@ -268,7 +273,7 @@ function getOldestArchive() {
 		type: 'GET',
 		data: {'action': 'getOldestArchive'},
 		success: function(res, status) {
-			dfd.resolve(res);
+			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
 	            console.log(xhr);
