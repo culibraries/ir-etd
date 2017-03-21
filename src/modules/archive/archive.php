@@ -13,7 +13,8 @@ if (isset($_GET['action'])) {
 			echo getArchives();
 			break;
 		case 'getExtractOldestArchive':
-			$archive = new ArchiveModel(extractZip(getOldestArchive()), null, 'W');
+			$oldestArchive = json_decode(getOldestArchive(), true);
+			$archive = new ArchiveModel(extractZip($oldestArchive['oldestArchive']), null, 'W');
 			echo $archive->getExtractOldestArchive();
 			break;
 		case 'getOneArchive':
@@ -25,9 +26,10 @@ if (isset($_GET['action'])) {
 if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
 		case 'postFormData':
-			// $archive = new ArchiveModel($_POST['archive'], $_POST['subId'], $_POST['status']);
 			echo insertFormData($_POST['data'], $_POST['subId']);
 			break;
+		case 'prepBatch':
+			// ???????????????????????????????????????????????????
 	}
 
 }
@@ -35,10 +37,24 @@ if (isset($_POST['action'])) {
 // finds oldest archive in ftp dir and creates archive object
 function getOldestArchive() {
 	global $config;
-	// array of all archive names in data directory
-	$archives = array_values(preg_grep('/\.(zip)$/', scandir($config['dir']['ftp'])));
-	// oldest is first
-	return $archives[0];
+
+	// array of all zip archives in ftp dir
+	$archives = glob($config['dir']['ftp'] . '*.zip');
+
+	// if ftp dir not empty
+	if ($archives) {
+		$oldestArchiveArray = explode('/',$archives[0]);
+		$response = array(
+			'numArchives' => sizeof($archives),
+			'oldestArchive' => $oldestArchiveArray[sizeof($oldestArchiveArray) - 1]
+		);
+	} else {
+		$response = array(
+			'numArchives' => false
+		);
+	}
+
+	return json_encode($response);
 }
 
 function extractZip($archive) {

@@ -26,7 +26,7 @@ class ArchiveModel {
 			'archiveUrl' => $this->archiveUrl,
 			'db' => $submission->selectOne($this->archiveSubId)[0],
 			'status' => $this->archiveStatus,
-			'readyUrl' => $config['dir']['readyUrl'],
+			'batchUrl' => $config['dir']['batchUrl'],
 			'json' => $this->getJson(),
 			'subId' => $this->archiveSubId
 		);
@@ -41,7 +41,7 @@ class ArchiveModel {
 			'contents' => scandir($this->archivePath),
 			'archiveUrl' => $this->archiveUrl,
 			'status' => $this->archiveStatus,
-			'readyUrl' => $config['dir']['readyUrl'],
+			'batchUrl' => $config['dir']['batchUrl'],
 			'json' => $this->getJson()
 		);
 

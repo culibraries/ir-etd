@@ -12,14 +12,12 @@ if (isset($_SERVER['APPLICATION_ENV']) && $_SERVER['APPLICATION_ENV'] === 'docke
 			'ftp' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/ftp/',
 			'working' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/working/',
 			'workingUrl' => 'http://docker.dev/etd/data/working/',
-			'pending' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/pending/',
-			'problems' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/problems/',
-			'ready' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/ready/',
-			'readyUrl' => 'http://docker.dev/etd/data/ready/',
+			'batch' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/batch/',
+			'batchUrl' => 'http://docker.dev/etd/data/batch/',
 			'dataRoot' => 'http://docker.dev/etd/data/',
 			'archive' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/archive/'
 		),
-		'uid' => 'someone'
+		'uid' => 'Identikey'
 	);
 // Production environment
 } else {
@@ -31,15 +29,13 @@ if (isset($_SERVER['APPLICATION_ENV']) && $_SERVER['APPLICATION_ENV'] === 'docke
 			'host' => '127.0.0.1'
 		),
 		'dir' => array(
-			'ftp' => $_SERVER['DOCUMENT_ROOT'] . '???',
-			'working' => $_SERVER['DOCUMENT_ROOT'] . '???',
-			'workingUrl' => '????',
-			'pending' => '????',
-			'problems' => '????',
-			'ready' => '????',
-			'readyUrl' => '????',
-			'dataRoot' => '????',
-			'archvie' => '????'
+			'ftp' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/ftp/',
+			'working' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/working/',
+			'workingUrl' => 'http://docker.dev/etd/data/working/',
+			'batch' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/batch/',
+			'batchUrl' => 'http://culibraries03.colorado.edu/etd/data/batch/',
+			'dataRoot' => 'http://culibraries03.colorado.edu/etd/data/',
+			'archive' => $_SERVER['DOCUMENT_ROOT'] . '/etd/data/archive/'
 		),
 		'uid' => $_SERVER['uid']
 	);
