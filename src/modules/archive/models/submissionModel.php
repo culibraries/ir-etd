@@ -12,8 +12,8 @@
  */
 class SubmissionModel
 {
-	private $conn;
-	private $db;
+	private $conn; // connection to the MySQL database
+	private $db;   // database instance itself
 
 	private $sequence_num;
 	private $title;
@@ -42,139 +42,217 @@ class SubmissionModel
 	private $workflow_status;
 	private $identikey;
 
+  /**
+	 * constructor
+	 *
+	 * Establishes a database connection using specified datasource. Database
+	 * connection remains open throughout the life of the object.
+	 */
 	public function __construct()
 	{
 		global $config;
 		require(MODULES_PATH . '/archive/models/connectionModel.php');
-		$this->db = new ConnectionModel($config['db']);
-		$this->conn = $this->db->open();
+		$this->conn = new ConnectionModel($config['db']);
+		$this->db = $this->conn->open();
 	}
 
+  /**
+	 * destructor
+	 *
+	 * Closes database connection when the object is destroyed.
+	 */
 	public function __destruct()
 	{
-		$this->db->close();
+		$this->conn->close();
 	}
 
-	public function insert($values)
+  /**
+	 * insertItem
+	 *
+	 * Inserts the next ETD item into the database. Parameter represents
+	 * all of the form field items that eventually will need to be loaded
+	 * into CU Scholar.
+	 */
+	public function insertItem($values)
 	{
 		$this->assignValues($values);
 
-		$sql = "INSERT INTO submission VALUES (
-				NULL,
-				'$this->sequence_num',
-				'$this->title',
-				'$this->fulltext_url',
-				'$this->keywords',
-				'$this->abstract',
-				'$this->author1_fname',
-				'$this->author1_mname',
-				'$this->author1_lname',
-				'$this->author1_suffix',
-				'$this->author1_email',
-				'$this->author1_institution',
-				'$this->advisor1',
-				'$this->advisor2',
-				'$this->advisor3',
-				'$this->advisor4',
-				'$this->advisor5',
-				'$this->disciplines',
-				'$this->comments',
-				'$this->degree_name',
-				'$this->department',
-				'$this->document_type',
-				'$this->embargo_date',
-				'$this->publication_date',
-				'$this->season',
-				'$this->workflow_status',
-				'$this->identikey',
-				CURRENT_TIMESTAMP,
-				CURRENT_TIMESTAMP)";
-				
+		$sql = "INSERT INTO submission
+		        VALUES (
+						NULL,
+				    '$this->sequence_num',
+				    '$this->title',
+				    '$this->fulltext_url',
+				    '$this->keywords',
+				    '$this->abstract',
+				    '$this->author1_fname',
+				    '$this->author1_mname',
+				    '$this->author1_lname',
+				    '$this->author1_suffix',
+				    '$this->author1_email',
+				    '$this->author1_institution',
+				    '$this->advisor1',
+				    '$this->advisor2',
+				    '$this->advisor3',
+				    '$this->advisor4',
+				    '$this->advisor5',
+				    '$this->disciplines',
+				    '$this->comments',
+				    '$this->degree_name',
+				    '$this->department',
+				    '$this->document_type',
+				    '$this->embargo_date',
+				    '$this->publication_date',
+				    '$this->season',
+				    '$this->workflow_status',
+				    '$this->identikey',
+				    CURRENT_TIMESTAMP,
+				    CURRENT_TIMESTAMP)";
 
-		$response = array(
-			'success' => $this->conn->query($sql),
-			'id' => $this->conn->insert_id,
-			'error' => $this->conn->error
+    // Method returns an array with the query result (true or false),
+		// id of the inserted record, and error message, if applicable
+		$result = array(
+			'success' => $this->db->query($sql),
+			'id' => $this->db->insert_id,
+			'error' => $this->db->error
 		);
-
-		return json_encode($response);
+		return json_encode($result);
 	}
 
-	function update($id, $values)
+  /**
+	 * updateItem
+	 *
+	 * Updates database record with id based.
+	 */
+	public function updateItem($id, $values)
 	{
 		$this->assignValues($values);
 
 		$sql = "UPDATE submission SET
-			title = '$this->title',
-			fulltext_url = '$this->fulltext_url',
-			keywords = '$this->keywords',
-			abstract = '$this->abstract',
-			author1_fname = '$this->author1_fname',
-			author1_mname = '$this->author1_mname',
-			author1_lname = '$this->author1_lname',
-			author1_suffix = '$this->author1_suffix',
-			author1_email = '$this->author1_email',
-			author1_institution = '$this->author1_institution',
-			advisor1 = '$this->advisor1',
-			advisor2 = '$this->advisor2',
-			advisor3 = '$this->advisor3',
-			advisor4 = '$this->advisor4',
-			advisor5 = '$this->advisor5',
-			disciplines = '$this->disciplines',
-			comments = '$this->comments',
-			degree_name = '$this->degree_name',
-			department = '$this->department',
-			document_type = '$this->document_type',
-			embargo_date = '$this->embargo_date',
-			publication_date = '$this->publication_date',
-			season = '$this->season',
-			workflow_status = '$this->workflow_status',
-			identikey = '$this->identikey'
-			WHERE submission_id = $id";
+						title = '$this->title',
+			      fulltext_url = '$this->fulltext_url',
+			      keywords = '$this->keywords',
+			      abstract = '$this->abstract',
+	          author1_fname = '$this->author1_fname',
+	          author1_mname = '$this->author1_mname',
+      			author1_lname = '$this->author1_lname',
+	          author1_suffix = '$this->author1_suffix',
+	          author1_email = '$this->author1_email',
+	          author1_institution = '$this->author1_institution',
+	          advisor1 = '$this->advisor1',
+	          advisor2 = '$this->advisor2',
+			      advisor3 = '$this->advisor3',
+			      advisor4 = '$this->advisor4',
+			      advisor5 = '$this->advisor5',
+			      disciplines = '$this->disciplines',
+			      comments = '$this->comments',
+			      degree_name = '$this->degree_name',
+			      department = '$this->department',
+			      document_type = '$this->document_type',
+			      embargo_date = '$this->embargo_date',
+			      publication_date = '$this->publication_date',
+			      season = '$this->season',
+			      workflow_status = '$this->workflow_status',
+			      identikey = '$this->identikey'
+			      WHERE submission_id = $id";
 
-		$response = array(
-			'success' => $this->conn->query($sql),
-			'error' => $this->conn->error
+    // Method returns query result and error message, if applicable
+		$result = array(
+			'success' => $this->db->query($sql),
+			'error' => $this->db->error
 		);
-
-		return json_encode($response);
+		return json_encode($result);
 	}
 
-	function select()
+  /**
+	 * selectWorkingItems
+	 *
+	 * Selects items from the database that have not been uploaded to
+	 * CU Scholar. Status can be any one of working (W), problem (L),
+	 * or pending (P) -- batched (B) items are excluded.
+	 */
+	function selectWorkingItems()
 	{
-		$sql = "SELECT workflow_status, sequence_num, identikey, submission_id FROM submission WHERE workflow_status != 'R'";
-		$result = $this->conn->query($sql);
+		$sql = "SELECT workflow_status, sequence_num, identikey, submission_id
+		        FROM submission
+						WHERE workflow_status <> 'B'
+						ORDER BY workflow_status";
 
-		$res = array();
+		$result = $this->db->query($sql);
 
+    // Prepare query result as a dataset and return
+		$dataset = array();
 		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$res[] = $row;
+			$dataset[] = $row;
 		}
-
-		return json_encode($res);
-
+		return json_encode($dataset);
 	}
 
+  /**
+	 * selectOne
+	 *
+	 * Selects one item from the database for a given id.
+	 */
 	function selectOne($id)
 	{
 		$sql = "SELECT * FROM submission WHERE submission_id = $id";
 
-		$result = $this->conn->query($sql);
+		$result = $this->db->query($sql);
 
-		$res = array();
-
-		if ($result) {
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				$res[] = $row;
-			}
-
-			return $res;
-		} else {
-			return $this->conn->error;
+    // Prepare query result as a dataset and return
+		$dataset = array();
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+			$dataset[] = $row;
 		}
-
+		return json_encode($dataset);
 	}
 
+  /**
+	 * createBatch
+	 *
+	 * Creates export files containing all database items that are pending
+	 * batch upload to CU Scholar.
+	 */
+	function createBatch()
+	{
+		$sql = "SELECT title, fulltext_url, keywords, abstract, author1_fname,
+			author1_mname, author1_lname, author1_suffix, author1_email,
+			author1_institution, advisor1, advisor2, advisor3, advisor4, advisor5,
+			disciplines, comments, degree_name, department, document_type,
+			publication_date, season
+			FROM submission
+			WHERE workflow_status = 'P'";
+
+		$result = $this->db->query($sql);
+
+		// Prepare query result as a dataset
+		$dataset = array();
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+				$dataset[] = $row;
+		}
+
+		// Export the result to an XML file
+		require_once(MODULES_PATH . '/export/php-export-data.php');
+		$dt = date('Ymd', time());
+		$export = new ExportDataExcel('browser', 'etd-batch-' . $dt . '.xml');
+		$export->initialize();
+		$export->addRow(array_keys($dataset[0]));
+		$export->addRow($dataset[0]);
+		$export->finalize();
+
+		// Update the pending records to reflect that they are now batched
+		$sql = "UPDATE submission
+		        SET workflow_status = 'B'
+						WHERE workflow_status = 'P'";
+		$this->db->query($sql);
+	}
+
+	/**
+	 * assignValues
+	 *
+	 * Utility method that assigns post values to their corresponding class
+	 * properties.
+	 */
 	private function assignValues($values)
 	{
 		$this->sequence_num = $values['sequence_num'];

@@ -66,7 +66,7 @@ function getArchives() {
 	global $config;
 	// get all records from database not marked ready
 	$submission = new SubmissionModel();
-	$res = $submission->select();
+	$res = $submission->selectWorkingItems();
 
 	return $res;
 }
@@ -77,9 +77,9 @@ function insertFormData($data, $id) {
 	$submission = new SubmissionModel();
 
 	if (!$id) {
-		echo $submission->insert($formDataArray);
+		echo $submission->insertItem($formDataArray);
 	} else {
-		echo $submission->update($id, $formDataArray);
+		echo $submission->updateItem($id, $formDataArray);
 	}
 }
 
