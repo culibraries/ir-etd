@@ -26,7 +26,6 @@ if (isset($_GET['action'])) {
 if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
 		case 'postFormData':
-			// $archive = new ArchiveModel($_POST['archive'], $_POST['subId'], $_POST['status']);
 			echo insertFormData($_POST['data'], $_POST['subId']);
 			break;
 		case 'prepBatch':
@@ -56,17 +55,6 @@ function getOldestArchive() {
 	}
 
 	return json_encode($response);
-
-
-	// return json_encode($archives);
-	// $archiveArray = iterator_to_array(
-	// 	new GlobIterator($config['dir']['ftp'] . '*.zip', )
-	// )
-	
-	// array of all archive names in data directory
-	// $archives = array_values(preg_grep('/\.(zip)$/', scandir($config['dir']['ftp'])));
-	// oldest is first
-	// return $archives[0];
 }
 
 function extractZip($archive) {

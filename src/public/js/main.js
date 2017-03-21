@@ -193,10 +193,12 @@ function refreshSideBar() {
 
 	// call API get function getOldestArchive to get oldest archives in ftp dir
 	getOldestArchive().done(function(res) {
+		// if there is at least one archive
 		if (res.numArchives) {
 			$('#oldestArchive').text(res.oldestArchive);
 			$('#numArchives').text(res.numArchives);
 		} else {
+			$('#numArchives').text(0);
 			$('#oldestArchive').text('No more archives');
 			$('#loadOldestArchive').hide();
 		}
