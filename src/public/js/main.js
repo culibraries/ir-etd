@@ -154,11 +154,12 @@ $(document).ready(function() {
 		});
 	});
 
-	// API call to have backend prepare batch uplaod spreadsheets
+	// API call to have backend prepare batch upload spreadsheets
 	$('#prepBatch').click(function() {
-		prepBatch().done(function(res) {
-			// ?????????????????????????????????????????????????????????
-		});
+		window.open("http://docker.dev/etd/prepbatch.php");
+		// prepBatch().done(function(res) {
+		// 	// ?????????????????????????????????????????????????????????
+		// });
 	});
 
 });
@@ -183,7 +184,6 @@ $(document).on('click', '.getme', function(event) {
 		// call map function that maps database data to the edit form's fields
 		currentArchive.preFillForm(currentArchive.mapDb());
 	});
-
 });
 
 // Display Functions ===============================================================================
@@ -224,6 +224,7 @@ function displayArchives(archives) {
 				break;
 			case 'P':
 				pendingHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '" status="' + archives[i].workflow_status + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
+				$('#batchBtn').show();
 				break;
 			case 'L':
 				problemHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '" status="' + archives[i].workflow_status + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
@@ -240,6 +241,7 @@ function clearViews() {
 	$('#xmlEdit').empty();
 	$('#top').empty();
 	$('#archiveFiles').empty();
+	$('#batchBtn').hide();
 }
 
 // Helper Functions ================================================================================

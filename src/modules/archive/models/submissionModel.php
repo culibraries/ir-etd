@@ -10,6 +10,8 @@
  /**
  * Represents an ETD submission
  */
+require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
+
 class SubmissionModel
 {
 	private $conn; // connection to the MySQL database
@@ -215,6 +217,7 @@ class SubmissionModel
 	 */
 	function createBatch()
 	{
+
 		$sql = "SELECT title, fulltext_url, keywords, abstract, author1_fname,
 			author1_mname, author1_lname, author1_suffix, author1_email,
 			author1_institution, advisor1, advisor2, advisor3, advisor4, advisor5,
@@ -241,10 +244,10 @@ class SubmissionModel
 		$export->finalize();
 
 		// Update the pending records to reflect that they are now batched
-		$sql = "UPDATE submission
-		        SET workflow_status = 'B'
-						WHERE workflow_status = 'P'";
-		$this->db->query($sql);
+		// $sql = "UPDATE submission
+		//         SET workflow_status = 'B'
+		// 				WHERE workflow_status = 'P'";
+		// $this->db->query($sql);
 	}
 
 	/**
@@ -259,7 +262,7 @@ class SubmissionModel
 		$this->title = $values['title'];
 		$this->fulltext_url = $values['fulltext_url'];
 		$this->keywords = $values['keywords'];
-		$this->abstract = $this->conn->escape_string($values['abstract']);
+		$this->abstract = $this->db->escape_string($values['abstract']);
 		$this->author1_fname = $values['author1_fname'];
 		$this->author1_mname = $values['author1_mname'];
 		$this->author1_lname = $values['author1_lname'];
