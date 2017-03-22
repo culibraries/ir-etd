@@ -16,10 +16,82 @@ function Archive(data) {
 		}
 	};
 	this.pdf = this.getPdf();
-	this.json = JSON.parse(stripChars(data.json));
-	this.db = data.db;
+	if (data.db) { this.db = JSON.parse(data.db); }
+	this.json = JSON.parse(stripChars(data.json)); 
 	this.subId = data.subId;
 }
+
+// JQUERY event watchers ===========================================================================
+
+$(document).ready(function() {
+
+	// Load button click (oldest archive)
+	$('#loadBtn').click(function() {
+		// call API get function getOneArchive(archive, id, status) to get data about archive 
+		getOneArchive(null, 'oldest', null).done(function(res) {
+
+			console.log(res);
+			// create currentArchive object from response
+			currentArchive = new Archive(res);
+
+			// use json2html to display json 
+			visualize(currentArchive.json);
+
+			// display archive files that are not XML
+			$('#archiveFiles').html(currentArchive.parseArchiveFiles());
+
+			// prefill the form using function mapJson
+			currentArchive.preFillForm(currentArchive.mapJson()).done(function(res) {
+				// once form is filled post to database and set the subId
+				currentArchive.postFormData().done(function(res) {
+					currentArchive.subId = res.id;
+					refreshSideBar();
+				});
+			});
+		});
+	}); 
+
+	// submit button click
+	$('.submit').click(function() {
+
+		currentArchive.postFormData().done(function(res) {
+			refreshSideBar();
+			clearViews();
+		});
+	});
+
+	// batch download button click
+	$('#batchBtn').click(function() {
+		window.location.assign('prepBatch.php');
+	});
+
+});
+
+// click handlers for archive links in working, pending, and problems on sidebar
+// since these elements are created dynamically create event watchers that will attach to these 
+$(document).on('click', '.getme', function(event) {
+	var subId = event.target.attributes.subId.textContent;
+	var archive = event.target.attributes.archive.textContent;
+	var status = event.target.attributes.status.textContent;
+
+	getOneArchive(archive, subId, status).done(function(res) {
+
+		console.log(res);
+
+		currentArchive = new Archive(res);
+
+		// use json2html to display json 
+		visualize(currentArchive.json);
+
+		// display archive files that are not XML
+		$('#archiveFiles').html(currentArchive.parseArchiveFiles());
+
+		// call map function that maps database data to the edit form's fields
+		currentArchive.preFillForm(currentArchive.mapDb());
+	});
+});
+
+// Display Functions ===============================================================================
 
 // parse archive folder contents for non XML files, return links to those files
 Archive.prototype.parseArchiveFiles = function() {
@@ -87,106 +159,9 @@ Archive.prototype.preFillForm = function(map) {
 
 		dfd.resolve();
 		// show submit and move buttons
-		$('.xmlEditBtns').show();
+		$('.submitBtn').show();
 		return dfd.promise();
 };
-
-// post form data to DB
-Archive.prototype.postFormData = function() {
-
-	var dfd = $.Deferred();
-
-	$.ajax( {
-		url: 'modules/archive/archive.php',
-		type: 'POST',
-		data: {
-			'action': 'postFormData',
-			'subId': this.subId,
-			'data': $('#xmlEdit').serialize()
-		},
-		success: function(res, status) {
-			console.log(res);
-			dfd.resolve(JSON.parse(res));
-		},
-		error: function(xhr, desc, err) {
-            console.log(xhr);
-            console.log("Details: " + desc + "\nError: " + err);
-        }
-	});
-
-	return dfd.promise();
-};
-
-// JQUERY event watchers ===========================================================================
-
-$(document).ready(function() {
-
-	// Load button click (oldest archive)
-	$('#loadOldestArchive').click(function() {
-		// call API get function getOneArchive(archive, id, status) to get data about archive 
-		getOneArchive(null, 'oldest', null).done(function(res) {
-			// create currentArchive object from response
-			currentArchive = new Archive(res);
-
-			// use json2html to display json 
-			visualize(currentArchive.json);
-
-			// display archive files that are not XML
-			$('#archiveFiles').html(currentArchive.parseArchiveFiles());
-
-			// prefill the form using function mapJson
-			currentArchive.preFillForm(currentArchive.mapJson()).done(function(res) {
-				// once form is filled post to database and set the subId
-				currentArchive.postFormData().done(function(res) {
-					currentArchive.subId = res.id;
-					refreshSideBar();
-				});
-			});
-		});
-	}); 
-
-	// submit button click
-	$('.submit').click(function() {
-
-		currentArchive.postFormData().done(function(res) {
-			refreshSideBar();
-			clearViews();
-		});
-	});
-
-	// API call to have backend prepare batch upload spreadsheets
-	$('#prepBatch').click(function() {
-		window.open("http://docker.dev/etd/prepbatch.php");
-		// prepBatch().done(function(res) {
-		// 	// ?????????????????????????????????????????????????????????
-		// });
-	});
-
-});
-
-// click handlers for archive links in working, pending, and problems on sidebar
-// since these elements are created dynamically create event watchers that will attach to these 
-$(document).on('click', '.getme', function(event) {
-	var subId = event.target.attributes.subId.textContent;
-	var archive = event.target.attributes.archive.textContent;
-	var status = event.target.attributes.status.textContent;
-
-	getOneArchive(archive, subId, status).done(function(res) {
-
-		currentArchive = new Archive(res);
-
-		// use json2html to display json 
-		visualize(currentArchive.json);
-
-		// display archive files that are not XML
-		$('#archiveFiles').html(currentArchive.parseArchiveFiles());
-
-		// call map function that maps database data to the edit form's fields
-		currentArchive.preFillForm(currentArchive.mapDb());
-	});
-});
-
-// Display Functions ===============================================================================
 
 // Initial data gets for sidebar 
 function refreshSideBar() {
@@ -200,7 +175,7 @@ function refreshSideBar() {
 		} else {
 			$('#numArchives').text(0);
 			$('#oldestArchive').text('No more archives');
-			$('#loadOldestArchive').hide();
+			$('#loadBtn').hide();
 		}
 	});
 
@@ -237,7 +212,7 @@ function displayArchives(archives) {
 }
 
 function clearViews() {
-	$('.xmlEditBtns').hide();
+	$('.submitBtn').hide();
 	$('#xmlEdit').empty();
 	$('#top').empty();
 	$('#archiveFiles').empty();
@@ -267,6 +242,32 @@ function stripChars(str) {
 
 
 // API CALLS =======================================================================================
+
+// post form data to DB
+Archive.prototype.postFormData = function() {
+
+	var dfd = $.Deferred();
+
+	$.ajax( {
+		url: 'modules/archive/archive.php',
+		type: 'POST',
+		data: {
+			'action': 'postFormData',
+			'subId': this.subId,
+			'data': $('#xmlEdit').serialize()
+		},
+		success: function(res, status) {
+			console.log(res);
+			dfd.resolve(JSON.parse(res));
+		},
+		error: function(xhr, desc, err) {
+            console.log(xhr);
+            console.log("Details: " + desc + "\nError: " + err);
+        }
+	});
+
+	return dfd.promise();
+};
 
 // get oldest archive from ftp directory
 function getOldestArchive() {

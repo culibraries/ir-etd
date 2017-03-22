@@ -38,4 +38,7 @@ header {
 .legend {
     font-size: 125%;
 }
+#batchBtn {
+    padding-top: 20px;
+}
 

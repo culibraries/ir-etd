@@ -204,7 +204,7 @@ class SubmissionModel
     // Prepare query result as a dataset and return
 		$dataset = array();
 		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$dataset[] = $row;
+			$dataset = $row;
 		}
 		return json_encode($dataset);
 	}
@@ -244,10 +244,10 @@ class SubmissionModel
 		$export->finalize();
 
 		// Update the pending records to reflect that they are now batched
-		// $sql = "UPDATE submission
-		//         SET workflow_status = 'B'
-		// 				WHERE workflow_status = 'P'";
-		// $this->db->query($sql);
+		$sql = "UPDATE submission
+		        SET workflow_status = 'B'
+						WHERE workflow_status = 'P'";
+		$this->db->query($sql);
 	}
 
 	/**
