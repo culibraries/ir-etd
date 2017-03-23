@@ -3,6 +3,13 @@ Archive.prototype.mapJson = function() {
 	
 	return [
 		{
+			"name": "Workflow Status",
+			"id": "workflow_status",
+			"data": this.status,
+			"type": "drop-down",
+			"readonly": true
+		},
+		{
 			"name": "Editor",
 			"id": "identikey",
 			"data": identikey,
@@ -10,17 +17,10 @@ Archive.prototype.mapJson = function() {
 			"readonly": true
 		},
 		{
-			"name": "Archive Name",
+			"name": "ETD Sequence",
 			"id": "sequence_num",
 			"data": this.name,
 			"type": "text",
-			"readonly": true
-		},
-		{
-			"name": "Workflow Status",
-			"id": "workflow_status",
-			"data": this.status,
-			"type": "drop-down",
 			"readonly": true
 		},
 		{
@@ -96,35 +96,35 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Advisor1",
 			"id": "advisor1",
-			"data": (this.json.description.cmte_member[0]) ? this.json.description.cmte_member[0].name.surname + ', ' + this.json.description.cmte_member[0].name.fname : undefined,
+			"data": (this.json.description.cmte_member[0]) ? this.json.description.cmte_member[0].name.fname + ' ' + this.json.description.cmte_member[0].name.surname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor2",
 			"id": "advisor2",
-			"data": (this.json.description.cmte_member[1]) ? this.json.description.cmte_member[1].name.surname + ', ' + this.json.description.cmte_member[1].name.fname : undefined,
+			"data": (this.json.description.cmte_member[1]) ? this.json.description.cmte_member[1].name.fname + ' ' + this.json.description.cmte_member[1].name.surname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor3",
 			"id": "advisor3",
-			"data": (this.json.description.cmte_member[2]) ? this.json.description.cmte_member[2].name.surname + ', ' + this.json.description.cmte_member[2].name.fname : undefined,
+			"data": (this.json.description.cmte_member[2]) ? this.json.description.cmte_member[2].name.fname + ' ' + this.json.description.cmte_member[2].name.surname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor4",
 			"id": "advisor4",
-			"data": (this.json.description.cmte_member[3]) ? this.json.description.cmte_member[3].name.surname + ', ' + this.json.description.cmte_member[3].name.fname : undefined,
+			"data": (this.json.description.cmte_member[3]) ? this.json.description.cmte_member[3].name.fname + ' ' + this.json.description.cmte_member[3].name.surname : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor5",
 			"id": "advisor5",
-			"data": (this.json.description.cmte_member[4]) ? this.json.description.cmte_member[4].name.surname + ', ' + this.json.description.cmte_member[4].name.fname : undefined,
+			"data": (this.json.description.cmte_member[4]) ? this.json.description.cmte_member[4].name.fname + ' ' + this.json.description.cmte_member[4].name.surname : undefined,
 			"type": "text",
 			"readonly": false
 		},

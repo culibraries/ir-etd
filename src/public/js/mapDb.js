@@ -2,6 +2,13 @@ Archive.prototype.mapDb = function() {
 	
 	return [
 		{
+			"name": "Workflow Status",
+			"id": "workflow_status",
+			"data": this.status,
+			"type": "drop-down",
+			"readonly": true
+		},
+		{
 			"name": "Editor",
 			"id": "identikey",
 			"data": identikey,
@@ -9,17 +16,10 @@ Archive.prototype.mapDb = function() {
 			"readonly": true
 		},
 		{
-			"name": "Archive Name",
+			"name": "ETD Sequence",
 			"id": "sequence_num",
 			"data": this.name,
 			"type": "text",
-			"readonly": true
-		},
-		{
-			"name": "Workflow Status",
-			"id": "workflow_status",
-			"data": this.status,
-			"type": "drop-down",
 			"readonly": true
 		},
 		{
