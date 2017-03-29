@@ -1,14 +1,14 @@
-<div>
-	<h3>Select</h3>
-	<div>
-		<span>Number of Archives: </span><span id="numArchives"></span>
-		<p>Next oldest file:</p>
-		<p id="oldestArchive"></p>
-		<button type="button" id="loadOldestArchive" class="btn btn-primary btn-large btn-block">Load Next Archive</button>
-	</div>
+<h3>Select</h3>
 
-	
+<hr>
+
+<div>
+	<span>Number of Archives: </span><span id="numArchives"></span>
+	<p>Next oldest file:</p>
+	<p id="oldestArchive"></p>
+	<button type="button" id="loadBtn" class="btn btn-primary btn-large btn-block">Load Next ETD</button>
 </div>
+
 
 <div>
 	<h3>Working</h3>
@@ -26,4 +26,6 @@
 	<div id="pending"></div>
 </div>
 
-<button type="button" id="prepBatch" class="btn btn-primary btn-large btn-block">Prepare Batch Upload</button>
+<div id="batchBtn" hidden>
+	<button class="btn btn-primary btn-large btn-block">Download Batch File</button>
+</div>

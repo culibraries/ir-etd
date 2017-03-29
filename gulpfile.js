@@ -70,7 +70,7 @@ var files = [
 	'src/resources/config.php',
 	'src/index.php',
 	'src/data/**/**',
-	'src/test.php'
+	'src/prepbatch.php'
 ];
 
 gulp.task('move', ['cleanData'], function() {
@@ -84,7 +84,7 @@ gulp.task('build', ['javascript', 'css', 'html', 'cleanData', 'move']);
 // Deploy ======================================================================
 gulp.task('deploy', function(cb) {
 
-	var paths = ['build/modules', 'build/public', 'build/resources', 'build/index.php', 'build/data'];
+	var paths = ['build/modules', 'build/public', 'build/resources', 'build/index.php', 'build/prepbatch.php', 'build/data'];
 
 	var conf = {
 		progress: true,

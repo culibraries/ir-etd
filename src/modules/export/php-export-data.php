@@ -228,8 +228,8 @@ class ExportDataExcel extends ExportData {
 	}
 
 	function sendHttpHeaders() {
-		header("Content-Type: application/vnd.ms-excel; charset=" . $this->encoding);
-		header("Content-Disposition: inline; filename=\"" . basename($this->filename) . "\"");
+		header("Content-Type: application/xml; charset=" . $this->encoding);
+		header("Content-Disposition: attachment; filename=\"" . basename($this->filename) . "\"");
 	}
 
 }

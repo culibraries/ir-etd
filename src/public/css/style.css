@@ -16,6 +16,7 @@ header {
     padding: 17px 0 0 80px;
 }
 
+/* regions */
 .file-select-region {
     background-color: lightgrey;
 }
@@ -25,18 +26,19 @@ header {
 .xml-view-region {
     background-color: grey;
 }
-
-.legend {
-    font-size: 125%;
-}
-
+/* keep the three view regions the same height */
 .row.match-my-cols {
     overflow: hidden;
-    /*height: 100vh;*/
 }
-
-/* keep the three view regions the same height */
 .row.match-my-cols [class*="col-"] {
     margin-bottom: -99999px;
     padding-bottom: 99999px;
 }
+
+.legend {
+    font-size: 125%;
+}
+#batchBtn {
+    padding-top: 20px;
+}
+

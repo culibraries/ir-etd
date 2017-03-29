@@ -23,7 +23,6 @@
 
 <body>
 
-
 <div>
     <?php
         require_once('./resources/config.php');
@@ -38,20 +37,17 @@
 
 <div class="container-fluid">
     <div class="row match-my-cols">
+        <!-- Sidebar -->
         <div class="col-md-2 file-select-region">
-            <?php
-                require(TEMPLATES_PATH . '/sidebar-nav-template.min.html');
-            ?>
+            <?php require(TEMPLATES_PATH . '/sidebar-nav-template.min.html'); ?>
         </div>
+        <!-- View -->
         <div class="col-md-5 xml-view-region">
-            <?php
-                require(TEMPLATES_PATH . '/xml-view-template.min.html');
-            ?> 
+            <?php require(TEMPLATES_PATH . '/xml-view-template.min.html'); ?> 
         </div>
+        <!-- edit -->
         <div class="col-md-5 xml-edit-region">
-            <?php
-                require(TEMPLATES_PATH . '/xml-edit-template.min.html');
-            ?>
+            <?php require(TEMPLATES_PATH . '/xml-edit-template.min.html'); ?>
         </div>
     </div>
 </div>
