@@ -65,7 +65,8 @@ function extractZip($archive) {
 
 	$zip = new ZipArchive();
 
-	if ($zip->open($config['dir']['ftp'] . $archive) === true) {
+	$res = $zip->open($config['dir']['ftp'] . $archive);
+	if ($res === true) {
 		$zip->extractTo($config['dir']['working'] . $archiveFolder);
 		$zip->close();
 
@@ -74,7 +75,7 @@ function extractZip($archive) {
 
 		return $archiveFolder;
 	} else {
-		return 'zip extract failed';
+		return 'failed, code: ' . $res;
 	}
 }
 

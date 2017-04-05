@@ -19,6 +19,8 @@ function Archive(data) {
 	if (data.db) { this.db = JSON.parse(data.db); }
 	this.json = JSON.parse(stripChars(data.json)); 
 	this.subId = data.subId;
+
+	console.log(this.json);
 }
 
 // JQUERY event watchers ===========================================================================
@@ -30,7 +32,6 @@ $(document).ready(function() {
 		// call API get function getOneArchive(archive, id, status) to get data about archive 
 		getOneArchive(null, 'oldest', null).done(function(res) {
 
-			console.log(res);
 			// create currentArchive object from response
 			currentArchive = new Archive(res);
 
@@ -50,7 +51,6 @@ $(document).ready(function() {
 			});
 		});
 	}); 
-
 	// submit button click
 	$('.submit').click(function() {
 
