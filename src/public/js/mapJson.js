@@ -96,35 +96,35 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Advisor1",
 			"id": "advisor1",
-			"data": (this.json.description.cmte_member[0]) ? this.json.description.cmte_member[0].name.fname + ' ' + ((typeof this.json.description.cmte_member[0].name.middle === 'string') ? (this.json.description.cmte_member[0].name.middle + ' ') : '') + this.json.description.cmte_member[0].name.surname : undefined,
+			"data": (this.json.description.cmte_member[0]) ? concatAdvisor(this.json.description.cmte_member[0]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor2",
 			"id": "advisor2",
-			"data": (this.json.description.cmte_member[1]) ? this.json.description.cmte_member[1].name.fname + ' ' + ((typeof this.json.description.cmte_member[1].name.middle === 'string') ? (this.json.description.cmte_member[1].name.middle + ' ') : '') + this.json.description.cmte_member[1].name.surname : undefined,
+			"data": (this.json.description.cmte_member[1]) ? concatAdvisor(this.json.description.cmte_member[1]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor3",
 			"id": "advisor3",
-			"data": (this.json.description.cmte_member[2]) ? this.json.description.cmte_member[2].name.fname + ' ' + ((typeof this.json.description.cmte_member[2].name.middle === 'string') ? (this.json.description.cmte_member[2].name.middle + ' ') : '') + this.json.description.cmte_member[2].name.surname : undefined,
+			"data": (this.json.description.cmte_member[2]) ? concatAdvisor(this.json.description.cmte_member[2]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor4",
 			"id": "advisor4",
-			"data": (this.json.description.cmte_member[3]) ? this.json.description.cmte_member[3].name.fname + ' ' + ((typeof this.json.description.cmte_member[3].name.middle === 'string') ? (this.json.description.cmte_member[3].name.middle + ' ') : '') + this.json.description.cmte_member[3].name.surname : undefined,
+			"data": (this.json.description.cmte_member[3]) ? concatAdvisor(this.json.description.cmte_member[3]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor5",
 			"id": "advisor5",
-			"data": (this.json.description.cmte_member[4]) ? this.json.description.cmte_member[4].name.fname + ' ' + ((typeof this.json.description.cmte_member[4].name.middle === 'string') ? (this.json.description.cmte_member[4].name.middle + ' ') : '') + this.json.description.cmte_member[4].name.surname : undefined,
+			"data": (this.json.description.cmte_member[4]) ? concatAdvisor(this.json.description.cmte_member[4]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
@@ -166,7 +166,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Embargo Date",
 			"id": "embargo_date",
-			"data": (this.json.attributes.embargo_code === '0') ? '0' : 'Warning: non zero embargo code',
+			"data": embargoCode(this.json.attributes.embargo_code),
 			"type": "text",
 			"readonly": false
 		},
@@ -238,5 +238,26 @@ var concatCategories = function(category) {
 		return strCategory;
 	}
 		return category.cat_desc;
-}
+};
+
+// lookup function for embargo codes
+var embargoCode = function(code) {
+	switch (code) {
+		case '0': return '0';
+		case '1': return '365';
+		case '2': return '540';
+		case '3': return '730';
+		case '4': return '1095';
+	}
+};
+
+var concatAdvisor = function(advisor) {
+	var str = '';
+	str += advisor.name.fname + ' ';
+	if (typeof advisor.name.middle === 'string') {
+		str += advisor.name.middle + ' ';
+	}
+	str += advisor.name.surname;
+	return str;
+}; 
 
