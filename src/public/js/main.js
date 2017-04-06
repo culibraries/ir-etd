@@ -32,6 +32,8 @@ $(document).ready(function() {
 		// call API get function getOneArchive(archive, id, status) to get data about archive 
 		getOneArchive(null, 'oldest', null).done(function(res) {
 
+			console.log(res);
+
 			// create currentArchive object from response
 			currentArchive = new Archive(res);
 
