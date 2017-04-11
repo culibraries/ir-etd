@@ -221,7 +221,7 @@ class SubmissionModel
 		$sql = "SELECT s.title, s.fulltext_url, s.keywords, s.abstract, s.author1_fname,
 			s.author1_mname, s.author1_lname, s.author1_suffix, s.author1_email,
 			s.author1_institution, s.advisor1, s.advisor2, s.advisor3, s.advisor4, s.advisor5,
-			s.disciplines, s.comments, d.degree_name_long, s.department, s.document_type,
+			s.disciplines, s.comments, d.degree_name_long AS degree_name, s.department, s.document_type, s.embargo_date,
 			s.publication_date, s.season
 			FROM submission s
 			INNER JOIN degree_name_ref d
@@ -232,24 +232,29 @@ class SubmissionModel
 
 		// Prepare query result as a dataset
 		$dataset = array();
-		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				$dataset[] = $row;
+
+		if (!$this->db->error) {
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+					$dataset[] = $row;
+			}
+			// Export the result to an XML file
+			require_once(MODULES_PATH . '/export/php-export-data.php');
+			$dt = date('Ymd', time());
+			$export = new ExportDataExcel('browser', 'etd-batch-' . $dt . '.xml');
+			$export->initialize();
+			$export->addRow(array_keys($dataset[0]));
+			$export->addRow($dataset[0]);
+			$export->finalize();
+			// Update the pending records to reflect that they are now batched
+			// $sql = "UPDATE submission
+			//         SET workflow_status = 'B'
+			// 			WHERE workflow_status = 'P'";
+			// $this->db->query($sql);
+		} else {
+			echo 'error: ' . $this->db->error;
 		}
 
-		// Export the result to an XML file
-		require_once(MODULES_PATH . '/export/php-export-data.php');
-		$dt = date('Ymd', time());
-		$export = new ExportDataExcel('browser', 'etd-batch-' . $dt . '.xml');
-		$export->initialize();
-		$export->addRow(array_keys($dataset[0]));
-		$export->addRow($dataset[0]);
-		$export->finalize();
 
-		// Update the pending records to reflect that they are now batched
-		$sql = "UPDATE submission
-		        SET workflow_status = 'B'
-						WHERE workflow_status = 'P'";
-		$this->db->query($sql);
 	}
 
 	/**
