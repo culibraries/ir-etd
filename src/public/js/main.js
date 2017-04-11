@@ -156,6 +156,12 @@ Archive.prototype.preFillForm = function(map) {
 							'</select>';
 				$('label:last').after(select);
 				$('#' + map[i].id).val(map[i].data);
+				break;
+			case 'email':
+				$('label:last').after('<input class="form-control" id="' + map[i].id + '" name="' + map[i].id + '">');
+				$('#' + map[i].id)
+					.val(map[i].data)
+					.attr('type', map[i].type);
 		}
 	}
 

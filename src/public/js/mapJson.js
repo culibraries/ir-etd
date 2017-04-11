@@ -40,7 +40,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Keywords",
 			"id": "keywords",
-			"data": this.json.description.categorization.keyword,
+			"data": (typeof this.json.description.categorization.keyword === 'string') ? this.json.description.categorization.keyword : undefined,
 			"type": "text-long",
 			"readonly": false
 		},
