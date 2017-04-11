@@ -218,12 +218,14 @@ class SubmissionModel
 	function createBatch()
 	{
 
-		$sql = "SELECT title, fulltext_url, keywords, abstract, author1_fname,
-			author1_mname, author1_lname, author1_suffix, author1_email,
-			author1_institution, advisor1, advisor2, advisor3, advisor4, advisor5,
-			disciplines, comments, degree_name, department, document_type,
-			publication_date, season
-			FROM submission
+		$sql = "SELECT s.title, s.fulltext_url, s.keywords, s.abstract, s.author1_fname,
+			s.author1_mname, s.author1_lname, s.author1_suffix, s.author1_email,
+			s.author1_institution, s.advisor1, s.advisor2, s.advisor3, s.advisor4, s.advisor5,
+			s.disciplines, s.comments, d.degree_name_long, s.department, s.document_type,
+			s.publication_date, s.season
+			FROM submission s
+			INNER JOIN degree_name_ref d
+			ON s.degree_name = d.degree_name_short
 			WHERE workflow_status = 'P'";
 
 		$result = $this->db->query($sql);
