@@ -19,6 +19,8 @@ function Archive(data) {
 	if (data.db) { this.db = JSON.parse(data.db); }
 	this.json = JSON.parse(stripChars(data.json)); 
 	this.subId = data.subId;
+
+	console.log(this.json);
 }
 
 // JQUERY event watchers ===========================================================================
@@ -31,6 +33,7 @@ $(document).ready(function() {
 		getOneArchive(null, 'oldest', null).done(function(res) {
 
 			console.log(res);
+
 			// create currentArchive object from response
 			currentArchive = new Archive(res);
 
@@ -50,7 +53,6 @@ $(document).ready(function() {
 			});
 		});
 	}); 
-
 	// submit button click
 	$('.submit').click(function() {
 
@@ -154,6 +156,12 @@ Archive.prototype.preFillForm = function(map) {
 							'</select>';
 				$('label:last').after(select);
 				$('#' + map[i].id).val(map[i].data);
+				break;
+			case 'email':
+				$('label:last').after('<input class="form-control" id="' + map[i].id + '" name="' + map[i].id + '">');
+				$('#' + map[i].id)
+					.val(map[i].data)
+					.attr('type', map[i].type);
 		}
 	}
 

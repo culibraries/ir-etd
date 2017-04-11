@@ -40,7 +40,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Keywords",
 			"id": "keywords",
-			"data": this.json.description.categorization.keyword,
+			"data": (typeof this.json.description.categorization.keyword === 'string') ? this.json.description.categorization.keyword : undefined,
 			"type": "text-long",
 			"readonly": false
 		},
@@ -96,42 +96,42 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Advisor1",
 			"id": "advisor1",
-			"data": (this.json.description.cmte_member[0]) ? this.json.description.cmte_member[0].name.fname + ' ' + this.json.description.cmte_member[0].name.surname : undefined,
+			"data": (this.json.description.cmte_member[0]) ? concatAdvisor(this.json.description.cmte_member[0]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor2",
 			"id": "advisor2",
-			"data": (this.json.description.cmte_member[1]) ? this.json.description.cmte_member[1].name.fname + ' ' + this.json.description.cmte_member[1].name.surname : undefined,
+			"data": (this.json.description.cmte_member[1]) ? concatAdvisor(this.json.description.cmte_member[1]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor3",
 			"id": "advisor3",
-			"data": (this.json.description.cmte_member[2]) ? this.json.description.cmte_member[2].name.fname + ' ' + this.json.description.cmte_member[2].name.surname : undefined,
+			"data": (this.json.description.cmte_member[2]) ? concatAdvisor(this.json.description.cmte_member[2]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor4",
 			"id": "advisor4",
-			"data": (this.json.description.cmte_member[3]) ? this.json.description.cmte_member[3].name.fname + ' ' + this.json.description.cmte_member[3].name.surname : undefined,
+			"data": (this.json.description.cmte_member[3]) ? concatAdvisor(this.json.description.cmte_member[3]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor5",
 			"id": "advisor5",
-			"data": (this.json.description.cmte_member[4]) ? this.json.description.cmte_member[4].name.fname + ' ' + this.json.description.cmte_member[4].name.surname : undefined,
+			"data": (this.json.description.cmte_member[4]) ? concatAdvisor(this.json.description.cmte_member[4]) : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Disciplines",
 			"id": "disciplines",
-			"data": this.json.description.institution.inst_contact,
+			"data": concatCategories(this.json.description.categorization.category),
 			"type": "text",
 			"readonly": false
 		},
@@ -159,15 +159,15 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Document Type",
 			"id": "document_type",
-			"data": (this.json.description.attributes.type === 'doctoral') ? 'Dissertation' : 'Thesis',
+			"data": (this.json.description.attributes.type === 'doctoral') ? 'dissertation' : 'thesis',
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Embargo Date",
 			"id": "embargo_date",
-			"data": embargoDate(this.json.attributes.embargo_code),
-			"type": "date",
+			"data": embargoCode(this.json.attributes.embargo_code),
+			"type": "text",
 			"readonly": false
 		},
 		{
@@ -198,7 +198,7 @@ String.prototype.toTitleCase = function() {
   lowers = ['A', 'An', 'The', 'And', 'But', 'Or', 'For', 'Nor', 'As', 'At', 
   'By', 'For', 'From', 'In', 'Into', 'Near', 'Of', 'On', 'Onto', 'To', 'With'];
   for (i = 0, j = lowers.length; i < j; i++)
-    str = str.replace(new RegExp('\\s' + lowers[i] + '\\s', 'g'), 
+    str = str.replace(new RegExp('\\s' + lowers[i] + '\\s', 'g'),
       function(txt) {
         return txt.toLowerCase();
       });
@@ -210,19 +210,6 @@ String.prototype.toTitleCase = function() {
       uppers[i].toUpperCase());
 
   return str;
-};
-
-var embargoDate = function(code) {
-	// get todays date and format for HTML5 date format ie yyyy-mm-dd
-	var now = new Date();
-	var day = ("0" + now.getDate()).slice(-2);
-	var month = ("0" + (now.getMonth() + 1)).slice(-2);
-	var today = now.getFullYear()+"-"+(month)+"-"+(day);
-
-	if (code === '0') {
-		return today;
-	}
-
 };
 
 // concat the paragraphs under abstract adding <p></p> tags if multiple paragraphs
@@ -237,4 +224,40 @@ var concatParas = function(paras) {
 		return paras;
 	}
 };
+
+// concat the categories adding ';' between
+var concatCategories = function(category) {
+	var strCategory = '';
+	if (category.length) {
+		for (var i = 0; i < category.length; i++) {
+			strCategory += category[i].cat_desc;
+			if (i < category.length -1) {
+				strCategory += '; '
+			}
+		}
+		return strCategory;
+	}
+		return category.cat_desc;
+};
+
+// lookup function for embargo codes
+var embargoCode = function(code) {
+	switch (code) {
+		case '0': return '0';
+		case '1': return '365';
+		case '2': return '540';
+		case '3': return '730';
+		case '4': return '1095';
+	}
+};
+
+var concatAdvisor = function(advisor) {
+	var str = '';
+	str += advisor.name.fname + ' ';
+	if (typeof advisor.name.middle === 'string') {
+		str += advisor.name.middle + ' ';
+	}
+	str += advisor.name.surname;
+	return str;
+}; 
 
