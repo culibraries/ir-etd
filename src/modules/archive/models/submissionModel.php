@@ -244,7 +244,7 @@ class SubmissionModel
 			$export = new ExportDataExcel('browser', 'etd-batch-' . $dt . '.xml');
 			$export->initialize();
 			$export->addRow(array_keys($dataset[0]));
-			for ($i = 1; $i < count($dataset); $i++) {
+			for ($i = 0; $i < count($dataset); $i++) {
 				$export->addRow($dataset[$i]);
 			}
 			$export->finalize();
