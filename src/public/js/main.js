@@ -106,7 +106,7 @@ Archive.prototype.parseArchiveFiles = function() {
 
 		// display files that are not xml
 		if (ext !== 'xml') {
-			html += '<a target="_blank" href="' + this.archiveUrl + file + '">' + file + '</a><br>';
+			html += '<a target="_blank" href="' + this.archiveUrl + '/' + file + '">' + file + '</a><br>';
 		}
 	}
 

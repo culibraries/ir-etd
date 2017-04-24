@@ -227,15 +227,12 @@ var concatParas = function(paras) {
 
 // concat the categories adding ';' between
 var concatCategories = function(category) {
-	var strCategory = '';
+	var strCategory = [];
 	if (category.length) {
-		for (var i = 0; i < category.length; i++) {
-			strCategory += category[i].cat_desc;
-			if (i < category.length -1) {
-				strCategory += '; '
-			}
+		for (var i = category.length - 1; i >= 0; i--) {
+			strCategory.push(category[i].cat_desc);
 		}
-		return strCategory;
+		return strCategory.join(';');
 	}
 		return category.cat_desc;
 };

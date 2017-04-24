@@ -10,7 +10,7 @@ class ArchiveModel {
 		global $config;
 		$this->archiveName = $archive;
 		$this->archivePath = $config['dir']['working'] . $archive;
-		$this->archiveUrl = $config['dir']['dataRoot'] . '/working/' . $archive . '/';
+		$this->archiveUrl = $config['dir']['workingUrl'] . $archive;
 		$this->archiveSubId = $subId;
 		$this->archiveStatus = $status;
 	}
