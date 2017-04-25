@@ -129,72 +129,69 @@ Archive.prototype.parseArchiveFiles = function() {
 };
 
 // prefills the xml edit form with data from xmlData using map.js as a map
-Archive.prototype.preFillForm = function(map) {
+Archive.prototype.preFillForm = function(maps) {
 	var dfd = $.Deferred();
 
 	$('#xmlEdit').empty();
 
-	for (var i in map) {
+	maps.forEach(function(map) {
 		// create basic html, and append to form
 		var data = '<div class="form-group">' +
-						'<label for="' + map[i].id + '">' + map[i].name + '</label>' +
+						'<label for="' + map.id + '">' + map.name + '</label>' +
 					'</div>';
 		$('#xmlEdit').append(data);
 
-		// if type is test-long create textarea, else create input
-		switch (map[i].type) {
+		switch (map.type) {
 			case 'text-long':
 				//append textarea afer label
-				$('label:last').after('<textarea class="form-control" id="' + map[i].id + '" name="' + map[i].id + '"></textarea>');
+				$('label:last').after('<textarea class="form-control" id="' + map.id + '" name="' + map.id + '"></textarea>');
 				//add value to <textarea>
-				$('#' + map[i].id).val(map[i].data);
+				$('#' + map.id).val(map.data);
 				//calculate how many rows based in scrollHeight
-				var rows = calcRows($('#' + map[i].id)[0].scrollHeight);
+				var rows = calcRows($('#' + map.id)[0].scrollHeight);
 				// change # of rows
-				$('#' + map[i].id).attr('rows', rows);
+				$('#' + map.id).attr('rows', rows);
 				break;
 			case 'text':
 			case 'date':
 				// append <input> after label
-				$('label:last').after('<input class="form-control" id="' + map[i].id + '" name="' + map[i].id + '">');
+				$('label:last').after('<input class="form-control" id="' + map.id + '" name="' + map.id + '">');
 				//add value and type to input
-				$('#' + map[i].id)
-					.attr('type', map[i].type)
-					.val(map[i].data)
-					.attr('readonly', map[i].readonly);
+				$('#' + map.id)
+					.attr('type', map.type)
+					.val(map.data)
+					.attr('readonly', map.readonly);
 				break;
 			case 'drop-down':
-				var select = '<select class="form-control" name="' + map[i].id + '" id="' + map[i].id + '">' +
+				var select = '<select class="form-control" name="' + map.id + '" id="' + map.id + '">' +
 								'<option value="W">Working</option>' +
 								'<option value="P">Pending</option>' +
 								'<option value="L">Problem</option>' +
 							'</select>';
 				$('label:last').after(select);
-				$('#' + map[i].id).val(map[i].data);
+				$('#' + map.id).val(map.data);
 				break;
 			case 'email':
-				$('label:last').after('<input class="form-control" id="' + map[i].id + '" name="' + map[i].id + '">');
-				$('#' + map[i].id)
-					.val(map[i].data)
-					.attr('type', map[i].type);
+				$('label:last').after('<input class="form-control" id="' + map.id + '" name="' + map.id + '">');
+				$('#' + map.id)
+					.val(map.data)
+					.attr('type', map.type);
 				break;
 			case 'disciplines':
-				console.log(map[i].data);
-				map[i].data.forEach(function(item, index) {
-					console.log(item);
-					$('label:last').after('<input class="form-control discipline" id="' + map[i].id + index + '" name="' + map[i].id + index + '">');
-					$('#' + map[i].id + index).val(item);
+				map.data.forEach(function(discipline, index) {
+					$('label:last').after('<input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '">');
+					$('#' + map.id + index).val(discipline);
 					// lookup discipline in db and highlight if not exist
-					lookupDiscipline(item).done(function(res) {
+					lookupDiscipline(discipline, index).done(function(res) {
 						if (!res) {
-							$('#' + map[i].id + index).addClass("errorInput");
+							$('#' + 'discipline' + index).addClass("errorInput");
 						}
 					});
 				});
 				// create hidden input for disciplines
 				$('#xmlEdit').append('<input type="hidden" class="form-control" id="disciplines" name="disciplines">');
 		}
-	}
+	});
 
 		dfd.resolve();
 		// show submit and move buttons
@@ -265,7 +262,6 @@ function createDisciplinesString() {
 		strDisciplines += $(this).val() + ';';
 	});
 	strDisciplines = strDisciplines.substring(0, strDisciplines.length -1);
-	console.log(strDisciplines);
 	// add value to hidden disciplines input
 	$('#disciplines').val(strDisciplines);
 }
@@ -305,7 +301,7 @@ function lookupDiscipline(discipline) {
 		},
 		success: function(res, status) {
 			console.log(res);
-			dfd.resolve(res);
+			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
             console.log(xhr);
@@ -330,7 +326,6 @@ Archive.prototype.postFormData = function() {
 			'data': $('#xmlEdit').serialize()
 		},
 		success: function(res, status) {
-			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {

@@ -68,6 +68,7 @@ var files = [
 	'src/public/img/**',
 	'src/modules/**/**',
 	'src/resources/config.php',
+    'src/resources/sql/**',
 	'src/index.php',
 	'src/data/**/**',
 	'src/prepbatch.php'
