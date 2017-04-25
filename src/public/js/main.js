@@ -179,15 +179,13 @@ Archive.prototype.preFillForm = function(map) {
 					.attr('type', map[i].type);
 				break;
 			case 'disciplines':
-				console.log(map[i].data);
 				map[i].data.forEach(function(item, index) {
-					console.log(item);
 					$('label:last').after('<input class="form-control discipline" id="' + map[i].id + index + '" name="' + map[i].id + index + '">');
 					$('#' + map[i].id + index).val(item);
 					// lookup discipline in db and highlight if not exist
-					lookupDiscipline(item).done(function(res) {
+					lookupDiscipline(item, index).done(function(res) {
 						if (!res) {
-							$('#' + map[i].id + index).addClass("errorInput");
+							$('#' + 'discipline' + index).addClass("errorInput");
 						}
 					});
 				});
@@ -265,7 +263,6 @@ function createDisciplinesString() {
 		strDisciplines += $(this).val() + ';';
 	});
 	strDisciplines = strDisciplines.substring(0, strDisciplines.length -1);
-	console.log(strDisciplines);
 	// add value to hidden disciplines input
 	$('#disciplines').val(strDisciplines);
 }
@@ -304,8 +301,7 @@ function lookupDiscipline(discipline) {
 			'data': discipline
 		},
 		success: function(res, status) {
-			console.log(res);
-			dfd.resolve(res);
+			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
             console.log(xhr);
@@ -330,7 +326,6 @@ Archive.prototype.postFormData = function() {
 			'data': $('#xmlEdit').serialize()
 		},
 		success: function(res, status) {
-			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
