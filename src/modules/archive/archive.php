@@ -23,9 +23,8 @@ if (isset($_GET['action'])) {
 			echo $archive->getOneArchive();
 			break;
 		case 'lookupDiscipline':
-			// $disciplineList = new disciplineListModel();
-			// echo $disciplineList->isValidDiscipline($_GET['data']);
-			echo json_encode(true);
+			$disciplineList = new disciplineListModel();
+			echo json_encode($disciplineList->isValidDiscipline($_GET['data']));
 	}
 }
 

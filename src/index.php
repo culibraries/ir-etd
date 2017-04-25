@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Electronic Thesis and Disertations</title>
-    
+
     <!-- JQuery -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
@@ -28,6 +28,7 @@
         require_once('./resources/config.php');
         require(TEMPLATES_PATH . '/header-template.min.html');
     ?>
+    
 </div>
 
 <!-- get sibboleth identikey attribute into JS variable -->
@@ -43,7 +44,7 @@
         </div>
         <!-- View -->
         <div class="col-md-5 xml-view-region">
-            <?php require(TEMPLATES_PATH . '/xml-view-template.min.html'); ?> 
+            <?php require(TEMPLATES_PATH . '/xml-view-template.min.html'); ?>
         </div>
         <!-- edit -->
         <div class="col-md-5 xml-edit-region">
