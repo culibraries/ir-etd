@@ -1,5 +1,5 @@
 Archive.prototype.mapDb = function() {
-	
+
 	return [
 		{
 			"name": "Workflow Status",
@@ -128,10 +128,10 @@ Archive.prototype.mapDb = function() {
 			"readonly": false
 		},
 		{
-			"name": "Disciplines",
-			"id": "disciplines",
-			"data": this.db.disciplines,
-			"type": "text",
+			"name": "Discipline",
+			"id": "discipline",
+			"data": this.db.disciplines.split(';'),
+			"type": "disciplines",
 			"readonly": false
 		},
 		{

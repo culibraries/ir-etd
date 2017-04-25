@@ -17,7 +17,7 @@ function Archive(data) {
 	};
 	this.pdf = this.getPdf();
 	if (data.db) { this.db = JSON.parse(data.db); }
-	this.json = JSON.parse(stripChars(data.json)); 
+	this.json = JSON.parse(stripChars(data.json));
 	this.subId = data.subId;
 
 	console.log(this.json);
@@ -27,9 +27,9 @@ function Archive(data) {
 
 $(document).ready(function() {
 
-	// Load button click (oldest archive)
+	// Load next ETD button (oldest archive)
 	$('#loadBtn').click(function() {
-		// call API get function getOneArchive(archive, id, status) to get data about archive 
+		// call API get function getOneArchive(archive, id, status) to get data about archive
 		getOneArchive(null, 'oldest', null).done(function(res) {
 
 			console.log(res);
@@ -37,7 +37,7 @@ $(document).ready(function() {
 			// create currentArchive object from response
 			currentArchive = new Archive(res);
 
-			// use json2html to display json 
+			// use json2html to display json
 			visualize(currentArchive.json);
 
 			// display archive files that are not XML
@@ -45,6 +45,8 @@ $(document).ready(function() {
 
 			// prefill the form using function mapJson
 			currentArchive.preFillForm(currentArchive.mapJson()).done(function(res) {
+				// create disciplines string from disciplines inputs
+				createDisciplinesString();
 				// once form is filled post to database and set the subId
 				currentArchive.postFormData().done(function(res) {
 					currentArchive.subId = res.id;
@@ -52,9 +54,12 @@ $(document).ready(function() {
 				});
 			});
 		});
-	}); 
-	// submit button click
+	});
+
+	// submit button
 	$('.submit').click(function() {
+
+		createDisciplinesString();
 
 		currentArchive.postFormData().done(function(res) {
 			refreshSideBar();
@@ -62,7 +67,7 @@ $(document).ready(function() {
 		});
 	});
 
-	// batch download button click
+	// batch download button
 	$('#batchBtn').click(function() {
 		window.location.assign('prepBatch.php');
 	});
@@ -70,7 +75,7 @@ $(document).ready(function() {
 });
 
 // click handlers for archive links in working, pending, and problems on sidebar
-// since these elements are created dynamically create event watchers that will attach to these 
+// since these elements are created dynamically create event watchers that will attach to these
 $(document).on('click', '.getme', function(event) {
 	var subId = event.target.attributes.subId.textContent;
 	var archive = event.target.attributes.archive.textContent;
@@ -82,7 +87,7 @@ $(document).on('click', '.getme', function(event) {
 
 		currentArchive = new Archive(res);
 
-		// use json2html to display json 
+		// use json2html to display json
 		visualize(currentArchive.json);
 
 		// display archive files that are not XML
@@ -90,6 +95,16 @@ $(document).on('click', '.getme', function(event) {
 
 		// call map function that maps database data to the edit form's fields
 		currentArchive.preFillForm(currentArchive.mapDb());
+	});
+});
+
+$(document).on('focusout', '.discipline', function(event) {
+	lookupDiscipline(item).done(function(res) {
+		if (!res) {
+			$(event.target).addClass("errorInput");
+		} else {
+			$(event.target).removeClass("errorInput");
+		}
 	});
 });
 
@@ -162,6 +177,22 @@ Archive.prototype.preFillForm = function(map) {
 				$('#' + map[i].id)
 					.val(map[i].data)
 					.attr('type', map[i].type);
+				break;
+			case 'disciplines':
+				console.log(map[i].data);
+				map[i].data.forEach(function(item, index) {
+					console.log(item);
+					$('label:last').after('<input class="form-control discipline" id="' + map[i].id + index + '" name="' + map[i].id + index + '">');
+					$('#' + map[i].id + index).val(item);
+					// lookup discipline in db and highlight if not exist
+					lookupDiscipline(item).done(function(res) {
+						if (!res) {
+							$('#' + map[i].id + index).addClass("errorInput");
+						}
+					});
+				});
+				// create hidden input for disciplines
+				$('#xmlEdit').append('<input type="hidden" class="form-control" id="disciplines" name="disciplines">');
 		}
 	}
 
@@ -171,7 +202,7 @@ Archive.prototype.preFillForm = function(map) {
 		return dfd.promise();
 };
 
-// Initial data gets for sidebar 
+// Initial data gets for sidebar
 function refreshSideBar() {
 
 	// call API get function getOldestArchive to get oldest archives in ftp dir
@@ -213,7 +244,7 @@ function displayArchives(archives) {
 				problemHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '" status="' + archives[i].workflow_status + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
 		}
 	}
-	
+
 	$('#working').html(workingHtml);
 	$('#pending').html(pendingHtml);
 	$('#problem').html(problemHtml);
@@ -227,6 +258,18 @@ function clearViews() {
 	$('#batchBtn').hide();
 }
 
+// create a string from the disciplines inputs and add as value to hidden desciplines input
+function createDisciplinesString() {
+	var strDisciplines = '';
+	$('.discipline').each(function(index) {
+		strDisciplines += $(this).val() + ';';
+	});
+	strDisciplines = strDisciplines.substring(0, strDisciplines.length -1);
+	console.log(strDisciplines);
+	// add value to hidden disciplines input
+	$('#disciplines').val(strDisciplines);
+}
+
 // Helper Functions ================================================================================
 
 // calculate the number of rows the textareas should be to show all text
@@ -234,7 +277,7 @@ function calcRows(scrollHeight) {
 	return Math.round(scrollHeight/20) - 1;
 }
 
-// remove '@' and 'DISS_' 
+// remove '@' and 'DISS_'
 function stripChars(str) {
 	var mapObj = {
 		'@attributes': 'attributes',
@@ -248,8 +291,30 @@ function stripChars(str) {
 	return str;
 }
 
-
 // API CALLS =======================================================================================
+
+function lookupDiscipline(discipline) {
+	var dfd = $.Deferred();
+
+	$.ajax( {
+		url: 'modules/archive/archive.php',
+		type: 'GET',
+		data: {
+			'action': 'lookupDiscipline',
+			'data': discipline
+		},
+		success: function(res, status) {
+			console.log(res);
+			dfd.resolve(res);
+		},
+		error: function(xhr, desc, err) {
+            console.log(xhr);
+            console.log("Details: " + desc + "\nError: " + err);
+        }
+	});
+
+	return dfd.promise();
+}
 
 // post form data to DB
 Archive.prototype.postFormData = function() {
@@ -378,13 +443,3 @@ function prepBatch() {
 
 	return dfd.promise();
 }
-
-
-
-
-
-
-
-
-
-
