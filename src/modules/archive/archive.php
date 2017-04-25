@@ -20,9 +20,9 @@ if (isset($_GET['action'])) {
 		case 'getOneArchive':
 			$archive = new ArchiveModel($_GET['archive'], $_GET['subId'], $_GET['status']);
 			echo $archive->getOneArchive();
-			// break:
-		// case 'getDisciplines':
-
+			break;
+		case 'lookupDiscipline':
+			echo 'db lookup';
 	}
 }
 

@@ -1,7 +1,5 @@
 var currentArchive;
-var disciplineArray = ['Communication'];
 refreshSideBar();
-getDisciplines();
 
 // object holding info about archive currently being edited
 function Archive(data) {
@@ -100,6 +98,16 @@ $(document).on('click', '.getme', function(event) {
 	});
 });
 
+$(document).on('focusout', '.discipline', function(event) {
+	lookupDiscipline(item).done(function(res) {
+		if (!res) {
+			$(event.target).addClass("errorInput");
+		} else {
+			$(event.target).removeClass("errorInput");
+		}
+	});
+});
+
 // Display Functions ===============================================================================
 
 // parse archive folder contents for non XML files, return links to those files
@@ -176,10 +184,12 @@ Archive.prototype.preFillForm = function(map) {
 					console.log(item);
 					$('label:last').after('<input class="form-control discipline" id="' + map[i].id + index + '" name="' + map[i].id + index + '">');
 					$('#' + map[i].id + index).val(item);
-					// lookup discipline in array and highlight if not exist
-					if (disciplineArray.indexOf(item) >= 0) {
-						$('#' + map[i].id + index).addClass("errorInput");
-					}
+					// lookup discipline in db and highlight if not exist
+					lookupDiscipline(item).done(function(res) {
+						if (!res) {
+							$('#' + map[i].id + index).addClass("errorInput");
+						}
+					});
 				});
 				// create hidden input for disciplines
 				$('#xmlEdit').append('<input type="hidden" class="form-control" id="disciplines" name="disciplines">');
@@ -280,26 +290,30 @@ function stripChars(str) {
 
 	return str;
 }
- function disciplineLookup(discipline) {
-	 var disciplineArray = ['Communication'];
-	 disciplineArray.indexOf(discipline);
- }
 
 // API CALLS =======================================================================================
 
-// get disciplines from data base for lookup array
-function getDisciplines() {
+function lookupDiscipline(discipline) {
+	var dfd = $.Deferred();
+
 	$.ajax( {
-			url: 'modules/archive/archive.php',
-			type: 'get',
-			success: function(res, status) {
-				console.log(res);
-			},
-			error: function(xhr, desc, err) {
-	            console.log(xhr);
-	            console.log("Details: " + desc + "\nError: " + err);
-	        }
+		url: 'modules/archive/archive.php',
+		type: 'GET',
+		data: {
+			'action': 'lookupDiscipline',
+			'data': discipline
+		},
+		success: function(res, status) {
+			console.log(res);
+			dfd.resolve(res);
+		},
+		error: function(xhr, desc, err) {
+            console.log(xhr);
+            console.log("Details: " + desc + "\nError: " + err);
+        }
 	});
+
+	return dfd.promise();
 }
 
 // post form data to DB
