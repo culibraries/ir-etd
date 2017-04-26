@@ -57,9 +57,13 @@ class DisciplineListModel
 
 		 $result = $this->db->query($sql);
 		 $this->disciplines = array();
-		 	while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
- 				$this->disciplines[] = $row["discipline_name"];
- 			}
+         if (!$this->db->error) {
+             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                 $this->disciplines[] = $row["discipline_name"];
+             }
+         } else {
+             echo 'error: ' . $this->db->error;
+         }
 
 	 }
 

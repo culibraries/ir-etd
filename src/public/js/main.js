@@ -99,7 +99,8 @@ $(document).on('click', '.getme', function(event) {
 });
 
 $(document).on('focusout', '.discipline', function(event) {
-	lookupDiscipline(item).done(function(res) {
+	console.log(event.target.value);
+	lookupDiscipline(event.target.value).done(function(res) {
 		if (!res) {
 			$(event.target).addClass("errorInput");
 		} else {

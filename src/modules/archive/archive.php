@@ -1,7 +1,7 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 require(MODULES_PATH . '/archive/models/archiveModel.php');
-require(MODULES_PATH . '/archive/models/DisciplineListModel.php');
+require(MODULES_PATH . '/archive/models/disciplineListModel.php');
 
 
 if (isset($_GET['action'])) {
@@ -23,7 +23,7 @@ if (isset($_GET['action'])) {
 			echo $archive->getOneArchive();
 			break;
 		case 'lookupDiscipline':
-			$disciplineList = new disciplineListModel();
+			$disciplineList = new DisciplineListModel();
 			echo json_encode($disciplineList->isValidDiscipline($_GET['data']));
 	}
 }
