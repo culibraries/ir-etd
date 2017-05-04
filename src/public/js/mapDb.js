@@ -166,7 +166,7 @@ Archive.prototype.mapDb = function() {
 			"name": "Embargo Date",
 			"id": "embargo_date",
 			"data": this.db.embargo_date,
-			"type": "date",
+			"type": "text",
 			"readonly": false
 		},
 		{
