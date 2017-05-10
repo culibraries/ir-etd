@@ -19,8 +19,6 @@ function Archive(data) {
 	if (data.db) { this.db = JSON.parse(data.db); }
 	this.json = JSON.parse(stripChars(data.json));
 	this.subId = data.subId;
-
-	console.log(this.json);
 }
 
 // JQUERY event watchers ===========================================================================
@@ -31,8 +29,6 @@ $(document).ready(function() {
 	$('#loadBtn').click(function() {
 		// call API get function getOneArchive(archive, id, status) to get data about archive
 		getOneArchive(null, 'oldest', null).done(function(res) {
-
-			console.log(res);
 
 			// create currentArchive object from response
 			currentArchive = new Archive(res);
@@ -59,12 +55,16 @@ $(document).ready(function() {
 	// submit button
 	$('.submit').click(function() {
 
-		createDisciplinesString();
-
-		currentArchive.postFormData().done(function(res) {
-			refreshSideBar();
-			clearViews();
-		});
+		// check is any discipline is in error and prevent moving to pending
+		if ($('.discipline').hasClass('errorInput') && $('#workflow_status').val() === 'P') {
+			alert('There is a Discipline in error so cannot move to pending');
+		} else {
+			createDisciplinesString();
+			currentArchive.postFormData().done(function(res) {
+				refreshSideBar();
+				clearViews();
+			});
+		}
 	});
 
 	// batch download button
@@ -301,7 +301,6 @@ function lookupDiscipline(discipline) {
 			'data': discipline
 		},
 		success: function(res, status) {
-			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
