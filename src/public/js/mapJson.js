@@ -96,40 +96,40 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Advisor1",
 			"id": "advisor1",
-			"data": (this.json.description.cmte_member[0]) ? concatAdvisor(this.json.description.cmte_member[0]) : undefined,
+			"data": createAdvisors(this.json.description)[0],
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor2",
 			"id": "advisor2",
-			"data": (this.json.description.cmte_member[1]) ? concatAdvisor(this.json.description.cmte_member[1]) : undefined,
+			"data": (createAdvisors(this.json.description)[1]) ? createAdvisors(this.json.description)[1] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor3",
 			"id": "advisor3",
-			"data": (this.json.description.cmte_member[2]) ? concatAdvisor(this.json.description.cmte_member[2]) : undefined,
+			"data": (createAdvisors(this.json.description)[2]) ? createAdvisors(this.json.description)[2] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor4",
 			"id": "advisor4",
-			"data": (this.json.description.cmte_member[3]) ? concatAdvisor(this.json.description.cmte_member[3]) : undefined,
+			"data": (createAdvisors(this.json.description)[3]) ? createAdvisors(this.json.description)[3] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor5",
 			"id": "advisor5",
-			"data": (this.json.description.cmte_member[4]) ? concatAdvisor(this.json.description.cmte_member[4]) : undefined,
+			"data": (createAdvisors(this.json.description)[4]) ? createAdvisors(this.json.description)[4] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"name": "Discipline",
+			"name": "Disciplines (Subject Categories)",
 			"id": "discipline",
 			"data": arrayDisciplines(this.json.description.categorization.category),
 			"type": "disciplines",
@@ -257,8 +257,31 @@ var concatAdvisor = function(advisor) {
 	var str = '';
 	str += advisor.name.fname + ' ';
 	if (typeof advisor.name.middle === 'string') {
-		str += advisor.name.middle + ' ';
+		str += advisor.name.middle + '. ';
 	}
 	str += advisor.name.surname;
 	return str;
+};
+
+var createAdvisors = function(member) {
+	var advisors = member.advisor;
+	var committee = member.cmte_member;
+	var advisorArray = [];
+
+	if (advisors.constructor === Array) {
+		advisors.forEach(function(item) {
+			advisorArray.push(concatAdvisor(item));
+		});
+	} else {
+		advisorArray.push(concatAdvisor(advisors));
+	}
+
+	if (committee.constructor === Array) {
+		committee.forEach(function(item) {
+			advisorArray.push(concatAdvisor(item));
+		});
+	} else {
+		advisorArray.push(concatAdvisor(committee));
+	}
+	return advisorArray;
 };
