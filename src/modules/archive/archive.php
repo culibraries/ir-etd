@@ -69,11 +69,15 @@ function extractZip($archive) {
 	$archiveFolder = explode('_', substr("$archive", 0, -4))[2];
 
 	$zip = new ZipArchive();
-
 	$res = $zip->open($config['dir']['ftp'] . $archive);
+
 	if ($res === true) {
+		// extract to working dir
 		$zip->extractTo($config['dir']['working'] . $archiveFolder);
 		$zip->close();
+
+		// change permissions to rwxrwxr-x on the folder in working dir
+		chmod($config['dir']['working'] . $archiveFolder, 0775);
 
 		// move zip file to archive dir
 		rename($config['dir']['ftp'] . $archive, $config['dir']['archive'] . $archive);
