@@ -237,6 +237,8 @@ class SubmissionModel
 			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 					$dataset[] = $row;
 			}
+
+
 			// Export the result to an XML file
 			// Refer to https://github.com/elidickinson/php-export-data for details
 			require_once(MODULES_PATH . '/export/php-export-data.php');
@@ -245,6 +247,10 @@ class SubmissionModel
 			$export->initialize();
 			$export->addRow(array_keys($dataset[0]));
 			for ($i = 0; $i < count($dataset); $i++) {
+				// Reverse the order of disciplines to accommodate the batch
+				// upload process anomoly
+				$dataset[$i]['disciplines'] =
+					implode(';', array_reverse(explode(';', $dataset[$i]['disciplines'])));
 				$export->addRow($dataset[$i]);
 			}
 			$export->finalize();
