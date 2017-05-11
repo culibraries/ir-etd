@@ -128,7 +128,7 @@ Archive.prototype.mapDb = function() {
 			"readonly": false
 		},
 		{
-			"name": "Discipline",
+			"name": "Disciplines (Subject Categories)",
 			"id": "discipline",
 			"data": this.db.disciplines.split(';'),
 			"type": "disciplines",
