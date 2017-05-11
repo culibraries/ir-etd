@@ -1,6 +1,7 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 require(MODULES_PATH . '/archive/models/archiveModel.php');
+require(MODULES_PATH . '/archive/models/disciplineListModel.php');
 
 
 if (isset($_GET['action'])) {
@@ -20,6 +21,10 @@ if (isset($_GET['action'])) {
 		case 'getOneArchive':
 			$archive = new ArchiveModel($_GET['archive'], $_GET['subId'], $_GET['status']);
 			echo $archive->getOneArchive();
+			break;
+		case 'lookupDiscipline':
+			$disciplineList = new DisciplineListModel();
+			echo json_encode($disciplineList->isValidDiscipline($_GET['data']));
 	}
 }
 
@@ -29,7 +34,7 @@ if (isset($_POST['action'])) {
 			echo insertFormData($_POST['data'], $_POST['subId']);
 			break;
 		case 'prepBatch':
-			// ???????????????????????????????????????????????????
+
 	}
 
 }
@@ -64,11 +69,15 @@ function extractZip($archive) {
 	$archiveFolder = explode('_', substr("$archive", 0, -4))[2];
 
 	$zip = new ZipArchive();
-
 	$res = $zip->open($config['dir']['ftp'] . $archive);
+
 	if ($res === true) {
+		// extract to working dir
 		$zip->extractTo($config['dir']['working'] . $archiveFolder);
 		$zip->close();
+
+		// change permissions to rwxrwxr-x on the folder in working dir
+		chmod($config['dir']['working'] . $archiveFolder, 0775);
 
 		// move zip file to archive dir
 		rename($config['dir']['ftp'] . $archive, $config['dir']['archive'] . $archive);

@@ -1,6 +1,6 @@
 Archive.prototype.mapJson = function() {
 
-	
+
 	return [
 		{
 			"name": "Workflow Status",
@@ -96,43 +96,43 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Advisor1",
 			"id": "advisor1",
-			"data": (this.json.description.cmte_member[0]) ? concatAdvisor(this.json.description.cmte_member[0]) : undefined,
+			"data": createAdvisors(this.json.description)[0],
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor2",
 			"id": "advisor2",
-			"data": (this.json.description.cmte_member[1]) ? concatAdvisor(this.json.description.cmte_member[1]) : undefined,
+			"data": (createAdvisors(this.json.description)[1]) ? createAdvisors(this.json.description)[1] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor3",
 			"id": "advisor3",
-			"data": (this.json.description.cmte_member[2]) ? concatAdvisor(this.json.description.cmte_member[2]) : undefined,
+			"data": (createAdvisors(this.json.description)[2]) ? createAdvisors(this.json.description)[2] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor4",
 			"id": "advisor4",
-			"data": (this.json.description.cmte_member[3]) ? concatAdvisor(this.json.description.cmte_member[3]) : undefined,
+			"data": (createAdvisors(this.json.description)[3]) ? createAdvisors(this.json.description)[3] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
 			"name": "Advisor5",
 			"id": "advisor5",
-			"data": (this.json.description.cmte_member[4]) ? concatAdvisor(this.json.description.cmte_member[4]) : undefined,
+			"data": (createAdvisors(this.json.description)[4]) ? createAdvisors(this.json.description)[4] : undefined,
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"name": "Disciplines",
-			"id": "disciplines",
-			"data": concatCategories(this.json.description.categorization.category),
-			"type": "text",
+			"name": "Disciplines (Subject Categories)",
+			"id": "discipline",
+			"data": arrayDisciplines(this.json.description.categorization.category),
+			"type": "disciplines",
 			"readonly": false
 		},
 		{
@@ -193,9 +193,9 @@ String.prototype.toTitleCase = function() {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 
-  // Certain minor words should be left lowercase unless 
+  // Certain minor words should be left lowercase unless
   // they are the first or last words in the string
-  lowers = ['A', 'An', 'The', 'And', 'But', 'Or', 'For', 'Nor', 'As', 'At', 
+  lowers = ['A', 'An', 'The', 'And', 'But', 'Or', 'For', 'Nor', 'As', 'At',
   'By', 'For', 'From', 'In', 'Into', 'Near', 'Of', 'On', 'Onto', 'To', 'With'];
   for (i = 0, j = lowers.length; i < j; i++)
     str = str.replace(new RegExp('\\s' + lowers[i] + '\\s', 'g'),
@@ -206,7 +206,7 @@ String.prototype.toTitleCase = function() {
   // Certain words such as initialisms or acronyms should be left uppercase
   uppers = ['Id', 'Tv'];
   for (i = 0, j = uppers.length; i < j; i++)
-    str = str.replace(new RegExp('\\b' + uppers[i] + '\\b', 'g'), 
+    str = str.replace(new RegExp('\\b' + uppers[i] + '\\b', 'g'),
       uppers[i].toUpperCase());
 
   return str;
@@ -225,16 +225,21 @@ var concatParas = function(paras) {
 	}
 };
 
-// concat the categories adding ';' between
-var concatCategories = function(category) {
-	var strCategory = [];
+// create array of the disciplines
+var arrayDisciplines = function(category) {
+	var arrayCategory = [];
+	// if category is an array of objects ie more than one discipline
 	if (category.length) {
-		for (var i = category.length - 1; i >= 0; i--) {
-			strCategory.push(category[i].cat_desc);
-		}
-		return strCategory.join(';');
+		// create array of the discliplines
+		category.forEach(function(item) {
+			arrayCategory.push(item.cat_desc.toTitleCase());
+		});
+		// and return it
+		return arrayCategory;
+	} else {
+		// else there is only one discipline so return it in an array
+		return [category.cat_desc.toTitleCase()];
 	}
-		return category.cat_desc;
 };
 
 // lookup function for embargo codes
@@ -252,9 +257,31 @@ var concatAdvisor = function(advisor) {
 	var str = '';
 	str += advisor.name.fname + ' ';
 	if (typeof advisor.name.middle === 'string') {
-		str += advisor.name.middle + ' ';
+		str += advisor.name.middle + '. ';
 	}
 	str += advisor.name.surname;
 	return str;
-}; 
+};
 
+var createAdvisors = function(member) {
+	var advisors = member.advisor;
+	var committee = member.cmte_member;
+	var advisorArray = [];
+
+	if (advisors.constructor === Array) {
+		advisors.forEach(function(item) {
+			advisorArray.push(concatAdvisor(item));
+		});
+	} else {
+		advisorArray.push(concatAdvisor(advisors));
+	}
+
+	if (committee.constructor === Array) {
+		committee.forEach(function(item) {
+			advisorArray.push(concatAdvisor(item));
+		});
+	} else {
+		advisorArray.push(concatAdvisor(committee));
+	}
+	return advisorArray;
+};

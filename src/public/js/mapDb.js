@@ -1,5 +1,5 @@
 Archive.prototype.mapDb = function() {
-	
+
 	return [
 		{
 			"name": "Workflow Status",
@@ -128,10 +128,10 @@ Archive.prototype.mapDb = function() {
 			"readonly": false
 		},
 		{
-			"name": "Disciplines",
-			"id": "disciplines",
-			"data": this.db.disciplines,
-			"type": "text",
+			"name": "Disciplines (Subject Categories)",
+			"id": "discipline",
+			"data": this.db.disciplines.split(';'),
+			"type": "disciplines",
 			"readonly": false
 		},
 		{
@@ -166,7 +166,7 @@ Archive.prototype.mapDb = function() {
 			"name": "Embargo Date",
 			"id": "embargo_date",
 			"data": this.db.embargo_date,
-			"type": "date",
+			"type": "text",
 			"readonly": false
 		},
 		{

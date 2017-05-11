@@ -41,4 +41,6 @@ header {
 #batchBtn {
     padding-top: 20px;
 }
-
+.errorInput {
+    background-color: indianred;
+}
