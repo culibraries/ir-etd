@@ -57,7 +57,7 @@ $(document).ready(function() {
 
 		// check is any discipline is in error and prevent moving to pending
 		if ($('.discipline').hasClass('errorInput') && $('#workflow_status').val() === 'P') {
-			alert('There is a Discipline in error so cannot move to pending');
+			alert('There is an error in Discipline. Change workflow status to Problem not Pending.');
 		} else {
 			createDisciplinesString();
 			currentArchive.postFormData().done(function(res) {

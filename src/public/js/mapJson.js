@@ -61,7 +61,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Author1 MName",
 			"id": "author1_mname",
-			"data": (this.json.authorship.author.name.middle[0]) ? this.json.authorship.author.name.middle : undefined,
+			"data": (this.json.authorship.author.name.middle[0]) ? addPeriodToMiddle(this.json.authorship.author.name.middle) : undefined,
 			"type": "text",
 			"readonly": false
 		},
@@ -284,4 +284,12 @@ var createAdvisors = function(member) {
 		advisorArray.push(concatAdvisor(committee));
 	}
 	return advisorArray;
+};
+
+var addPeriodToMiddle = function(name) {
+	if (name.length === 1) {
+		return name + '.';
+	} else {
+		return name;
+	}
 };
