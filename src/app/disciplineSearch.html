@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <input type="text" ng-model="$ctrl.search">
+        </div>
+        <div class="col-md-6" ng-repeat="discipline in $ctrl.disciplines | filter: $ctrl.search track by $index">
+            <a href="#" ng-click="$ctrl.enterDiscipline(discipline)">{{discipline}}</a>
+        </div>
+    </div>
+</div>

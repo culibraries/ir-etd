@@ -98,6 +98,7 @@ $(document).on('click', '.getme', function(event) {
 	});
 });
 
+// looksup and validates the discipline on click out
 $(document).on('focusout', '.discipline', function(event) {
 	lookupDiscipline(event.target.value).done(function(res) {
 		if (!res) {
@@ -106,6 +107,12 @@ $(document).on('focusout', '.discipline', function(event) {
 			$(event.target).removeClass("errorInput");
 		}
 	});
+});
+
+// launches discipline search modal
+$(document).on('click', '#editDiscipline', function(event) {
+	var id = $(event.target).closest('div').find('input').attr('id');
+	launchDisciplineSearch(id);
 });
 
 // Display Functions ===============================================================================
@@ -179,7 +186,7 @@ Archive.prototype.preFillForm = function(maps) {
 				break;
 			case 'disciplines':
 				map.data.forEach(function(discipline, index) {
-					$('label:last').after('<input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '">');
+					$('label:last').after('<div class="input-group"><input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
 					$('#' + map.id + index).val(discipline);
 					// lookup discipline in db and highlight if not exist
 					lookupDiscipline(discipline, index).done(function(res) {
@@ -264,6 +271,12 @@ function createDisciplinesString() {
 	strDisciplines = strDisciplines.substring(0, strDisciplines.length -1);
 	// add value to hidden disciplines input
 	$('#disciplines').val(strDisciplines);
+}
+
+// Discipline search Modal =========================================================================
+
+function launchDisciplineSearch(id) {
+	
 }
 
 // Helper Functions ================================================================================

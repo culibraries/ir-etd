@@ -25,6 +25,9 @@ if (isset($_GET['action'])) {
 		case 'lookupDiscipline':
 			$disciplineList = new DisciplineListModel();
 			echo json_encode($disciplineList->isValidDiscipline($_GET['data']));
+		case 'getDisciplines':
+			$disciplineList = new DisciplineListModel();
+			echo json_encode($disciplineList->sendDisciplines());
 	}
 }
 
