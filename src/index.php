@@ -15,9 +15,13 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Styles -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="public/css/style.min.css">
 
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js" type="text/javascript"></script>
+    <script src="app/app.module.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="public/js/bundle.min.js"></script>
 </head>
 
@@ -49,6 +53,17 @@
         <!-- edit -->
         <div class="col-md-5 xml-edit-region">
             <?php require(TEMPLATES_PATH . '/xml-edit-template.min.html'); ?>
+        </div>
+    </div>
+</div>
+
+
+<div ng-app="searchApp">
+    <div id="dialog" title="maindialog">
+        <div class="container">
+            <div class="row">
+                <discipline-search></discipline-search>
+            </div>
         </div>
     </div>
 </div>

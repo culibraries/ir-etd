@@ -1,4 +1,5 @@
 var currentArchive;
+var id = '';
 refreshSideBar();
 
 // object holding info about archive currently being edited
@@ -111,7 +112,7 @@ $(document).on('focusout', '.discipline', function(event) {
 
 // launches discipline search modal
 $(document).on('click', '#editDiscipline', function(event) {
-	var id = $(event.target).closest('div').find('input').attr('id');
+	id = $(event.target).closest('div').find('input').attr('id');
 	launchDisciplineSearch(id);
 });
 
@@ -276,7 +277,9 @@ function createDisciplinesString() {
 // Discipline search Modal =========================================================================
 
 function launchDisciplineSearch(id) {
-	
+	$('#dialog').dialog({
+		modal: true
+	})
 }
 
 // Helper Functions ================================================================================
