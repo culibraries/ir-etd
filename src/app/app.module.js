@@ -30,7 +30,8 @@ angular
 
         function enterDiscipline(discipline) {
             $('#dialog').dialog('close');
-            $('#' + id).val(discipline);
+            $('#' + id).val(discipline.toTitleCase());
+            $('#' + id).removeClass("errorInput");
         }
     }
 

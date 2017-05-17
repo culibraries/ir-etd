@@ -316,7 +316,11 @@ function lookupDiscipline(discipline) {
 			'data': discipline
 		},
 		success: function(res, status) {
-			dfd.resolve(JSON.parse(res));
+			if (res.length > 5) {
+				console.log('Error: ' + res);
+			} else {
+				dfd.resolve(JSON.parse(res));
+			}
 		},
 		error: function(xhr, desc, err) {
             console.log(xhr);
