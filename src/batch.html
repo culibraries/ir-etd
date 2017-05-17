@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>batch</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <script type="text/javascript">
+        $.ajax( {
+            url: 'prepbatch.php',
+            type: 'GET',
+            success: function(res, status) {
+                console.log(res);
+                console.log(JSON.parse(res));
+            },
+            error: function(xhr, desc, err) {
+                    console.log(xhr);
+                    console.log("Details: " + desc + "\nError: " + err);
+            }
+        });
+        </script>
+
+    </body>
+</html>

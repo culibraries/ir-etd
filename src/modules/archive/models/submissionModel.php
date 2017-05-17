@@ -237,32 +237,37 @@ class SubmissionModel
 			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 					$dataset[] = $row;
 			}
+            echo ($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/phpexcel/PHPExcel.php');
+            require_once ($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/phpexcel/PHPExcel.php');
+
+            $excel = new PHPExcel;
 
 
 			// Export the result to an XML file
 			// Refer to https://github.com/elidickinson/php-export-data for details
-			require_once(MODULES_PATH . '/export/php-export-data.php');
-			$dt = date('Ymd', time());
-			$export = new ExportDataExcel('browser', 'etd-batch-' . $dt . '.xml');
-			$export->initialize();
-			$export->addRow(array_keys($dataset[0]));
-			for ($i = 0; $i < count($dataset); $i++) {
-				// Reverse the order of disciplines to accommodate the batch
-				// upload process anomoly
-				$dataset[$i]['disciplines'] =
-					implode(';', array_reverse(explode(';', $dataset[$i]['disciplines'])));
-				$export->addRow($dataset[$i]);
-			}
-			$export->finalize();
-
-			// Update the pending records to reflect that they are now batched
-			$sql = "UPDATE submission
-			        SET workflow_status = 'B'
-			  			WHERE workflow_status = 'P'";
-			$this->db->query($sql);
+			// require_once(MODULES_PATH . '/export/php-export-data.php');
+			// $dt = date('Ymd', time());
+			// $export = new ExportDataExcel('browser', 'etd-batch-' . $dt . '.xml');
+			// $export->initialize();
+			// $export->addRow(array_keys($dataset[0]));
+			// for ($i = 0; $i < count($dataset); $i++) {
+			// 	// Reverse the order of disciplines to accommodate the batch
+			// 	// upload process anomoly
+			// 	$dataset[$i]['disciplines'] =
+			// 		implode(';', array_reverse(explode(';', $dataset[$i]['disciplines'])));
+			// 	$export->addRow($dataset[$i]);
+			// }
+			// $export->finalize();
+            //
+			// // Update the pending records to reflect that they are now batched
+			// $sql = "UPDATE submission
+			//         SET workflow_status = 'B'
+			//   			WHERE workflow_status = 'P'";
+			// $this->db->query($sql);
 		} else {
 			echo 'error: ' . $this->db->error;
 		}
+        echo json_encode(array_keys($dataset[0]));
 	}
 
 	/**

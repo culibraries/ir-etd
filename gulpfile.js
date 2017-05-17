@@ -72,7 +72,8 @@ var files = [
 	'src/index.php',
 	'src/data/**/**',
 	'src/prepbatch.php',
-    'src/search.html',
+    'src/batch.html',
+    'src/resources/phpexcel/**/**',
     'src/app/**'
 ];
 
