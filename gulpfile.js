@@ -87,7 +87,7 @@ gulp.task('build', ['javascript', 'css', 'html', 'cleanData', 'move']);
 // Deploy ======================================================================
 gulp.task('deploy', function(cb) {
 
-	var paths = ['build/modules', 'build/public', 'build/resources', 'build/index.php', 'build/prepbatch.php', 'build/data/working'];
+	var paths = ['build/modules', 'build/public', 'build/resources', 'build/index.php', 'build/prepbatch.php', 'build/app'];
 
 	var conf = {
 		progress: true,

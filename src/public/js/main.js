@@ -113,7 +113,7 @@ $(document).on('focusout', '.discipline', function(event) {
 // launches discipline search modal
 $(document).on('click', '#editDiscipline', function(event) {
 	id = $(event.target).closest('div').find('input').attr('id');
-	launchDisciplineSearch(id);
+	launchDisciplineSearch();
 });
 
 // Display Functions ===============================================================================
@@ -276,7 +276,7 @@ function createDisciplinesString() {
 
 // Discipline search Modal =========================================================================
 
-function launchDisciplineSearch(id) {
+function launchDisciplineSearch() {
 	$('#dialog').dialog({
 		modal: true
 	})
