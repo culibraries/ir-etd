@@ -71,7 +71,9 @@ var files = [
     'src/resources/sql/**',
 	'src/index.php',
 	'src/data/**/**',
-	'src/prepbatch.php'
+	'src/prepbatch.php',
+    'src/search.html',
+    'src/app/**'
 ];
 
 gulp.task('move', ['cleanData'], function() {

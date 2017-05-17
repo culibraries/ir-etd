@@ -1,4 +1,5 @@
 var currentArchive;
+var id = '';
 refreshSideBar();
 
 // object holding info about archive currently being edited
@@ -98,6 +99,7 @@ $(document).on('click', '.getme', function(event) {
 	});
 });
 
+// looksup and validates the discipline on click out
 $(document).on('focusout', '.discipline', function(event) {
 	lookupDiscipline(event.target.value).done(function(res) {
 		if (!res) {
@@ -106,6 +108,12 @@ $(document).on('focusout', '.discipline', function(event) {
 			$(event.target).removeClass("errorInput");
 		}
 	});
+});
+
+// launches discipline search modal
+$(document).on('click', '#editDiscipline', function(event) {
+	id = $(event.target).closest('div').find('input').attr('id');
+	launchDisciplineSearch(id);
 });
 
 // Display Functions ===============================================================================
@@ -179,7 +187,7 @@ Archive.prototype.preFillForm = function(maps) {
 				break;
 			case 'disciplines':
 				map.data.forEach(function(discipline, index) {
-					$('label:last').after('<input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '">');
+					$('label:last').after('<div class="input-group"><input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
 					$('#' + map.id + index).val(discipline);
 					// lookup discipline in db and highlight if not exist
 					lookupDiscipline(discipline, index).done(function(res) {
@@ -266,6 +274,14 @@ function createDisciplinesString() {
 	$('#disciplines').val(strDisciplines);
 }
 
+// Discipline search Modal =========================================================================
+
+function launchDisciplineSearch(id) {
+	$('#dialog').dialog({
+		modal: true
+	})
+}
+
 // Helper Functions ================================================================================
 
 // calculate the number of rows the textareas should be to show all text
@@ -300,7 +316,11 @@ function lookupDiscipline(discipline) {
 			'data': discipline
 		},
 		success: function(res, status) {
-			dfd.resolve(JSON.parse(res));
+			if (res.length > 5) {
+				console.log('Error: ' + res);
+			} else {
+				dfd.resolve(JSON.parse(res));
+			}
 		},
 		error: function(xhr, desc, err) {
             console.log(xhr);

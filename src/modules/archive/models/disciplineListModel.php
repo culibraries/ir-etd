@@ -82,5 +82,9 @@ class DisciplineListModel
 		 return in_array($discipline, $this->disciplines);
 	 }
 
+     public function sendDisciplines() {
+         return $this->disciplines;
+     }
+
 }
 ?>
