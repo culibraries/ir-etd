@@ -46,8 +46,12 @@ $(document).ready(function() {
 				createDisciplinesString();
 				// once form is filled post to database and set the subId
 				currentArchive.postFormData().done(function(res) {
-					currentArchive.subId = res.id;
-					refreshSideBar();
+					if (res.success) {
+						currentArchive.subId = res.id;
+						refreshSideBar();
+					} else {
+						console.log('Error: ' + res.error);
+					}
 				});
 			});
 		});
@@ -71,6 +75,12 @@ $(document).ready(function() {
 	// batch download button
 	$('#batchBtn').click(function() {
 		window.location.assign('prepBatch.php');
+		refreshSideBar();
+	});
+
+	$('#dialog').dialog({
+		autoOpen: false,
+		modal: true
 	});
 
 });
@@ -277,9 +287,7 @@ function createDisciplinesString() {
 // Discipline search Modal =========================================================================
 
 function launchDisciplineSearch(id) {
-	$('#dialog').dialog({
-		modal: true
-	})
+	$('#dialog').dialog('open');
 }
 
 // Helper Functions ================================================================================
