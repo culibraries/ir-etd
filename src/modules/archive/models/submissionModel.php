@@ -241,32 +241,45 @@ class SubmissionModel
 
             $excel = new PHPExcel;
 
+            $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G','H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+                'X', 'Y', 'Z', 'AA', 'AB', 'AC'];
+            // $dt = date('Ymd', time());
+            $file = 'etd-batch-' . date('Ymd', time()) . '.xlsx';
 
-			// Export the result to an XML file
-			// Refer to https://github.com/elidickinson/php-export-data for details
-			// require_once(MODULES_PATH . '/export/php-export-data.php');
-			// $dt = date('Ymd', time());
-			// $export = new ExportDataExcel('browser', 'etd-batch-' . $dt . '.xml');
-			// $export->initialize();
-			// $export->addRow(array_keys($dataset[0]));
-			// for ($i = 0; $i < count($dataset); $i++) {
-			// 	// Reverse the order of disciplines to accommodate the batch
-			// 	// upload process anomoly
-			// 	$dataset[$i]['disciplines'] =
-			// 		implode(';', array_reverse(explode(';', $dataset[$i]['disciplines'])));
-			// 	$export->addRow($dataset[$i]);
-			// }
-			// $export->finalize();
-            //
-			// // Update the pending records to reflect that they are now batched
-			// $sql = "UPDATE submission
-			//         SET workflow_status = 'B'
-			//   			WHERE workflow_status = 'P'";
-			// $this->db->query($sql);
+            $excel = new PHPExcel;
+
+            // write the header row
+            for ($i = 0; $i < count($dataset[0]); $i++) {
+                $excel->setActiveSheetIndex(0)->setCellValue($letters[$i] . '1', array_keys($dataset[0])[$i]);
+            }
+
+            for ($row = 0; $row < count($dataset); $row++) {
+
+                // Reverse the order of disciplines to accommodate the batch upload process anomoly
+                $dataset[$row]['disciplines'] = implode(';', array_reverse(explode(';', $dataset[$row]['disciplines'])));
+
+                for ($col = 0; $col < count($dataset[0]); $col++) {
+                    $excel->setActiveSheetIndex(0)->setCellValue($letters[$col] . ($row + 2), array_values($dataset[$row])[$col]);
+                }
+            }
+
+            // Redirect output to a client’s web browser (Excel2007)
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $file . '"');
+            header('Cache-Control: max-age=0');
+
+            $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+            $writer->save('php://output');
+
+			// Update the pending records to reflect that they are now batched
+			$sql = "UPDATE submission
+			        SET workflow_status = 'B'
+			  			WHERE workflow_status = 'P'";
+			$this->db->query($sql);
+
 		} else {
 			echo 'error: ' . $this->db->error;
 		}
-        echo json_encode(array_keys($dataset[0]));
 	}
 
 	/**

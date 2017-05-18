@@ -35,7 +35,7 @@ if (isset($_GET['action'])) {
 if (isset($_POST['action'])) {
 	switch ($_POST['action']) {
 		case 'postFormData':
-			echo insertFormData($_POST['data'], $_POST['subId']);
+			insertFormData($_POST['data'], $_POST['subId']);
 			break;
 		case 'prepBatch':
 
