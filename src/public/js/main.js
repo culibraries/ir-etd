@@ -74,7 +74,7 @@ $(document).ready(function() {
 
 	// batch download button
 	$('#batchBtn').click(function() {
-		window.location.assign('prepBatch.php');
+		window.location.assign('prepbatch.php');
 		refreshSideBar();
 	});
 
@@ -85,16 +85,13 @@ $(document).ready(function() {
 
 });
 
-// click handlers for archive links in working, pending, and problems on sidebar
-// since these elements are created dynamically create event watchers that will attach to these
+// click handlers for dynamically created elements
 $(document).on('click', '.getme', function(event) {
 	var subId = event.target.attributes.subId.textContent;
 	var archive = event.target.attributes.archive.textContent;
 	var status = event.target.attributes.status.textContent;
 
 	getOneArchive(archive, subId, status).done(function(res) {
-
-		console.log(res);
 
 		currentArchive = new Archive(res);
 
@@ -109,21 +106,27 @@ $(document).on('click', '.getme', function(event) {
 	});
 });
 
-// looksup and validates the discipline on click out
+// looks up and validates the discipline on click out
 $(document).on('focusout', '.discipline', function(event) {
-	lookupDiscipline(event.target.value).done(function(res) {
-		if (!res) {
-			$(event.target).addClass("errorInput");
-		} else {
-			$(event.target).removeClass("errorInput");
-		}
-	});
+	markDiscipline(event.target.value, event.target);
 });
 
 // launches discipline search modal
 $(document).on('click', '#editDiscipline', function(event) {
+	// id needed for angular modal
 	id = $(event.target).closest('div').find('input').attr('id');
-	launchDisciplineSearch();
+	// open the modal
+	$('#dialog').dialog('open');
+});
+
+// add additional discipline input box
+$(document).on('click', '#addDiscipline', function() {
+	// get the id of the last discipline input
+	var lastDisciplineId = Number($('.discipline-group:last').find('input').attr('id').substring(10));
+	// add discipline input group after incrementing the id
+	$('.discipline-group:last').after('<div class="input-group discipline-group"><input class="form-control discipline" id="discipline' + (lastDisciplineId+1) + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
+	// mark ass error since blank
+	$('#discipline' + (lastDisciplineId+1)).addClass("errorInput");
 });
 
 // Display Functions ===============================================================================
@@ -197,15 +200,13 @@ Archive.prototype.preFillForm = function(maps) {
 				break;
 			case 'disciplines':
 				map.data.forEach(function(discipline, index) {
-					$('label:last').after('<div class="input-group"><input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
+					$('label:last').after('<div class="input-group discipline-group"><input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
 					$('#' + map.id + index).val(discipline);
-					// lookup discipline in db and highlight if not exist
-					lookupDiscipline(discipline, index).done(function(res) {
-						if (!res) {
-							$('#' + 'discipline' + index).addClass("errorInput");
-						}
-					});
+					// mark diciplines not in db list
+					markDiscipline(discipline, '#' + 'discipline' + index);
 				});
+				// add additional discipline input btn
+				$('.input-group:last').after('<button type="button"class="btn btn-sm" id="addDiscipline">Add Discipline</button>');
 				// create hidden input for disciplines
 				$('#xmlEdit').append('<input type="hidden" class="form-control" id="disciplines" name="disciplines">');
 		}
@@ -284,17 +285,15 @@ function createDisciplinesString() {
 	$('#disciplines').val(strDisciplines);
 }
 
-// Discipline search Modal =========================================================================
-
-<<<<<<< HEAD
-function launchDisciplineSearch() {
-	$('#dialog').dialog({
-		modal: true
-	})
-=======
-function launchDisciplineSearch(id) {
-	$('#dialog').dialog('open');
->>>>>>> 9d6f49a85af1dee9b563f900379af300e42b7d8b
+// look up disciplines in db and mark those that don't exist
+function markDiscipline(discipline, target) {
+	lookupDiscipline(discipline).done(function(res) {
+		if (!res) {
+			$(target).addClass("errorInput");
+		} else {
+			$(target).removeClass("errorInput");
+		}
+	});
 }
 
 // Helper Functions ================================================================================
