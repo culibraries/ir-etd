@@ -75,9 +75,12 @@ $(document).ready(function() {
 	// batch download button
 	$('#batchBtn').click(function() {
 		window.location.assign('prepbatch.php');
-		refreshSideBar();
+		updateBatch().done(function() {
+			refreshSideBar();
+		});
 	});
 
+	// initial settings for dialog modal
 	$('#dialog').dialog({
 		autoOpen: false,
 		modal: true
@@ -200,7 +203,7 @@ Archive.prototype.preFillForm = function(maps) {
 				break;
 			case 'disciplines':
 				map.data.forEach(function(discipline, index) {
-					$('label:last').after('<div class="input-group discipline-group"><input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
+					$('.form-group:last').append('<div class="input-group discipline-group"><input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
 					$('#' + map.id + index).val(discipline);
 					// mark diciplines not in db list
 					markDiscipline(discipline, '#' + 'discipline' + index);
@@ -454,14 +457,18 @@ function getOneArchive(archive, subId, status) {
 	return dfd.promise();
 }
 
-function prepBatch() {
+function updateBatch() {
 	var dfd = $.Deferred();
 	$.ajax( {
 		url: 'modules/archive/archive.php',
 		type: 'POST',
-		data: {'action': 'prepBatch'},
+		data: {'action': 'updateBatch'},
 		success: function(res, status) {
-			dfd.resolve(JSON.parse(res));
+			var result = JSON.parse(res);
+			if (!result.success) {
+				console.log(result.error);
+			}
+			dfd.resolve();
 		},
 		error: function(xhr, desc, err) {
             console.log(xhr);
