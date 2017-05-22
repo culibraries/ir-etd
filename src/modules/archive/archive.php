@@ -37,8 +37,9 @@ if (isset($_POST['action'])) {
 		case 'postFormData':
 			insertFormData($_POST['data'], $_POST['subId']);
 			break;
-		case 'prepBatch':
-
+		case 'updateBatch':
+			$submission = new SubmissionModel;
+			$submission->updateBatch();
 	}
 
 }

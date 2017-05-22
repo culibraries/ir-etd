@@ -243,7 +243,7 @@ class SubmissionModel
 
             $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G','H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
                 'X', 'Y', 'Z', 'AA', 'AB', 'AC'];
-            $file = 'etd-batch-' . date('Ymd', time()) . '.xlsx';
+            $file = 'etd-batch-' . date('Ymd', time()) . '.xls';
             $excel = new PHPExcel;
 
             // write the header row
@@ -266,19 +266,26 @@ class SubmissionModel
             header('Content-Disposition: attachment;filename="' . $file . '"');
             header('Cache-Control: max-age=0');
 
-            $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+            $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
             $writer->save('php://output');
-
-			// Update the pending records to reflect that they are now batched
-			$sql = "UPDATE submission
-			        SET workflow_status = 'B'
-			  			WHERE workflow_status = 'P'";
-			$this->db->query($sql);
-
 		} else {
 			echo 'error: ' . $this->db->error;
 		}
 	}
+
+    // Update the pending records to reflect that they are now batched
+    function updateBatch() {
+        $sql = "UPDATE submission
+                SET workflow_status = 'B'
+                    WHERE workflow_status = 'P'";
+
+        $result = array(
+			'success' => $this->db->query($sql),
+			'error' => $this->db->error
+		);
+
+        echo json_encode($result);
+    }
 
 	/**
 	 * assignValues
