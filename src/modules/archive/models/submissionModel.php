@@ -268,23 +268,21 @@ class SubmissionModel
 
             $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
             $writer->save('php://output');
+
+            $this->updateBatch();
 		} else {
 			echo 'error: ' . $this->db->error;
 		}
 	}
 
     // Update the pending records to reflect that they are now batched
-    function updateBatch() {
+    private function updateBatch() {
         $sql = "UPDATE submission
                 SET workflow_status = 'B'
                     WHERE workflow_status = 'P'";
 
-        $result = array(
-			'success' => $this->db->query($sql),
-			'error' => $this->db->error
-		);
+        $this->db->query($sql);
 
-        echo json_encode($result);
     }
 
 	/**

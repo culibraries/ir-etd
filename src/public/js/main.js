@@ -75,9 +75,7 @@ $(document).ready(function() {
 	// batch download button
 	$('#batchBtn').click(function() {
 		window.location.assign('prepbatch.php');
-		updateBatch().done(function() {
-			refreshSideBar();
-		});
+		setTimeout(refreshSideBar, 3000);
 	});
 
 	// initial settings for dialog modal
