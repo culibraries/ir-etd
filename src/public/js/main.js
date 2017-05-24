@@ -221,6 +221,7 @@ Archive.prototype.preFillForm = function(maps) {
 
 // Initial data gets for sidebar
 function refreshSideBar() {
+	$('#batchBtn').hide();
 
 	// call API get function getOldestArchive to get oldest archives in ftp dir
 	getOldestArchive().done(function(res) {
