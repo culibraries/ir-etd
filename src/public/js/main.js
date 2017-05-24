@@ -122,12 +122,31 @@ $(document).on('click', '#editDiscipline', function(event) {
 
 // add additional discipline input box
 $(document).on('click', '#addDiscipline', function() {
-	// get the id of the last discipline input
-	var lastDisciplineId = Number($('.discipline-group:last').find('input').attr('id').substring(10));
-	// add discipline input group after incrementing the id
-	$('.discipline-group:last').after('<div class="input-group discipline-group"><input class="form-control discipline" id="discipline' + (lastDisciplineId+1) + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
-	// mark ass error since blank
-	$('#discipline' + (lastDisciplineId+1)).addClass("errorInput");
+	var nextDisciplineId = 0;
+
+	// if there are already inputs add after
+	if ($('.discipline-group')[0]) {
+		nextDisciplineId = Number($('.discipline-group:last').find('input').attr('id').substring(10)) + 1;
+		$('.discipline-group:last').after(html(nextDisciplineId));
+	} else {
+		$('label[for="discipline"]').after(html(nextDisciplineId));
+	}
+
+	// mark as error since blank
+	$('#discipline' + nextDisciplineId).addClass("errorInput");
+
+	function html(id) {
+		return '<div class="input-group discipline-group">' +
+					'<input class="form-control discipline" id="discipline' + id + '">' +
+					'<span id="editDiscipline" class="btn input-group-addon">Edit</span>' +
+					'<span id="deleteDiscipline" class="btn input-group-addon">X</span>' +
+				'</div>';
+	}
+});
+
+$(document).on('click', '#deleteDiscipline', function() {
+	$(this).closest('div').remove();
+
 });
 
 // Display Functions ===============================================================================
@@ -201,7 +220,11 @@ Archive.prototype.preFillForm = function(maps) {
 				break;
 			case 'disciplines':
 				map.data.forEach(function(discipline, index) {
-					$('.form-group:last').append('<div class="input-group discipline-group"><input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '"><span id="editDiscipline" class="btn input-group-addon">Edit</span></div>');
+					$('.form-group:last').append('<div class="input-group discipline-group">' +
+													'<input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '">' +
+													'<span id="editDiscipline" class="btn input-group-addon">Edit</span>' +
+													'<span id="deleteDiscipline" class="btn input-group-addon">X</span>' +
+												'</div>');
 					$('#' + map.id + index).val(discipline);
 					// mark diciplines not in db list
 					markDiscipline(discipline, '#' + 'discipline' + index);
