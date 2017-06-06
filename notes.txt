@@ -1,0 +1,7 @@
+- add new status and download for real problems
+- when downloading batch clear views after, right now only clearing sidebar
+
+golive:
+Friday after 4
+    move libnet/etd -> sftp
+        libnet/done -> libetd-archive
