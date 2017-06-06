@@ -60,14 +60,23 @@ $(document).ready(function() {
 	// submit button
 	$('.submit').click(function() {
 
-		// check is any discipline is in error and prevent moving to pending
+		// check if any discipline is in error and prevent moving to pending
 		if ($('.discipline').hasClass('errorInput') && $('#workflow_status').val() === 'P') {
 			alert('There is an error in Discipline. Change workflow status to Problem not Pending.');
 		} else {
+			var workflowStatus = $('#workflow_status').val();
+			var archiveURL = createArchiveURL(currentArchive.archiveUrl);
+
 			createDisciplinesString();
+
 			currentArchive.postFormData().done(function(res) {
 				refreshSideBar();
 				clearViews();
+
+				// if the status is changed to R then download the file since we are taking out of app
+				if  (workflowStatus === 'R') {
+					window.location.assign(archiveURL);
+				}
 			});
 		}
 	});
@@ -211,6 +220,7 @@ Archive.prototype.preFillForm = function(maps) {
 								'<option value="W">Working</option>' +
 								'<option value="P">Pending</option>' +
 								'<option value="L">Problem</option>' +
+								'<option value="R">Real Problem *will download and remove this ETD*</option>'
 							'</select>';
 				$('label:last').after(select);
 				$('#' + map.id).val(map.data);
@@ -345,6 +355,12 @@ function stripChars(str) {
 	return str;
 }
 
+// creates the URL to download the real problem archive
+function createArchiveURL(url) {
+	var urlString = url.split('/');
+	var ID = urlString[urlString.length-1];
+	return ('getArchive.php?file=etdadmin_upload_' + ID + '.zip');
+}
 // API CALLS =======================================================================================
 
 function lookupDiscipline(discipline) {
