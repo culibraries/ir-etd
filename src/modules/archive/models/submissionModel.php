@@ -293,32 +293,32 @@ class SubmissionModel
 	 */
 	private function assignValues($values)
 	{
-		$this->sequence_num = $values['sequence_num'];
-		$this->title = $values['title'];
-		$this->fulltext_url = $values['fulltext_url'];
-		$this->keywords = $values['keywords'];
+		$this->sequence_num = $this->db->escape_string($values['sequence_num']);
+		$this->title = $this->db->escape_string($values['title']);
+		$this->fulltext_url = $this->db->escape_string($values['fulltext_url']);
+		$this->keywords = $this->db->escape_string($values['keywords']);
 		$this->abstract = $this->db->escape_string($values['abstract']);
-		$this->author1_fname = $values['author1_fname'];
-		$this->author1_mname = $values['author1_mname'];
-		$this->author1_lname = $values['author1_lname'];
-		$this->author1_suffix = $values['author1_suffix'];
-		$this->author1_email = $values['author1_email'];
-		$this->author1_institution = $values['author1_institution'];
-		$this->advisor1 = $values['advisor1'];
-		$this->advisor2 = $values['advisor2'];
-		$this->advisor3 = $values['advisor3'];
-		$this->advisor4 = $values['advisor4'];
-		$this->advisor5 = $values['advisor5'];
-		$this->disciplines = $values['disciplines'];
-		$this->comments = $values['comments'];
-		$this->degree_name = $values['degree_name'];
-		$this->department = $values['department'];
-		$this->document_type = $values['document_type'];
-		$this->embargo_date = $values['embargo_date'];
-		$this->publication_date = $values['publication_date'];
-		$this->season = $values['season'];
-		$this->workflow_status = $values['workflow_status'];
-		$this->identikey = $values['identikey'];
+		$this->author1_fname = $this->db->escape_string($values['author1_fname']);
+		$this->author1_mname = $this->db->escape_string($values['author1_mname']);
+		$this->author1_lname = $this->db->escape_string($values['author1_lname']);
+		$this->author1_suffix = $this->db->escape_string($values['author1_suffix']);
+		$this->author1_email = $this->db->escape_string($values['author1_email']);
+		$this->author1_institution = $this->db->escape_string($values['author1_institution']);
+		$this->advisor1 = $this->db->escape_string($values['advisor1']);
+		$this->advisor2 = $this->db->escape_string($values['advisor2']);
+		$this->advisor3 = $this->db->escape_string($values['advisor3']);
+		$this->advisor4 = $this->db->escape_string($values['advisor4']);
+		$this->advisor5 = $this->db->escape_string($values['advisor5']);
+		$this->disciplines = $this->db->escape_string($values['disciplines']);
+		$this->comments = $this->db->escape_string($values['comments']);
+		$this->degree_name = $this->db->escape_string($values['degree_name']);
+		$this->department = $this->db->escape_string($values['department']);
+		$this->document_type = $this->db->escape_string($values['document_type']);
+		$this->embargo_date = $this->db->escape_string($values['embargo_date']);
+		$this->publication_date = $this->db->escape_string($values['publication_date']);
+		$this->season = $this->db->escape_string($values['season']);
+		$this->workflow_status = $this->db->escape_string($values['workflow_status']);
+		$this->identikey = $this->db->escape_string($values['identikey']);
 	}
 }
 ?>
