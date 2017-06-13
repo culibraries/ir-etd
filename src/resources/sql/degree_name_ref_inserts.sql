@@ -1,3 +1,5 @@
+USE etd;
+
 INSERT INTO degree_name_ref VALUES (1,'NULL','Candidate in Philosophy');
 INSERT INTO degree_name_ref VALUES (2,'DA','Doctor of Arts (DA)');
 INSERT INTO degree_name_ref VALUES (3,'AuD','Doctor of Audiology (AuD)');

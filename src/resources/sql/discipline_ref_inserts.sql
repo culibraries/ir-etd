@@ -1,8 +1,10 @@
-CREATE TABLE IF NOT EXISTS discipline_ref (
-  discipline_id INT(10) UNSIGNED NOT NULL,
-  discipline_name VARCHAR(100) NOT NULL,
-  PRIMARY KEY (discipline_id)
-);
+-- CREATE TABLE IF NOT EXISTS discipline_ref (
+--   discipline_id INT(10) UNSIGNED NOT NULL,
+--   discipline_name VARCHAR(100) NOT NULL,
+--   PRIMARY KEY (discipline_id)
+-- );
+
+USE etd;
 
 INSERT INTO discipline_ref (discipline_id, discipline_name) VALUES
 (1, 'architecture'),

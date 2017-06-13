@@ -1,17 +1,17 @@
-// Database scripts for etd
-//
-// To create the etd database, run the following scripts in sequence in
-# the MySQL CLI. The first script creates the database object itself. This
-# is followed by the script to create the tables in the database. The final
-# scripts set up the service account with the require privileges.
+-- Database scripts for etd
+--
+-- To create the etd database, run the following scripts in sequence in
+-- the MySQL CLI. The first script creates the database object itself. This
+-- is followed by the script to create the tables in the database. The final
+-- scripts set up the service account with the require privileges.
 
-# Run this command first
+-- Run this command first
 CREATE DATABASE etd CHARACTER SET utf8;
 
-# Before creating the database tables, USE the target database first
+-- Before creating the database tables, USE the target database first
 USE etd;
 
-# Main submission table
+-- Main submission table
 CREATE TABLE submission (
 	submission_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	sequence_num VARCHAR(10) NOT NULL,
@@ -44,21 +44,23 @@ CREATE TABLE submission (
 	update_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
-# Degree name reference table
+-- Degree name reference table
 CREATE TABLE degree_name_ref (
 	degree_name_id INT(10) UNSIGNED NOT NULL PRIMARY KEY,
 	degree_name_short VARCHAR(10) NOT NULL,
 	degree_name_long VARCHAR(100) NOT NULL
 );
 
-# Discipline reference table
+-- Discipline reference table
 CREATE TABLE discipline_ref (
 	discipline_id INT(10) UNSIGNED NOT NULL PRIMARY KEY,
 	discipline_name VARCHAR(100) NOT NULL
 
 );
 
-# Finally, create the service user that the application will use
-# to access the database
+-- Finally, create the service user that the application will use
+-- to access the database
 CREATE USER 'etd_service'@'localhost' IDENTIFIED BY 'cuboulder';
-GRANT SELECT, INSERT, UPDATE ON etd.submission TO 'etd_service'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON etd.submission TO 'etd_service'@'128.138.184.102';
+GRANT SELECT etd.degree_name_ref TO 'etd_service'@'128.138.184.102';
+GRANT SELECT etd.discipline_ref TO 'etd_service'@'128.138.184.102';
