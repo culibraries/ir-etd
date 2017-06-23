@@ -215,7 +215,7 @@ class SubmissionModel
 	 * Creates export files containing all database items that are pending
 	 * batch upload to CU Scholar.
 	 */
-	function createBatch()
+	function createBatch($user)
 	{
 
 		$sql = "SELECT s.title, s.fulltext_url, s.keywords, s.abstract, s.author1_fname,
@@ -226,7 +226,7 @@ class SubmissionModel
 			FROM submission s
 			INNER JOIN degree_name_ref d
 			ON s.degree_name = d.degree_name_short
-			WHERE workflow_status = 'P'";
+			WHERE workflow_status = 'P' AND identikey = '$user'";
 
 		$result = $this->db->query($sql);
 
@@ -269,17 +269,17 @@ class SubmissionModel
             $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
             $writer->save('php://output');
 
-            $this->updateBatch();
+            $this->updateBatch($user);
 		} else {
 			echo 'error: ' . $this->db->error;
 		}
 	}
 
     // Update the pending records to reflect that they are now batched
-    private function updateBatch() {
+    private function updateBatch($user) {
         $sql = "UPDATE submission
                 SET workflow_status = 'B'
-                    WHERE workflow_status = 'P'";
+                WHERE workflow_status = 'P' AND identikey='$user'";
 
         $this->db->query($sql);
 

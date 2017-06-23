@@ -1,4 +1,5 @@
 <?php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 
     if( ! ini_get('date.timezone') ) {
         date_default_timezone_set('America/Denver');
@@ -8,6 +9,6 @@
 
     $submission = new SubmissionModel();
 
-    $submission->createBatch();
+    $submission->createBatch($config['uid']);
 
 ?>
