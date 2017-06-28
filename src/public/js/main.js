@@ -292,7 +292,9 @@ function displayArchives(archives) {
 				break;
 			case 'P':
 				pendingHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '" status="' + archives[i].workflow_status + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
-				$('#batchBtn').show();
+				if (archives[i].identikey === identikey) {
+					$('#batchBtn').show();
+				}
 				break;
 			case 'L':
 				problemHtml += '<a href="#" class="getme" subId="' + archives[i].submission_id + '" archive="' + archives[i].sequence_num + '" status="' + archives[i].workflow_status + '">' + archives[i].identikey + '-' + archives[i].sequence_num + '</a><br>';
@@ -498,24 +500,24 @@ function getOneArchive(archive, subId, status) {
 	return dfd.promise();
 }
 
-function updateBatch() {
-	var dfd = $.Deferred();
-	$.ajax( {
-		url: 'modules/archive/archive.php',
-		type: 'POST',
-		data: {'action': 'updateBatch'},
-		success: function(res, status) {
-			var result = JSON.parse(res);
-			if (!result.success) {
-				console.log(result.error);
-			}
-			dfd.resolve();
-		},
-		error: function(xhr, desc, err) {
-            console.log(xhr);
-            console.log("Details: " + desc + "\nError: " + err);
-        }
-	});
-
-	return dfd.promise();
-}
+// function updateBatch() {
+// 	var dfd = $.Deferred();
+// 	$.ajax( {
+// 		url: 'modules/archive/archive.php',
+// 		type: 'POST',
+// 		data: {'action': 'updateBatch'},
+// 		success: function(res, status) {
+// 			var result = JSON.parse(res);
+// 			if (!result.success) {
+// 				console.log(result.error);
+// 			}
+// 			dfd.resolve();
+// 		},
+// 		error: function(xhr, desc, err) {
+//             console.log(xhr);
+//             console.log("Details: " + desc + "\nError: " + err);
+//         }
+// 	});
+//
+// 	return dfd.promise();
+// }
