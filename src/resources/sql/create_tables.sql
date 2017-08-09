@@ -41,7 +41,8 @@ CREATE TABLE submission (
 	workflow_status CHAR(1) NOT NULL,
 	identikey CHAR(8) NOT NULL,
 	create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	update_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP
+	update_date TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+	acceptance CHAR(2) NOT NULL
 );
 
 -- Degree name reference table
