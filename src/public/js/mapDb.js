@@ -23,6 +23,13 @@ Archive.prototype.mapDb = function() {
 			"readonly": true
 		},
 		{
+			"name": "Acceptance",
+			"id": "acceptance",
+			"data": this.db.acceptance,
+			"type": "text",
+			"readonly": true
+		},
+		{
 			"name": "Title",
 			"id": "title",
 			"data": this.db.title,

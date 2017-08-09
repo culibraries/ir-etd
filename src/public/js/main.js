@@ -63,6 +63,8 @@ $(document).ready(function() {
 		// check if any discipline is in error and prevent moving to pending
 		if ($('.discipline').hasClass('errorInput') && $('#workflow_status').val() === 'P') {
 			alert('There is an error in Discipline. Change workflow status to Problem not Pending.');
+		} else if ($('#acceptance').hasClass('errorInput') && $('#workflow_status').val() === 'P') {
+			alert('There is an error in Acceptance. Change workflow status to Problem not Pending.');
 		} else {
 			var workflowStatus = $('#workflow_status').val();
 			var archiveURL = createArchiveURL(currentArchive.archiveUrl);
@@ -214,6 +216,9 @@ Archive.prototype.preFillForm = function(maps) {
 					.attr('type', map.type)
 					.val(map.data)
 					.attr('readonly', map.readonly);
+				if (map.id === 'acceptance' && map.data !== '1') {
+					$('#acceptance').addClass("errorInput");
+				}
 				break;
 			case 'drop-down':
 				var select = '<select class="form-control" name="' + map.id + '" id="' + map.id + '">' +
@@ -405,6 +410,7 @@ Archive.prototype.postFormData = function() {
 			'data': $('#xmlEdit').serialize()
 		},
 		success: function(res, status) {
+			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
@@ -425,6 +431,7 @@ function getOldestArchive() {
 		type: 'GET',
 		data: {'action': 'getOldestArchive'},
 		success: function(res, status) {
+			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
@@ -499,25 +506,3 @@ function getOneArchive(archive, subId, status) {
 
 	return dfd.promise();
 }
-
-// function updateBatch() {
-// 	var dfd = $.Deferred();
-// 	$.ajax( {
-// 		url: 'modules/archive/archive.php',
-// 		type: 'POST',
-// 		data: {'action': 'updateBatch'},
-// 		success: function(res, status) {
-// 			var result = JSON.parse(res);
-// 			if (!result.success) {
-// 				console.log(result.error);
-// 			}
-// 			dfd.resolve();
-// 		},
-// 		error: function(xhr, desc, err) {
-//             console.log(xhr);
-//             console.log("Details: " + desc + "\nError: " + err);
-//         }
-// 	});
-//
-// 	return dfd.promise();
-// }

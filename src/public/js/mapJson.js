@@ -24,6 +24,13 @@ Archive.prototype.mapJson = function() {
 			"readonly": true
 		},
 		{
+			"name": "Acceptance",
+			"id": "acceptance",
+			"data": this.json.repository.acceptance,
+			"type": "text",
+			"readonly": true
+		},
+		{
 			"name": "Title",
 			"id": "title",
 			"data": this.json.description.title.toTitleCase(),

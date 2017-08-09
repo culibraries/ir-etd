@@ -17,6 +17,7 @@ class SubmissionModel
 	private $conn; // connection to the MySQL database
 	private $db;   // database instance itself
 
+    private $acceptance;
 	private $sequence_num;
 	private $title;
 	private $fulltext_url;
@@ -109,7 +110,8 @@ class SubmissionModel
 				    '$this->workflow_status',
 				    '$this->identikey',
 				    CURRENT_TIMESTAMP,
-				    CURRENT_TIMESTAMP)";
+				    CURRENT_TIMESTAMP,
+                    '$this->acceptance')";
 
     // Method returns an array with the query result (true or false),
 		// id of the inserted record, and error message, if applicable
@@ -131,32 +133,33 @@ class SubmissionModel
 		$this->assignValues($values);
 
 		$sql = "UPDATE submission SET
-						title = '$this->title',
-			      fulltext_url = '$this->fulltext_url',
-			      keywords = '$this->keywords',
-			      abstract = '$this->abstract',
-	          author1_fname = '$this->author1_fname',
-	          author1_mname = '$this->author1_mname',
-      			author1_lname = '$this->author1_lname',
-	          author1_suffix = '$this->author1_suffix',
-	          author1_email = '$this->author1_email',
-	          author1_institution = '$this->author1_institution',
-	          advisor1 = '$this->advisor1',
-	          advisor2 = '$this->advisor2',
-			      advisor3 = '$this->advisor3',
-			      advisor4 = '$this->advisor4',
-			      advisor5 = '$this->advisor5',
-			      disciplines = '$this->disciplines',
-			      comments = '$this->comments',
-			      degree_name = '$this->degree_name',
-			      department = '$this->department',
-			      document_type = '$this->document_type',
-			      embargo_date = '$this->embargo_date',
-			      publication_date = '$this->publication_date',
-			      season = '$this->season',
-			      workflow_status = '$this->workflow_status',
-			      identikey = '$this->identikey'
-			      WHERE submission_id = $id";
+            acceptance = '$this->acceptance',
+			title = '$this->title',
+            fulltext_url = '$this->fulltext_url',
+            keywords = '$this->keywords',
+            abstract = '$this->abstract',
+            author1_fname = '$this->author1_fname',
+            author1_mname = '$this->author1_mname',
+            author1_lname = '$this->author1_lname',
+            author1_suffix = '$this->author1_suffix',
+            author1_email = '$this->author1_email',
+            author1_institution = '$this->author1_institution',
+            advisor1 = '$this->advisor1',
+            advisor2 = '$this->advisor2',
+            advisor3 = '$this->advisor3',
+            advisor4 = '$this->advisor4',
+            advisor5 = '$this->advisor5',
+            disciplines = '$this->disciplines',
+            comments = '$this->comments',
+            degree_name = '$this->degree_name',
+            department = '$this->department',
+            document_type = '$this->document_type',
+            embargo_date = '$this->embargo_date',
+            publication_date = '$this->publication_date',
+            season = '$this->season',
+            workflow_status = '$this->workflow_status',
+            identikey = '$this->identikey'
+            WHERE submission_id = $id";
 
     // Method returns query result and error message, if applicable
 		$result = array(
@@ -293,6 +296,7 @@ class SubmissionModel
 	 */
 	private function assignValues($values)
 	{
+        $this->acceptance = $this->db->escape_string($values['acceptance']);
 		$this->sequence_num = $this->db->escape_string($values['sequence_num']);
 		$this->title = $this->db->escape_string($values['title']);
 		$this->fulltext_url = $this->db->escape_string($values['fulltext_url']);
