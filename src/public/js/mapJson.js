@@ -272,7 +272,7 @@ var concatAdvisor = function(advisor) {
 
 var createAdvisors = function(member) {
 	var advisors = member.advisor;
-	var committee = member.cmte_member;
+	var committee = member.cmte_member || [];
 	var advisorArray = [];
 
 	if (advisors.constructor === Array) {
