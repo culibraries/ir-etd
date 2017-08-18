@@ -239,13 +239,13 @@ var arrayDisciplines = function(category) {
 	if (category.length) {
 		// create array of the discliplines
 		category.forEach(function(item) {
-			arrayCategory.push(item.cat_desc.toTitleCase());
+			arrayCategory.push(item.cat_desc);
 		});
 		// and return it
 		return arrayCategory;
 	} else {
 		// else there is only one discipline so return it in an array
-		return [category.cat_desc.toTitleCase()];
+		return [category.cat_desc];
 	}
 };
 

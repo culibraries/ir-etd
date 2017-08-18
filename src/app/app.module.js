@@ -17,7 +17,6 @@ angular
         vm.disciplines = [];
         vm.search = '';
         vm.enterDiscipline = enterDiscipline;
-        vm.name = 'test';
 
         activate();
 
@@ -30,7 +29,7 @@ angular
 
         function enterDiscipline(discipline) {
             $('#dialog').dialog('close');
-            $('#' + id).val(discipline.toTitleCase());
+            $('#' + id).val(discipline);
             $('#' + id).removeClass("errorInput");
         }
     }

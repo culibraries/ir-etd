@@ -431,7 +431,6 @@ function getOldestArchive() {
 		type: 'GET',
 		data: {'action': 'getOldestArchive'},
 		success: function(res, status) {
-			console.log(res);
 			dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {

@@ -60,11 +60,7 @@
 
 <div ng-app="searchApp">
     <div id="dialog" title="Disciplines Search">
-        <div class="container">
-            <div class="row">
-                <discipline-search></discipline-search>
-            </div>
-        </div>
+        <discipline-search></discipline-search>
     </div>
 </div>
 
