@@ -264,7 +264,11 @@ var concatAdvisor = function(advisor) {
 	var str = '';
 	str += advisor.name.fname + ' ';
 	if (typeof advisor.name.middle === 'string') {
-		str += advisor.name.middle + '. ';
+		if (advisor.name.middle.length > 1 && advisor.name.middle[advisor.name.middle.length - 1] === '.') {
+			str += advisor.name.middle + ' ';
+		} else  {
+			str += advisor.name.middle + '. ';
+		}
 	}
 	str += advisor.name.surname;
 	return str;
