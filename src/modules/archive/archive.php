@@ -54,9 +54,11 @@ function getOldestArchive() {
 	// if ftp dir not empty
 	if ($archives) {
 		$oldestArchiveArray = explode('/',$archives[0]);
+		$oldestArchive = $oldestArchiveArray[sizeof($oldestArchiveArray) - 1];
 		$response = array(
 			'numArchives' => sizeof($archives),
-			'oldestArchive' => $oldestArchiveArray[sizeof($oldestArchiveArray) - 1]
+			'oldestArchive' => $oldestArchive,
+			'oldestModifiedDate' => filemtime($config['dir']['ftp'] . $oldestArchive)
 		);
 	} else {
 		$response = array(

@@ -268,7 +268,9 @@ function refreshSideBar() {
 	getOldestArchive().done(function(res) {
 		// if there is at least one archive
 		if (res.numArchives) {
+			var date = new Date(res.oldestModifiedDate * 1000);
 			$('#oldestArchive').text(res.oldestArchive);
+			$('#modifiedDate').text(date);
 			$('#numArchives').text(res.numArchives);
 		} else {
 			$('#numArchives').text(0);
