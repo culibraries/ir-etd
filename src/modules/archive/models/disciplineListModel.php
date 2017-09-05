@@ -78,7 +78,6 @@ class DisciplineListModel
  	 */
 	 public function isValidDiscipline($discipline)
 	 {
-		 $discipline = str_replace(array(",","'"), "", $discipline);
 		 return in_array($discipline, $this->disciplines);
 	 }
 
