@@ -8,8 +8,8 @@ Theses / dissertations are submitted by students to ProQuest typically after the
 
 Coding standards for both PHP source files and MySQL artifacts will adhere to the following general guidelines:
 
-* PHP [link](http://www.php-fig.org/psr/psr-2/)
-* MySQL [link](http://www.toadworld.com/platforms/mysql/w/wiki/6103.naming-conventions)
+* [PHP] (http://www.php-fig.org/psr/psr-2/)
+* [MySQL] (http://www.toadworld.com/platforms/mysql/w/wiki/6103.naming-conventions)
 
 ## Branching Model ##
 
@@ -17,5 +17,5 @@ TBD
 
 ## Authors ##
 
-Justin Van Voorst justin.vanvoorst@colorado.edu  
-Fred Schumacher fred.schumacher@colorado.edu
+[Justin Van Voorst] (mailto://justin.vanvoorst@colorado.edu)
+[Fred Schumacher] (mailto://fred.schumacher@colorado.edu)
