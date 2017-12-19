@@ -26,7 +26,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Acceptance",
 			"id": "acceptance",
-			"data": this.json.repository.acceptance,
+			"data": (_.isUndefined(this.json.repository)) ? 'Not Set': (_.isObject(this.json.repository.acceptance))? 'Not Set': this.json.repository.acceptance,
 			"type": "text",
 			"readonly": true
 		},
