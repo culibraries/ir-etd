@@ -26,7 +26,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Acceptance",
 			"id": "acceptance",
-			"data": (_.isUndefined(this.json.repository)) ? 'Not Set': (_.isObject(this.json.repository.acceptance))? 'Not Set': this.json.repository.acceptance,
+			"data": (_.isUndefined(this.json.repository)) ? 'Blank': (_.isObject(this.json.repository.acceptance))? 'Blank': this.json.repository.acceptance,
 			"type": "text",
 			"readonly": false
 		},
@@ -40,7 +40,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Full Text Url",
 			"id": "fulltext_url",
-			"data": this.batchUrl + this.name + '/' + this.pdf,
+			"data": [this.batchUrl,this.name,'/',this.pdf].join(''),
 			"type": "text",
 			"readonly": true
 		},
