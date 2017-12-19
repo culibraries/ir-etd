@@ -10,6 +10,7 @@ header {
     background-repeat: no-repeat;
 }
 .banner-text {
+    margin-left: 10px;
     color: white;
     font-size: 28px;
     font-family: "HelveticaNeue-Light", "Helvetica Neue", sans-serif;
