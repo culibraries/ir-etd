@@ -2,189 +2,189 @@ Archive.prototype.mapDb = function() {
 
 	return [
 		{
-			"me": "Workflow Status",
+			"name": "Workflow Status",
 			"id": "workflow_status",
 			"data": _.get(this,'status',''),
 			"type": "drop-down",
 			"readonly": true
 		},
 		{
-			"me": "Editor",
+			"name": "Editor",
 			"id": "identikey",
 			"data": identikey,
 			"type": "text",
 			"readonly": true
 		},
 		{
-			"me": "ETD Sequence",
+			"name": "ETD Sequence",
 			"id": "sequence_num",
-			"data": _.get(this,'me',''),
+			"data": _.get(this,'name',''),
 			"type": "text",
 			"readonly": true
 		},
 		{
-			"me": "Acceptance",
+			"name": "Acceptance",
 			"id": "acceptance",
 			"data": (_.isUndefined(this.json.repository)) ? 'Not Set': (_.isObject(this.json.repository.acceptance))? 'Not Set': this.json.repository.acceptance,
 			"type": "text",
 			"readonly": true
 		},
 		{
-			"me": "Title",
+			"name": "Title",
 			"id": "title",
 			"data": _.get(this,'db.title',''),
 			"type": "text-long",
 			"readonly": false
 		},
 		{
-			"me": "Full Text Url",
+			"name": "Full Text Url",
 			"id": "fulltext_url",
-			"data": [this.batchUrl,this.me,'/',this.pdf].join(),
+			"data": [this.batchUrl,this.name,'/',this.pdf].join(),
 			"type": "text",
 			"readonly": true
 		},
 		{
-			"me": "Keywords",
+			"name": "Keywords",
 			"id": "keywords",
 			"data": _.get(this,'db.keywords',''),
 			"type": "text-long",
 			"readonly": false
 		},
 		{
-			"me": "Abstract",
+			"name": "Abstract",
 			"id": "abstract",
 			"data": _.get(this,'db.abstract',''),
 			"type": "text-long",
 			"readonly": false
 		},
 		{
-			"me": "Author1 Fme",
-			"id": "author1_fme",
-			"data": _.get(this,'db.author1_fme',''),
+			"name": "Author1 Fname",
+			"id": "author1_fname",
+			"data": _.get(this,'db.author1_fname',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Author1 Mme",
-			"id": "author1_mme",
-			"data": _.get(this,'db.author1_mme',''),
+			"name": "Author1 Mname",
+			"id": "author1_mname",
+			"data": _.get(this,'db.author1_mname',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Author1 Lme",
-			"id": "author1_lme",
-			"data": _.get(this,'db.author1_lme',''),
+			"name": "Author1 Lname",
+			"id": "author1_lname",
+			"data": _.get(this,'db.author1_lname',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Author1 Suffix",
+			"name": "Author1 Suffix",
 			"id": "author1_suffix",
 			"data": _.get(this,'db.author1_suffix',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Author1 Email",
+			"name": "Author1 Email",
 			"id": "author1_email",
 			"data": _.get(this,'db.author1_email',''),
 			"type": "email",
 			"readonly": false
 		},
 		{
-			"me": "Author1 Institution",
+			"name": "Author1 Institution",
 			"id": "author1_institution",
 			"data": _.get(this,'db.author1_institution',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Advisor1",
+			"name": "Advisor1",
 			"id": "advisor1",
 			"data": _.get(this,'db.advisor1',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Advisor2",
+			"name": "Advisor2",
 			"id": "advisor2",
 			"data": _.get(this,'db.advisor2',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Advisor3",
+			"name": "Advisor3",
 			"id": "advisor3",
 			"data": _.get(this,'db.advisor3',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Advisor4",
+			"name": "Advisor4",
 			"id": "advisor4",
 			"data": _.get(this,'db.advisor4',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Advisor5",
+			"name": "Advisor5",
 			"id": "advisor5",
 			"data": _.get(this,'db.advisor5',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Disciplines (Subject Categories)",
+			"name": "Disciplines (Subject Categories)",
 			"id": "discipline",
 			"data": this.db.disciplines.split(';'),
 			"type": "disciplines",
 			"readonly": false
 		},
 		{
-			"me": "Comments",
+			"name": "Comments",
 			"id": "comments",
 			"data": _.get(this,'db.comments',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Degree me",
-			"id": "degree_me",
-			"data": _.get(this,'db.degree_me',''),
+			"name": "Degree name",
+			"id": "degree_name",
+			"data": _.get(this,'db.degree_name',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Department",
+			"name": "Department",
 			"id": "department",
 			"data": _.get(this,'db.department',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Document Type",
+			"name": "Document Type",
 			"id": "document_type",
 			"data": _.get(this,'db.document_type',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Embargo Date",
+			"name": "Embargo Date",
 			"id": "embargo_date",
 			"data": _.get(this,'db.embargo_date',''),
 			"type": "text",
 			"readonly": false
 		},
 		{
-			"me": "Publication Date",
+			"name": "Publication Date",
 			"id": "publication_date",
 			"data": _.get(this,'db.publication_date',''),
 			"type": "date",
 			"readonly": false
 		},
 		{
-			"me": "Season",
+			"name": "Season",
 			"id": "season",
 			"data": _.get(this,'db.season',''),
 			"type": "text",
