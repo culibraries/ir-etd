@@ -102,11 +102,11 @@ gulp.task('deploy', function(cb) {
 
 	if (argv.staging) {
 		conf.hostname = 'culibraries03.colorado.edu';
-		conf.username = 'vanvoors';
+		conf.username = 'mast4541';
 		conf.destination = '/data/web/htdocs/culibraries/etd';
 	} else if (argv.production) {
 		conf.hostname = 'culibraries01.colorado.edu';
-		conf.username = 'vanvoors';
+		conf.username = 'mast4541';
 		conf.destination = '/data/web/htdocs/culibraries/etd';
 	} else {
 		throwError('deploy', gutil.colors.red('Missing or Invalid Target'));

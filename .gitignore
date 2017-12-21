@@ -2,3 +2,5 @@ src/resources/config.php
 node_modules/
 src/data/
 build/
+.DS_Store
+package-lock.json
