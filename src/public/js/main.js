@@ -28,9 +28,11 @@ $(document).ready(function() {
 
 	// Load next ETD button (oldest archive)
 	$('#loadBtn').click(function() {
+
 		// call API get function getOneArchive(archive, id, status) to get data about archive
 		getOneArchive(null, 'oldest', null).done(function(res) {
-
+			//Disable Button
+			$('#loadBtn').attr("disabled", "disabled");
 			// create currentArchive object from response
 			currentArchive = new Archive(res);
 			//Validate data
@@ -52,9 +54,13 @@ $(document).ready(function() {
 					} else {
 						console.log('Error: ' + res.error);
 					}
+					//Enable Button
+					$('#loadBtn').removeAttr("disabled");
 				});
 			});
+			
 		});
+
 	});
 
 	// submit button
