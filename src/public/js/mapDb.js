@@ -1,5 +1,6 @@
 Archive.prototype.mapDb = function() {
-
+	//set Pub Date and Label Array [stringDate,label]
+	pubDateLabel = publicationDate(this.json);
 	return [
 		{
 			"name": "Workflow Status",
@@ -178,7 +179,7 @@ Archive.prototype.mapDb = function() {
 			"readonly": false
 		},
 		{
-			"name": "Publication Date",
+			"name": "Publication Date: Calculated( " + pubDateLabel[1] + " = " + pubDateLabel[0] +  " )",
 			"id": "publication_date",
 			"data": _.get(this,'db.publication_date',''),
 			"type": "date",
