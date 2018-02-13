@@ -17,7 +17,7 @@ class SubmissionModel
 	private $conn; // connection to the MySQL database
 	private $db;   // database instance itself
 
-    private $acceptance;
+  private $acceptance;
 	private $sequence_num;
 	private $title;
 	private $fulltext_url;
@@ -215,12 +215,18 @@ class SubmissionModel
   /**
 	 * createBatch
 	 *
-	 * Creates export files containing all database items that are pending
+	 * Creates export file containing all database items that are pending
 	 * batch upload to CU Scholar.
 	 */
 	function createBatch($user)
 	{
+		require_once ($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/phpexcel/PHPExcel.php');
 
+		// References to worksheet columns
+	  $letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',
+							  'P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC'];
+
+    // Get data for the export files (all items that are pending)
 		$sql = "SELECT s.title, s.fulltext_url, s.keywords, s.abstract, s.author1_fname,
 			s.author1_mname, s.author1_lname, s.author1_suffix, s.author1_email,
 			s.author1_institution, s.advisor1, s.advisor2, s.advisor3, s.advisor4, s.advisor5,
@@ -229,64 +235,79 @@ class SubmissionModel
 			FROM submission s
 			INNER JOIN degree_name_ref d
 			ON s.degree_name = d.degree_name_short
-			WHERE workflow_status = 'P' AND identikey = '$user'";
+			WHERE workflow_status = 'P' AND identikey = '$user'
+			ORDER BY s.department";
 
 		$result = $this->db->query($sql);
 
-		// Prepare query result as a dataset
+		// Prepare query result
 		$dataset = array();
-
-		if (!$this->db->error) {
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-					$dataset[] = $row;
-			}
-            require_once ($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/phpexcel/PHPExcel.php');
-
-            $excel = new PHPExcel;
-
-            $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G','H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-                'X', 'Y', 'Z', 'AA', 'AB', 'AC'];
-            $file = 'etd-batch-' . date('Ymd', time()) . '.xls';
-            $excel = new PHPExcel;
-
-            // write the header row
-            for ($i = 0; $i < count($dataset[0]); $i++) {
-                $excel->setActiveSheetIndex(0)->setCellValue($letters[$i] . '1', array_keys($dataset[0])[$i]);
-            }
-
-            for ($row = 0; $row < count($dataset); $row++) {
-
-                // Reverse the order of disciplines to accommodate the batch upload process anomoly
-                $dataset[$row]['disciplines'] = implode(';', array_reverse(explode(';', $dataset[$row]['disciplines'])));
-
-                for ($col = 0; $col < count($dataset[0]); $col++) {
-                    $excel->setActiveSheetIndex(0)->setCellValue($letters[$col] . ($row + 2), array_values($dataset[$row])[$col]);
-                }
-            }
-
-            // Redirect output to a client’s web browser (Excel2007)
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="' . $file . '"');
-            header('Cache-Control: max-age=0');
-
-            $writer = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-            $writer->save('php://output');
-
-            $this->updateBatch($user);
-		} else {
-			echo 'error: ' . $this->db->error;
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+			$dataset[] = $row;
 		}
+
+		// Get a unique set of departments (needed for controlling the
+		// outermost processing loop)
+		$depts = array_unique(array_column($dataset, 'department'));
+
+		// Instantiate a new Excel object
+		$excel = new PHPExcel();
+
+		// Start the outermost loop
+		$n = 0; // Worksheet index
+		foreach ($depts as $d) {
+
+			// Add a new worksheet representing the current department
+			// Note that max length of a worksheet name is 31 characters
+			$ds = substr($d, 0, 30);
+			$wks = new PHPExcel_Worksheet($excel, $ds);
+			$excel->addSheet($wks, ++$n);
+
+			// Write the header row for the current worksheet
+			$cols = array_keys($dataset[0]);
+		  for ($i = 0; $i < count($cols); $i++) {
+			  $excel->getSheetByName($ds)->setCellValue($letters[$i] . '1', $cols[$i]);
+		  }
+
+			// Write the data for the current department only
+			$r = 2; // Current row index
+			for ($row = 0; $row < count($dataset); $row++) {
+				if ($dataset[$row]['department'] == $d) {
+				  for ($col = 0; $col < count($cols); $col++) {
+					  $excel->getSheetByName($ds)->setCellValue($letters[$col] . $r,
+							array_values($dataset[$row])[$col]);
+				  }
+					$r++;
+				}
+			}
+		}
+
+		// remove worksheet 0 as it was not used
+		$excel->removeSheetByIndex(0);
+
+		// download file
+		$file = 'etd-batch-' . date('Ymd', time()) . '.xls';
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment; filename="' . $file . '"');
+		header('Cache-Control: max-age=0');
+		$writer = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+		$writer->save('php://output');
+
+		// Update the workflow status for the records just batched
+    $this->updateBatch($user);
 	}
 
-    // Update the pending records to reflect that they are now batched
-    private function updateBatch($user) {
-        $sql = "UPDATE submission
-                SET workflow_status = 'B'
-                WHERE workflow_status = 'P' AND identikey='$user'";
-
-        $this->db->query($sql);
-
-    }
+	/**
+	 * updateBatch
+	 *
+	 * Sets workflow status to 'B' for all batched items
+	 */
+  private function updateBatch($user) {
+    $sql = "UPDATE submission
+            SET workflow_status = 'B'
+            WHERE workflow_status = 'P' AND identikey='$user'";
+    $this->db->query($sql);
+  }
 
 	/**
 	 * assignValues
