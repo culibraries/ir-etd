@@ -5,6 +5,10 @@
 -- is followed by the script to create the tables in the database. The final
 -- scripts set up the service account with the require privileges.
 
+-- SET GLOBAL sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+-- DROP Database if exists
+DROP DATABASE IF EXISTS etd;
+
 -- Run this command first
 CREATE DATABASE etd CHARACTER SET utf8;
 
@@ -61,7 +65,8 @@ CREATE TABLE discipline_ref (
 
 -- Finally, create the service user that the application will use
 -- to access the database
+-- DROP user IF EXISTS etd_service@localhost;
 CREATE USER 'etd_service'@'localhost' IDENTIFIED BY 'cuboulder';
 GRANT SELECT, INSERT, UPDATE ON etd.submission TO 'etd_service'@'128.138.184.102';
-GRANT SELECT etd.degree_name_ref TO 'etd_service'@'128.138.184.102';
-GRANT SELECT etd.discipline_ref TO 'etd_service'@'128.138.184.102';
+GRANT SELECT ON etd.degree_name_ref TO 'etd_service'@'128.138.184.102';
+GRANT SELECT ON etd.discipline_ref TO 'etd_service'@'128.138.184.102';

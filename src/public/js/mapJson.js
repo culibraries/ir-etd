@@ -1,6 +1,6 @@
 Archive.prototype.mapJson = function() {
-
-
+	//set Pub Date and Label Array [stringDate,label]
+  pubDateLabel = publicationDate(this.json)
 	return [
 		{
 			"name": "Workflow Status",
@@ -26,9 +26,9 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Acceptance",
 			"id": "acceptance",
-			"data": this.json.repository.acceptance,
+			"data": (_.isUndefined(this.json.repository)) ? 'Blank': (_.isObject(this.json.repository.acceptance))? 'Blank': this.json.repository.acceptance,
 			"type": "text",
-			"readonly": true
+			"readonly": false
 		},
 		{
 			"name": "Title",
@@ -40,7 +40,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Full Text Url",
 			"id": "fulltext_url",
-			"data": this.batchUrl + this.name + '/' + this.pdf,
+			"data": [this.batchUrl,this.name,'/',this.pdf].join(''),
 			"type": "text",
 			"readonly": true
 		},
@@ -178,9 +178,9 @@ Archive.prototype.mapJson = function() {
 			"readonly": false
 		},
 		{
-			"name": "Publication Date",
+			"name": "Publication Date: Calculated( " + pubDateLabel[1] + " = " + pubDateLabel[0] + " )",
 			"id": "publication_date",
-			"data": this.json.description.dates.comp_date + '-01-01',
+			"data": pubDateLabel[0],//.description.dates.comp_date + '-01-01',
 			"type": "date",
 			"readonly": false
 		},
@@ -248,13 +248,52 @@ var arrayDisciplines = function(category) {
 		return [category.cat_desc];
 	}
 };
-
+// Publication Date Calculation
+function publicationDate(json){
+	embargo_days = parseInt(embargoCode(json.attributes.embargo_code));
+	if (checkNested(json,'restriction','sales_restriction','attributes','remove')){
+		if(json.restriction.sales_restriction.attributes.remove.trim() !== ""){
+			dateParts = json.restriction.sales_restriction.attributes.remove.trim().split(" ")[0].split("/");
+			strDate = [dateParts[2],dateParts[0],dateParts[1]].join('-')
+			label = "sales_restriction Remove Date: " + strDate
+			return [strDate,label];
+	 	}
+	}
+	if (checkNested(json,'repository','agreement_decision_date')){
+		if(json.repository.agreement_decision_date.trim() !== ""){
+			strAgreeDate = json.repository.agreement_decision_date.trim().split(" ")[0]
+			startDate = new Date(json.repository.agreement_decision_date.trim())
+			label = "agreement_decision_date: " + strAgreeDate + " + " + embargo_days + " days"
+			return [calculateEmbargoDate(startDate,embargo_days),label];
+	  }
+	}
+	startDate =  new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)')
+	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days"
+	return [calculateEmbargoDate(startDate,embargo_days),label];
+}
+function calculateEmbargoDate(startDate,days){
+	newdate = new Date(startDate);
+	if (days != 0){
+			if (days===365){
+				newdate.setFullYear(newdate.getFullYear() + 1)
+			}
+			else if (days===730){
+				newdate.setFullYear(newdate.getFullYear() + 2)
+			}
+			else if (days==1095){
+				newdate.setFullYear(newdate.getFullYear() + 3)
+			}else{
+				newdate.setDate(newdate.getDate() + (days));
+			}
+	}
+	return [newdate.getFullYear(),('0'+ (newdate.getMonth()+1)).slice(-2),('0' + newdate.getDate()).slice(-2)].join('-');
+}
 // lookup function for embargo codes
 var embargoCode = function(code) {
 	switch (code) {
 		case '0': return '0';
-		case '1': return '365';
-		case '2': return '540';
+		case '1': return '184';
+		case '2': return '365';
 		case '3': return '730';
 		case '4': return '1095';
 	}
@@ -304,3 +343,15 @@ var addPeriodToMiddle = function(name) {
 		return name;
 	}
 };
+
+function checkNested(obj /*, level1, level2, ... levelN*/) {
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  for (var i = 0; i < args.length; i++) {
+    if (!obj || !obj.hasOwnProperty(args[i])) {
+      return false;
+    }
+    obj = obj[args[i]];
+  }
+  return true;
+}

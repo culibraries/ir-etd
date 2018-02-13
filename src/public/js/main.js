@@ -28,15 +28,17 @@ $(document).ready(function() {
 
 	// Load next ETD button (oldest archive)
 	$('#loadBtn').click(function() {
+
 		// call API get function getOneArchive(archive, id, status) to get data about archive
 		getOneArchive(null, 'oldest', null).done(function(res) {
-
+			//Disable Button
+			$('#loadBtn').attr("disabled", "disabled");
 			// create currentArchive object from response
 			currentArchive = new Archive(res);
-
+			//Validate data
+			currentArchive.json = validation_etd_data(currentArchive.json)
 			// use json2html to display json
 			visualize(currentArchive.json);
-
 			// display archive files that are not XML
 			$('#archiveFiles').html(currentArchive.parseArchiveFiles());
 
@@ -52,9 +54,13 @@ $(document).ready(function() {
 					} else {
 						console.log('Error: ' + res.error);
 					}
+					//Enable Button
+					$('#loadBtn').removeAttr("disabled");
 				});
 			});
+			
 		});
+
 	});
 
 	// submit button
@@ -259,7 +265,20 @@ Archive.prototype.preFillForm = function(maps) {
 		$('.submitBtn').show();
 		return dfd.promise();
 };
-
+//Validate json data elements
+function validation_etd_data(data){
+	//Check ETD Discipline and convert to Title Case format.
+	if(data.description.categorization.category instanceof Array){
+		$.each(data.description.categorization.category,function(index,value){
+			value.cat_desc = value.cat_desc.toTitleCase();
+			data.description.categorization.category[index]=value
+		})
+	}else{
+		value= data.description.categorization.category.cat_desc.toTitleCase();
+		data.description.categorization.category.cat_desc= value;
+	}
+	return data;
+}
 // Initial data gets for sidebar
 function refreshSideBar() {
 	$('#batchBtn').hide();
