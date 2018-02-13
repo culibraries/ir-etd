@@ -37,7 +37,7 @@ CREATE TABLE submission (
 	disciplines VARCHAR(200) NOT NULL,
 	comments VARCHAR(500) NOT NULL,
 	degree_name VARCHAR(50) NOT NULL,
-	department VARCHAR(50) NOT NULL,
+	department VARCHAR(100) NOT NULL,
 	document_type CHAR(12) NOT NULL,
 	embargo_date VARCHAR(5) NOT NULL,
 	publication_date DATE NOT NULL,
