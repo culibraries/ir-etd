@@ -260,12 +260,16 @@ function publicationDate(json){
 	 	}
 	}
 	if (checkNested(json,'repository','agreement_decision_date')){
-		if(json.repository.agreement_decision_date.trim() !== ""){
-			strAgreeDate = json.repository.agreement_decision_date.trim().split(" ")[0]
-			startDate = new Date(json.repository.agreement_decision_date.trim())
-			label = "agreement_decision_date: " + strAgreeDate + " + " + embargo_days + " days"
-			return [calculateEmbargoDate(startDate,embargo_days),label];
-	  }
+    try {
+		  if(json.repository.agreement_decision_date.trim() !== ""){
+			  strAgreeDate = json.repository.agreement_decision_date.trim().split(" ")[0]
+			  startDate = new Date(json.repository.agreement_decision_date.trim())
+			  label = "agreement_decision_date: " + strAgreeDate + " + " + embargo_days + " days"
+			  return [calculateEmbargoDate(startDate,embargo_days),label];
+	    }
+    }catch(err){
+      //pass 
+    }
 	}
 	startDate =  new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)')
 	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days"
