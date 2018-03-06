@@ -58,7 +58,7 @@ $(document).ready(function() {
 					$('#loadBtn').removeAttr("disabled");
 				});
 			});
-			
+
 		});
 
 	});
@@ -387,7 +387,8 @@ function stripChars(str) {
 function createArchiveURL(url) {
 	var urlString = url.split('/');
 	var ID = urlString[urlString.length-1];
-	return ('getArchive.php?file=etdadmin_upload_' + ID + '.zip');
+	return ('getArchive.php?file=' + ID);
+	//return ('getArchive.php?file=etdadmin_upload_' + ID + '.zip');
 }
 // API CALLS =======================================================================================
 
