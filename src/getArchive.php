@@ -3,7 +3,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 
 $file = $_GET['file'];
 
-foreach (glob($config['dir']['archive'] . "*$file*") as $filename) {
+foreach (glob($config['dir']['archive'] . "*etdadmin_upload_$file*") as $filename) {
   $fileURL = $filename;
 }
 //$fileURL = $config['dir']['archive'] . $file;
