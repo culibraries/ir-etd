@@ -259,6 +259,10 @@ function publicationDate(json){
   	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days";
   	return [calculateEmbargoDate(startDate,embargo_days),label];
   }
+  // Embargo Code 4 and no restriction remove date Pub date set to 0000-00-00 (mysql)
+  if (zembargo_code==4 && !checkNested(json,'restriction','sales_restriction','attributes','remove')){
+    return ["","Embargo code 4 without restriction remove date."];
+  }
 	if (checkNested(json,'restriction','sales_restriction','attributes','remove')){
     try {
 		  if(json.restriction.sales_restriction.attributes.remove.trim() !== ""){
@@ -266,8 +270,10 @@ function publicationDate(json){
 			  strDate = [dateParts[2],dateParts[0],dateParts[1]].join('-');
 			  label = "sales_restriction Remove Date: " + strDate;
 			  return [strDate,label];
-	 	  }
-    }catch{
+	 	  }else{
+        return ["","Embargo code 4 without restriction remove date."];
+      }
+    }catch(err){
       //pass
     }
 
