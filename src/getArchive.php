@@ -2,7 +2,11 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/config.php');
 
 $file = $_GET['file'];
-$fileURL = $config['dir']['archive'] . $file;
+
+foreach (glob($config['dir']['archive'] . "*$file*") as $filename) {
+  $fileURL = $filename;
+}
+//$fileURL = $config['dir']['archive'] . $file;
 
 if (file_exists($fileURL)) {
     header('Content-Description: File Transfer');
