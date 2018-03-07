@@ -251,28 +251,47 @@ var arrayDisciplines = function(category) {
 // Publication Date Calculation
 function publicationDate(json){
 	embargo_days = parseInt(embargoCode(json.attributes.embargo_code));
+  zembargo_code = parseInt(json.attributes.embargo_code);
+
+  //Update embargo code 0 always set to YYYY-01-01 accept_date
+  if (zembargo_code==0){
+    startDate =  new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)');
+  	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days";
+  	return [calculateEmbargoDate(startDate,embargo_days),label];
+  }
+  // Embargo Code 4 and no restriction remove date Pub date set to 0000-00-00 (mysql)
+  if (zembargo_code==4 && !checkNested(json,'restriction','sales_restriction','attributes','remove')){
+    return ["","Embargo code 4 without restriction remove date."];
+  }
 	if (checkNested(json,'restriction','sales_restriction','attributes','remove')){
-		if(json.restriction.sales_restriction.attributes.remove.trim() !== ""){
-			dateParts = json.restriction.sales_restriction.attributes.remove.trim().split(" ")[0].split("/");
-			strDate = [dateParts[2],dateParts[0],dateParts[1]].join('-')
-			label = "sales_restriction Remove Date: " + strDate
-			return [strDate,label];
-	 	}
+    try {
+		  if(json.restriction.sales_restriction.attributes.remove.trim() !== ""){
+			  dateParts = json.restriction.sales_restriction.attributes.remove.trim().split(" ")[0].split("/");
+			  strDate = [dateParts[2],dateParts[0],dateParts[1]].join('-');
+			  label = "sales_restriction Remove Date: " + strDate;
+			  return [strDate,label];
+	 	  }else{
+        return ["","Embargo code 4 without restriction remove date."];
+      }
+    }catch(err){
+      //pass
+    }
+
 	}
 	if (checkNested(json,'repository','agreement_decision_date')){
     try {
 		  if(json.repository.agreement_decision_date.trim() !== ""){
-			  strAgreeDate = json.repository.agreement_decision_date.trim().split(" ")[0]
-			  startDate = new Date(json.repository.agreement_decision_date.trim())
-			  label = "agreement_decision_date: " + strAgreeDate + " + " + embargo_days + " days"
+			  strAgreeDate = json.repository.agreement_decision_date.trim().split(" ")[0];
+			  startDate = new Date(json.repository.agreement_decision_date.trim());
+			  label = "agreement_decision_date: " + strAgreeDate + " + " + embargo_days + " days";
 			  return [calculateEmbargoDate(startDate,embargo_days),label];
 	    }
     }catch(err){
-      //pass 
+      //pass
     }
 	}
-	startDate =  new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)')
-	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days"
+	startDate =  new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)');
+	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days";
 	return [calculateEmbargoDate(startDate,embargo_days),label];
 }
 function calculateEmbargoDate(startDate,days){
@@ -299,7 +318,7 @@ var embargoCode = function(code) {
 		case '1': return '184';
 		case '2': return '365';
 		case '3': return '730';
-		case '4': return '1095';
+		case '4': return '1095'; // Not used - Pub date is blank if code ==4
 	}
 };
 
