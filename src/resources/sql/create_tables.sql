@@ -40,7 +40,7 @@ CREATE TABLE submission (
 	department VARCHAR(100) NOT NULL,
 	document_type CHAR(12) NOT NULL,
 	embargo_date VARCHAR(5) NOT NULL,
-	publication_date DATE NOT NULL,
+	publication_date DATE,
 	season CHAR(20) NOT NULL,
 	workflow_status CHAR(1) NOT NULL,
 	identikey CHAR(8) NOT NULL,
