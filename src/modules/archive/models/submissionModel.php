@@ -17,7 +17,7 @@ class SubmissionModel
 	private $conn; // connection to the MySQL database
 	private $db;   // database instance itself
 
-  private $acceptance;
+	private $acceptance;
 	private $sequence_num;
 	private $title;
 	private $fulltext_url;
@@ -86,7 +86,7 @@ class SubmissionModel
 				    '$this->sequence_num',
 				    '$this->title',
 				    '$this->fulltext_url',
-				    '$this->keywords',
+				    'strtolower($this->keywords)',
 				    '$this->abstract',
 				    '$this->author1_fname',
 				    '$this->author1_mname',
