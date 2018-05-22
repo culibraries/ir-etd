@@ -222,11 +222,18 @@ class SubmissionModel
 	{
 		require_once ($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/phpexcel/PHPExcel.php');
 
-		// References to worksheet columns
-	  $letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',
-							  'P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC'];
+		// Utility function to account for limitations of Excel sheetnames (special chars and length)
+		private function clean_sheetname($name)
+		{
+    		$invalid_chars = ['/','\\','*','[',']',':','?'];
+    		return trim(substr(str_replace($invalid_chars, ' ', $name), 0, 30));
+		}
 
-    // Get data for the export files (all items that are pending)
+		// References to worksheet columns
+	   $letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O',
+				  'P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC'];
+
+    	// Get data for the export files (all items that are pending)
 		$sql = "SELECT s.title, s.fulltext_url, s.keywords, s.abstract, s.author1_fname,
 			s.author1_mname, s.author1_lname, s.author1_suffix, s.author1_email,
 			s.author1_institution, s.advisor1, s.advisor2, s.advisor3, s.advisor4, s.advisor5,
@@ -258,15 +265,16 @@ class SubmissionModel
 		foreach ($depts as $d) {
 
 			// Add a new worksheet representing the current department
-			// Note that max length of a worksheet name is 31 characters
-			$ds = substr($d, 0, 30);
+			// Note that max length of a worksheet name is 31 characters and
+			// there are 7 characters that cannot be used in the name
+			$ds = clean_sheetname($d);
 			$wks = new PHPExcel_Worksheet($excel, $ds);
 			$excel->addSheet($wks, ++$n);
 
 			// Write the header row for the current worksheet
 			$cols = array_keys($dataset[0]);
-		  for ($i = 0; $i < count($cols); $i++) {
-			  $excel->getSheetByName($ds)->setCellValue($letters[$i] . '1', $cols[$i]);
+		    for ($i = 0; $i < count($cols); $i++) {
+				$excel->getSheetByName($ds)->setCellValue($letters[$i] . '1', $cols[$i]);
 		  }
 
 			// Write the data for the current department only
@@ -294,7 +302,7 @@ class SubmissionModel
 		$writer->save('php://output');
 
 		// Update the workflow status for the records just batched
-    $this->updateBatch($user);
+    	$this->updateBatch($user);
 	}
 
 	/**
@@ -302,7 +310,8 @@ class SubmissionModel
 	 *
 	 * Sets workflow status to 'B' for all batched items
 	 */
-  private function updateBatch($user) {
+  private function updateBatch($user)
+  {
     $sql = "UPDATE submission
             SET workflow_status = 'B'
             WHERE workflow_status = 'P' AND identikey='$user'";
