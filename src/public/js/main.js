@@ -70,7 +70,7 @@ $(document).ready(function() {
 		if ($('.discipline').hasClass('errorInput') && $('#workflow_status').val() === 'P') {
 			alert('There is an error in Discipline. Change workflow status to Problem not Pending.');
 		} else if ($('#acceptance').val() != "1" && $('#workflow_status').val() === 'P') {
-			alert('There is an error in Acceptance. Change workflow status to Problem not Pending.');
+			alert('Pending status requires an Acceptance code of 1.');
 		} else {
 			var workflowStatus = $('#workflow_status').val();
 			var archiveURL = createArchiveURL(currentArchive.archiveUrl);
