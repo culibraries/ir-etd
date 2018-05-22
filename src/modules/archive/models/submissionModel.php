@@ -223,7 +223,7 @@ class SubmissionModel
 		require_once ($_SERVER['DOCUMENT_ROOT'] . '/etd/resources/phpexcel/PHPExcel.php');
 
 		// Utility function to account for limitations of Excel sheetnames (special chars and length)
-		private function clean_sheetname($name)
+		function clean_sheetname($name)
 		{
     		$invalid_chars = ['/','\\','*','[',']',':','?'];
     		return trim(substr(str_replace($invalid_chars, ' ', $name), 0, 30));
