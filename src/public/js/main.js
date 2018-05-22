@@ -277,6 +277,12 @@ function validation_etd_data(data){
 		value= data.description.categorization.category.cat_desc.toTitleCase();
 		data.description.categorization.category.cat_desc= value;
 	}
+	//Convert Keyword to lower case
+	try {
+		data.description.categorization.keyword=data.description.categorization.keyword.toLowerCase();
+	}
+	catch(err) {}
+
 	return data;
 }
 // Initial data gets for sidebar
@@ -432,8 +438,7 @@ Archive.prototype.postFormData = function() {
 			'data': $('#xmlEdit').serialize()
 		},
 		success: function(res, status) {
-			console.log(res);
-			dfd.resolve(JSON.parse(res));
+				dfd.resolve(JSON.parse(res));
 		},
 		error: function(xhr, desc, err) {
             console.log(xhr);
@@ -473,7 +478,12 @@ function getArchives() {
 		type: 'GET',
 		data: {'action': 'getArchives'},
 		success: function(res, status) {
-			dfd.resolve(JSON.parse(res));
+			try {
+				dfd.resolve(JSON.parse(res));
+			} catch (err) {
+				console.log(res,"ERROR:",err);
+			}
+
 		},
 		error: function(xhr, desc, err) {
 	            console.log(xhr);
