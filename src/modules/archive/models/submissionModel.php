@@ -330,7 +330,7 @@ class SubmissionModel
 		$this->sequence_num = $this->db->escape_string($values['sequence_num']);
 		$this->title = $this->db->escape_string($values['title']);
 		$this->fulltext_url = $this->db->escape_string($values['fulltext_url']);
-		$this->keywords = $this->db->strtolower(escape_string($values['keywords']));
+		$this->keywords = strtolower($this->db->escape_string($values['keywords']));
 		$this->abstract = $this->db->escape_string($values['abstract']);
 		$this->author1_fname = $this->db->escape_string($values['author1_fname']);
 		$this->author1_mname = $this->db->escape_string($values['author1_mname']);
