@@ -51,9 +51,16 @@ function getOldestArchive() {
 	// array of all zip archives in ftp dir
 	$archives = glob($config['dir']['ftp'] . '*.zip');
 
+	// INC0479641 reverse order load
+	// Default loading of ETDs is oldest to newest
+	// This change forces the loading of the newest ETD first
+	// To reset the default behavior of this function, revert to the commented line
+	$nextETD = $archives[count($archives) - 1];
+	//$nextETD = $archives[0];
+
 	// if ftp dir not empty
 	if ($archives) {
-		$oldestArchiveArray = explode('/',$archives[0]);
+		$oldestArchiveArray = explode('/', $nextETD); // INC0479641 refers
 		$oldestArchive = $oldestArchiveArray[sizeof($oldestArchiveArray) - 1];
 		$response = array(
 			'numArchives' => sizeof($archives),
