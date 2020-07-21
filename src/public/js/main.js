@@ -9,7 +9,7 @@ function Archive(data) {
 	this.contents = data.contents;
 	this.archiveUrl = data.archiveUrl;
 	this.batchUrl = data.batchUrl;
-	this.getPdf = function() {
+	this.getPdf = function () {
 		for (var i = 0; i < this.contents.length; i++) {
 			if (this.contents[i].substr(-3) === 'pdf') {
 				return this.contents[i];
@@ -24,13 +24,13 @@ function Archive(data) {
 
 // JQUERY event watchers ===========================================================================
 
-$(document).ready(function() {
+$(document).ready(function () {
 
 	// Load next ETD button (oldest archive)
-	$('#loadBtn').click(function() {
+	$('#loadBtn').click(function () {
 
 		// call API get function getOneArchive(archive, id, status) to get data about archive
-		getOneArchive(null, 'oldest', null).done(function(res) {
+		getOneArchive(null, 'oldest', null).done(function (res) {
 			//Disable Button
 			$('#loadBtn').attr("disabled", "disabled");
 			// create currentArchive object from response
@@ -43,11 +43,11 @@ $(document).ready(function() {
 			$('#archiveFiles').html(currentArchive.parseArchiveFiles());
 
 			// prefill the form using function mapJson
-			currentArchive.preFillForm(currentArchive.mapJson()).done(function(res) {
+			currentArchive.preFillForm(currentArchive.mapJson()).done(function (res) {
 				// create disciplines string from disciplines inputs
 				createDisciplinesString();
 				// once form is filled post to database and set the subId
-				currentArchive.postFormData().done(function(res) {
+				currentArchive.postFormData().done(function (res) {
 					if (res.success) {
 						currentArchive.subId = res.id;
 						refreshSideBar();
@@ -64,7 +64,7 @@ $(document).ready(function() {
 	});
 
 	// submit button
-	$('.submit').click(function() {
+	$('.submit').click(function () {
 
 		// check if any discipline is in error and prevent moving to pending
 		if ($('.discipline').hasClass('errorInput') && $('#workflow_status').val() === 'P') {
@@ -77,12 +77,12 @@ $(document).ready(function() {
 
 			createDisciplinesString();
 
-			currentArchive.postFormData().done(function(res) {
+			currentArchive.postFormData().done(function (res) {
 				refreshSideBar();
 				clearViews();
 
 				// if the status is changed to R then download the file since we are taking out of app
-				if  (workflowStatus === 'R') {
+				if (workflowStatus === 'R') {
 					window.location.assign(archiveURL);
 				}
 			});
@@ -90,9 +90,9 @@ $(document).ready(function() {
 	});
 
 	// batch download button
-	$('#batchBtn').click(function() {
+	$('#batchBtn').click(function () {
 		window.location.assign('prepbatch.php');
-		setTimeout(function() {
+		setTimeout(function () {
 			refreshSideBar();
 			clearViews();
 		}, 3000);
@@ -107,12 +107,12 @@ $(document).ready(function() {
 });
 
 // click handlers for dynamically created elements
-$(document).on('click', '.getme', function(event) {
+$(document).on('click', '.getme', function (event) {
 	var subId = event.target.attributes.subId.textContent;
 	var archive = event.target.attributes.archive.textContent;
 	var status = event.target.attributes.status.textContent;
 
-	getOneArchive(archive, subId, status).done(function(res) {
+	getOneArchive(archive, subId, status).done(function (res) {
 
 		currentArchive = new Archive(res);
 
@@ -128,12 +128,12 @@ $(document).on('click', '.getme', function(event) {
 });
 
 // looks up and validates the discipline on click out
-$(document).on('focusout', '.discipline', function(event) {
+$(document).on('focusout', '.discipline', function (event) {
 	markDiscipline(event.target.value, event.target);
 });
 
 // launches discipline search modal
-$(document).on('click', '#editDiscipline', function(event) {
+$(document).on('click', '#editDiscipline', function (event) {
 	// id needed for angular modal
 	id = $(event.target).closest('div').find('input').attr('id');
 	// open the modal
@@ -141,7 +141,7 @@ $(document).on('click', '#editDiscipline', function(event) {
 });
 
 // add additional discipline input box
-$(document).on('click', '#addDiscipline', function() {
+$(document).on('click', '#addDiscipline', function () {
 	var nextDisciplineId = 0;
 
 	// if there are already inputs add after
@@ -157,14 +157,14 @@ $(document).on('click', '#addDiscipline', function() {
 
 	function html(id) {
 		return '<div class="input-group discipline-group">' +
-					'<input class="form-control discipline" id="discipline' + id + '">' +
-					'<span id="editDiscipline" class="btn input-group-addon">Edit</span>' +
-					'<span id="deleteDiscipline" class="btn input-group-addon">X</span>' +
-				'</div>';
+			'<input class="form-control discipline" id="discipline' + id + '">' +
+			'<span id="editDiscipline" class="btn input-group-addon">Edit</span>' +
+			'<span id="deleteDiscipline" class="btn input-group-addon">X</span>' +
+			'</div>';
 	}
 });
 
-$(document).on('click', '#deleteDiscipline', function() {
+$(document).on('click', '#deleteDiscipline', function () {
 	$(this).closest('div').remove();
 
 });
@@ -172,11 +172,11 @@ $(document).on('click', '#deleteDiscipline', function() {
 // Display Functions ===============================================================================
 
 // parse archive folder contents for non XML files, return links to those files
-Archive.prototype.parseArchiveFiles = function() {
+Archive.prototype.parseArchiveFiles = function () {
 	var html = '';
 
 	// loop through array of files in archive
-	for (var i = 2; i <  this.contents.length; i++) {
+	for (var i = 2; i < this.contents.length; i++) {
 		var file = this.contents[i];
 		var ext = file.substr(-3);
 
@@ -190,16 +190,16 @@ Archive.prototype.parseArchiveFiles = function() {
 };
 
 // prefills the xml edit form with data from xmlData using map.js as a map
-Archive.prototype.preFillForm = function(maps) {
+Archive.prototype.preFillForm = function (maps) {
 	var dfd = $.Deferred();
 
 	$('#xmlEdit').empty();
 
-	maps.forEach(function(map) {
+	maps.forEach(function (map) {
 		// create basic html, and append to form
 		var data = '<div class="form-group">' +
-						'<label for="' + map.id + '">' + map.name + '</label>' +
-					'</div>';
+			'<label for="' + map.id + '">' + map.name + '</label>' +
+			'</div>';
 		$('#xmlEdit').append(data);
 
 		switch (map.type) {
@@ -228,11 +228,11 @@ Archive.prototype.preFillForm = function(maps) {
 				break;
 			case 'drop-down':
 				var select = '<select class="form-control" name="' + map.id + '" id="' + map.id + '">' +
-								'<option value="W">Working</option>' +
-								'<option value="P">Pending</option>' +
-								'<option value="L">Problem</option>' +
-								'<option value="R">Real Problem *will download and remove this ETD*</option>'
-							'</select>';
+					'<option value="W">Working</option>' +
+					'<option value="P">Pending</option>' +
+					'<option value="L">Problem</option>' +
+					'<option value="R">Real Problem *will download and remove this ETD*</option>'
+				'</select>';
 				$('label:last').after(select);
 				$('#' + map.id).val(map.data);
 				break;
@@ -243,12 +243,12 @@ Archive.prototype.preFillForm = function(maps) {
 					.attr('type', map.type);
 				break;
 			case 'disciplines':
-				map.data.forEach(function(discipline, index) {
+				map.data.forEach(function (discipline, index) {
 					$('.form-group:last').append('<div class="input-group discipline-group">' +
-													'<input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '">' +
-													'<span id="editDiscipline" class="btn input-group-addon">Edit</span>' +
-													'<span id="deleteDiscipline" class="btn input-group-addon">X</span>' +
-												'</div>');
+						'<input class="form-control discipline" id="' + map.id + index + '" name="' + map.id + index + '">' +
+						'<span id="editDiscipline" class="btn input-group-addon">Edit</span>' +
+						'<span id="deleteDiscipline" class="btn input-group-addon">X</span>' +
+						'</div>');
 					$('#' + map.id + index).val(discipline);
 					// mark diciplines not in db list
 					markDiscipline(discipline, '#' + 'discipline' + index);
@@ -260,28 +260,28 @@ Archive.prototype.preFillForm = function(maps) {
 		}
 	});
 
-		dfd.resolve();
-		// show submit and move buttons
-		$('.submitBtn').show();
-		return dfd.promise();
+	dfd.resolve();
+	// show submit and move buttons
+	$('.submitBtn').show();
+	return dfd.promise();
 };
 //Validate json data elements
-function validation_etd_data(data){
+function validation_etd_data(data) {
 	//Check ETD Discipline and convert to Title Case format.
-	if(data.description.categorization.category instanceof Array){
-		$.each(data.description.categorization.category,function(index,value){
+	if (data.description.categorization.category instanceof Array) {
+		$.each(data.description.categorization.category, function (index, value) {
 			value.cat_desc = value.cat_desc.toTitleCase();
-			data.description.categorization.category[index]=value
+			data.description.categorization.category[index] = value
 		})
-	}else{
-		value= data.description.categorization.category.cat_desc.toTitleCase();
-		data.description.categorization.category.cat_desc= value;
+	} else {
+		value = data.description.categorization.category.cat_desc.toTitleCase();
+		data.description.categorization.category.cat_desc = value;
 	}
 	//Convert Keyword to lower case
 	try {
-		data.description.categorization.keyword=data.description.categorization.keyword.toLowerCase();
+		data.description.categorization.keyword = data.description.categorization.keyword.toLowerCase();
 	}
-	catch(err) {}
+	catch (err) { }
 
 	return data;
 }
@@ -290,7 +290,7 @@ function refreshSideBar() {
 	$('#batchBtn').hide();
 
 	// call API get function getOldestArchive to get oldest archives in ftp dir
-	getOldestArchive().done(function(res) {
+	getOldestArchive().done(function (res) {
 		// if there is at least one archive
 		if (res.numArchives) {
 			var date = new Date(res.oldestModifiedDate * 1000);
@@ -305,7 +305,7 @@ function refreshSideBar() {
 	});
 
 	// call API get function getArchives to get archives in working dir and their status
-	getArchives().done(function(res) {
+	getArchives().done(function (res) {
 		//display in sidebar
 		displayArchives(res);
 	});
@@ -349,17 +349,17 @@ function clearViews() {
 // create a string from the disciplines inputs and add as value to hidden desciplines input
 function createDisciplinesString() {
 	var strDisciplines = '';
-	$('.discipline').each(function(index) {
+	$('.discipline').each(function (index) {
 		strDisciplines += $(this).val() + ';';
 	});
-	strDisciplines = strDisciplines.substring(0, strDisciplines.length -1);
+	strDisciplines = strDisciplines.substring(0, strDisciplines.length - 1);
 	// add value to hidden disciplines input
 	$('#disciplines').val(strDisciplines);
 }
 
 // look up disciplines in db and mark those that don't exist
 function markDiscipline(discipline, target) {
-	lookupDiscipline(discipline).done(function(res) {
+	lookupDiscipline(discipline).done(function (res) {
 		if (!res) {
 			$(target).addClass("errorInput");
 		} else {
@@ -372,7 +372,7 @@ function markDiscipline(discipline, target) {
 
 // calculate the number of rows the textareas should be to show all text
 function calcRows(scrollHeight) {
-	return Math.round(scrollHeight/20) - 1;
+	return Math.round(scrollHeight / 20) - 1;
 }
 
 // remove '@' and 'DISS_'
@@ -382,7 +382,7 @@ function stripChars(str) {
 		'DISS_': ''
 	};
 
-	str = str.replace(/@attributes|DISS_/g, function(matched) {
+	str = str.replace(/@attributes|DISS_/g, function (matched) {
 		return mapObj[matched];
 	});
 
@@ -392,7 +392,7 @@ function stripChars(str) {
 // creates the URL to download the real problem archive
 function createArchiveURL(url) {
 	var urlString = url.split('/');
-	var ID = urlString[urlString.length-1];
+	var ID = urlString[urlString.length - 1];
 	return ('getArchive.php?file=' + ID);
 	//return ('getArchive.php?file=etdadmin_upload_' + ID + '.zip');
 }
@@ -401,35 +401,35 @@ function createArchiveURL(url) {
 function lookupDiscipline(discipline) {
 	var dfd = $.Deferred();
 
-	$.ajax( {
+	$.ajax({
 		url: 'modules/archive/archive.php',
 		type: 'GET',
 		data: {
 			'action': 'lookupDiscipline',
 			'data': discipline
 		},
-		success: function(res, status) {
+		success: function (res, status) {
 			if (res.length > 5) {
 				console.log('Error: ' + res);
 			} else {
 				dfd.resolve(JSON.parse(res));
 			}
 		},
-		error: function(xhr, desc, err) {
-            console.log(xhr);
-            console.log("Details: " + desc + "\nError: " + err);
-        }
+		error: function (xhr, desc, err) {
+			console.log(xhr);
+			console.log("Details: " + desc + "\nError: " + err);
+		}
 	});
 
 	return dfd.promise();
 }
 
 // post form data to DB
-Archive.prototype.postFormData = function() {
+Archive.prototype.postFormData = function () {
 
 	var dfd = $.Deferred();
 
-	$.ajax( {
+	$.ajax({
 		url: 'modules/archive/archive.php',
 		type: 'POST',
 		data: {
@@ -437,13 +437,14 @@ Archive.prototype.postFormData = function() {
 			'subId': this.subId,
 			'data': $('#xmlEdit').serialize()
 		},
-		success: function(res, status) {
-				dfd.resolve(JSON.parse(res));
+		success: function (res, status) {
+			console.log(res);
+			dfd.resolve(JSON.parse(res));
 		},
-		error: function(xhr, desc, err) {
-            console.log(xhr);
-            console.log("Details: " + desc + "\nError: " + err);
-        }
+		error: function (xhr, desc, err) {
+			console.log(xhr);
+			console.log("Details: " + desc + "\nError: " + err);
+		}
 	});
 
 	return dfd.promise();
@@ -453,17 +454,17 @@ Archive.prototype.postFormData = function() {
 function getOldestArchive() {
 	var dfd = $.Deferred();
 
-	$.ajax( {
+	$.ajax({
 		url: 'modules/archive/archive.php',
 		type: 'GET',
-		data: {'action': 'getOldestArchive'},
-		success: function(res, status) {
+		data: { 'action': 'getOldestArchive' },
+		success: function (res, status) {
 			dfd.resolve(JSON.parse(res));
 		},
-		error: function(xhr, desc, err) {
-	            console.log(xhr);
-	            console.log("Details: " + desc + "\nError: " + err);
-	    }
+		error: function (xhr, desc, err) {
+			console.log(xhr);
+			console.log("Details: " + desc + "\nError: " + err);
+		}
 	});
 
 	return dfd.promise();
@@ -473,22 +474,22 @@ function getOldestArchive() {
 function getArchives() {
 	var dfd = $.Deferred();
 
-	$.ajax( {
+	$.ajax({
 		url: 'modules/archive/archive.php',
 		type: 'GET',
-		data: {'action': 'getArchives'},
-		success: function(res, status) {
+		data: { 'action': 'getArchives' },
+		success: function (res, status) {
 			try {
 				dfd.resolve(JSON.parse(res));
 			} catch (err) {
-				console.log(res,"ERROR:",err);
+				console.log(res, "ERROR:", err);
 			}
 
 		},
-		error: function(xhr, desc, err) {
-	            console.log(xhr);
-	            console.log("Details: " + desc + "\nError: " + err);
-	    }
+		error: function (xhr, desc, err) {
+			console.log(xhr);
+			console.log("Details: " + desc + "\nError: " + err);
+		}
 	});
 
 	return dfd.promise();
@@ -499,23 +500,23 @@ function getOneArchive(archive, subId, status) {
 	var dfd = $.Deferred();
 
 	if (subId === 'oldest') {
-		$.ajax( {
+		$.ajax({
 			url: 'modules/archive/archive.php',
 			type: 'GET',
 			datatype: 'JSON',
 			data: {
 				'action': 'getExtractOldestArchive',
 			},
-			success: function(res, status) {
+			success: function (res, status) {
 				dfd.resolve(JSON.parse(res));
 			},
-			error: function(xhr, desc, err) {
-	            console.log(xhr);
-	            console.log("Details: " + desc + "\nError: " + err);
-	        }
+			error: function (xhr, desc, err) {
+				console.log(xhr);
+				console.log("Details: " + desc + "\nError: " + err);
+			}
 		});
 	} else {
-		$.ajax( {
+		$.ajax({
 			url: 'modules/archive/archive.php',
 			type: 'GET',
 			datatype: 'JSON',
@@ -525,13 +526,13 @@ function getOneArchive(archive, subId, status) {
 				'subId': subId,
 				'archive': archive
 			},
-			success: function(res, status) {
+			success: function (res, status) {
 				dfd.resolve(JSON.parse(res));
 			},
-			error: function(xhr, desc, err) {
-	            console.log(xhr);
-	            console.log("Details: " + desc + "\nError: " + err);
-	        }
+			error: function (xhr, desc, err) {
+				console.log(xhr);
+				console.log("Details: " + desc + "\nError: " + err);
+			}
 		});
 	}
 

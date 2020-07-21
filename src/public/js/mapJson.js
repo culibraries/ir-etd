@@ -1,6 +1,6 @@
-Archive.prototype.mapJson = function() {
+Archive.prototype.mapJson = function () {
 	//set Pub Date and Label Array [stringDate,label]
-  pubDateLabel = publicationDate(this.json)
+	pubDateLabel = publicationDate(this.json)
 	return [
 		{
 			"name": "Workflow Status",
@@ -26,7 +26,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Acceptance",
 			"id": "acceptance",
-			"data": (_.isUndefined(this.json.repository)) ? 'Blank': (_.isObject(this.json.repository.acceptance))? 'Blank': this.json.repository.acceptance,
+			"data": (_.isUndefined(this.json.repository)) ? 'Blank' : (_.isObject(this.json.repository.acceptance)) ? 'Blank' : this.json.repository.acceptance,
 			"type": "text",
 			"readonly": false
 		},
@@ -40,7 +40,7 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Full Text Url",
 			"id": "fulltext_url",
-			"data": [this.batchUrl,this.name,'/',this.pdf].join(''),
+			"data": [this.batchUrl, this.name, '/', this.pdf].join(''),
 			"type": "text",
 			"readonly": true
 		},
@@ -89,7 +89,8 @@ Archive.prototype.mapJson = function() {
 		{
 			"name": "Author1 Email",
 			"id": "author1_email",
-			"data": this.json.authorship.author.contact[1].email || this.json.authorship.author.contact[0].email,
+			"data": findEmailValue(this.json),
+			// (_.isUndefined(this.json.repository)) ? 'Blank' : (_.isObject(this.json.repository.acceptance)) ? 'Blank' : this.json.repository.acceptance,
 			"type": "email",
 			"readonly": false
 		},
@@ -194,34 +195,34 @@ Archive.prototype.mapJson = function() {
 	];
 };
 
-String.prototype.toTitleCase = function() {
-  var i, j, str, lowers, uppers;
-  str = this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-  });
+String.prototype.toTitleCase = function () {
+	var i, j, str, lowers, uppers;
+	str = this.replace(/([^\W_]+[^\s-]*) */g, function (txt) {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	});
 
-  // Certain minor words should be left lowercase unless
-  // they are the first or last words in the string
-  lowers = ['A', 'An', 'The', 'And', 'But', 'Or', 'For', 'Nor', 'As', 'At',
-  'By', 'For', 'From', 'In', 'Into', 'Near', 'Of', 'On', 'Onto', 'To', 'With'];
-  for (i = 0, j = lowers.length; i < j; i++)
-    str = str.replace(new RegExp('\\s' + lowers[i] + '\\s', 'g'),
-      function(txt) {
-        return txt.toLowerCase();
-      });
+	// Certain minor words should be left lowercase unless
+	// they are the first or last words in the string
+	lowers = ['A', 'An', 'The', 'And', 'But', 'Or', 'For', 'Nor', 'As', 'At',
+		'By', 'For', 'From', 'In', 'Into', 'Near', 'Of', 'On', 'Onto', 'To', 'With'];
+	for (i = 0, j = lowers.length; i < j; i++)
+		str = str.replace(new RegExp('\\s' + lowers[i] + '\\s', 'g'),
+			function (txt) {
+				return txt.toLowerCase();
+			});
 
-  // Certain words such as initialisms or acronyms should be left uppercase
-  uppers = ['Id', 'Tv'];
-  for (i = 0, j = uppers.length; i < j; i++)
-    str = str.replace(new RegExp('\\b' + uppers[i] + '\\b', 'g'),
-      uppers[i].toUpperCase());
+	// Certain words such as initialisms or acronyms should be left uppercase
+	uppers = ['Id', 'Tv'];
+	for (i = 0, j = uppers.length; i < j; i++)
+		str = str.replace(new RegExp('\\b' + uppers[i] + '\\b', 'g'),
+			uppers[i].toUpperCase());
 
-  return str;
+	return str;
 };
 
 // concat the paragraphs under abstract adding <p></p> tags if multiple paragraphs
-var concatParas = function(paras) {
-	if (typeof(paras) === 'object') {
+var concatParas = function (paras) {
+	if (typeof (paras) === 'object') {
 		var str = '';
 		for (var i = 0; i < paras.length; i++) {
 			str += '<p>' + paras[i] + '</p>';
@@ -233,12 +234,12 @@ var concatParas = function(paras) {
 };
 
 // create array of the disciplines
-var arrayDisciplines = function(category) {
+var arrayDisciplines = function (category) {
 	var arrayCategory = [];
 	// if category is an array of objects ie more than one discipline
 	if (category.length) {
 		// create array of the discliplines
-		category.forEach(function(item) {
+		category.forEach(function (item) {
 			arrayCategory.push(item.cat_desc);
 		});
 		// and return it
@@ -249,70 +250,70 @@ var arrayDisciplines = function(category) {
 	}
 };
 // Publication Date Calculation
-function publicationDate(json){
+function publicationDate(json) {
 	embargo_days = parseInt(embargoCode(json.attributes.embargo_code));
-  zembargo_code = parseInt(json.attributes.embargo_code);
+	zembargo_code = parseInt(json.attributes.embargo_code);
 
-  //Update embargo code 0 always set to YYYY-01-01 accept_date
-  if (zembargo_code==0){
-    startDate =  new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)');
-  	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days";
-  	return [calculateEmbargoDate(startDate,embargo_days),label];
-  }
-  // Embargo Code 4 and no restriction remove date Pub date set to 0000-00-00 (mysql)
-  if (zembargo_code==4 && !checkNested(json,'restriction','sales_restriction','attributes','remove')){
-    return ["","Embargo code 4 without restriction remove date."];
-  }
-	if (checkNested(json,'restriction','sales_restriction','attributes','remove')){
-    try {
-		  if(json.restriction.sales_restriction.attributes.remove.trim() !== ""){
-			  dateParts = json.restriction.sales_restriction.attributes.remove.trim().split(" ")[0].split("/");
-			  strDate = [dateParts[2],dateParts[0],dateParts[1]].join('-');
-			  label = "sales_restriction Remove Date: " + strDate;
-			  return [strDate,label];
-	 	  }else{
-        return ["","Embargo code 4 without restriction remove date."];
-      }
-    }catch(err){
-      //pass
-    }
+	//Update embargo code 0 always set to YYYY-01-01 accept_date
+	if (zembargo_code == 0) {
+		startDate = new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)');
+		label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days";
+		return [calculateEmbargoDate(startDate, embargo_days), label];
+	}
+	// Embargo Code 4 and no restriction remove date Pub date set to 0000-00-00 (mysql)
+	if (zembargo_code == 4 && !checkNested(json, 'restriction', 'sales_restriction', 'attributes', 'remove')) {
+		return ["", "Embargo code 4 without restriction remove date."];
+	}
+	if (checkNested(json, 'restriction', 'sales_restriction', 'attributes', 'remove')) {
+		try {
+			if (json.restriction.sales_restriction.attributes.remove.trim() !== "") {
+				dateParts = json.restriction.sales_restriction.attributes.remove.trim().split(" ")[0].split("/");
+				strDate = [dateParts[2], dateParts[0], dateParts[1]].join('-');
+				label = "sales_restriction Remove Date: " + strDate;
+				return [strDate, label];
+			} else {
+				return ["", "Embargo code 4 without restriction remove date."];
+			}
+		} catch (err) {
+			//pass
+		}
 
 	}
-	if (checkNested(json,'repository','agreement_decision_date')){
-    try {
-		  if(json.repository.agreement_decision_date.trim() !== ""){
-			  strAgreeDate = json.repository.agreement_decision_date.trim().split(" ")[0];
-			  startDate = new Date(json.repository.agreement_decision_date.trim());
-			  label = "agreement_decision_date: " + strAgreeDate + " + " + embargo_days + " days";
-			  return [calculateEmbargoDate(startDate,embargo_days),label];
-	    }
-    }catch(err){
-      //pass
-    }
+	if (checkNested(json, 'repository', 'agreement_decision_date')) {
+		try {
+			if (json.repository.agreement_decision_date.trim() !== "") {
+				strAgreeDate = json.repository.agreement_decision_date.trim().split(" ")[0];
+				startDate = new Date(json.repository.agreement_decision_date.trim());
+				label = "agreement_decision_date: " + strAgreeDate + " + " + embargo_days + " days";
+				return [calculateEmbargoDate(startDate, embargo_days), label];
+			}
+		} catch (err) {
+			//pass
+		}
 	}
-	startDate =  new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)');
+	startDate = new Date(json.description.dates.comp_date + '-01-01 12:00:00 GMT-0700 (MST)');
 	label = "accept_date: " + json.description.dates.comp_date + "-01-01 + " + embargo_days + " days";
-	return [calculateEmbargoDate(startDate,embargo_days),label];
+	return [calculateEmbargoDate(startDate, embargo_days), label];
 }
-function calculateEmbargoDate(startDate,days){
+function calculateEmbargoDate(startDate, days) {
 	newdate = new Date(startDate);
-	if (days != 0){
-			if (days===365){
-				newdate.setFullYear(newdate.getFullYear() + 1)
-			}
-			else if (days===730){
-				newdate.setFullYear(newdate.getFullYear() + 2)
-			}
-			else if (days==1095){
-				newdate.setFullYear(newdate.getFullYear() + 3)
-			}else{
-				newdate.setDate(newdate.getDate() + (days));
-			}
+	if (days != 0) {
+		if (days === 365) {
+			newdate.setFullYear(newdate.getFullYear() + 1)
+		}
+		else if (days === 730) {
+			newdate.setFullYear(newdate.getFullYear() + 2)
+		}
+		else if (days == 1095) {
+			newdate.setFullYear(newdate.getFullYear() + 3)
+		} else {
+			newdate.setDate(newdate.getDate() + (days));
+		}
 	}
-	return [newdate.getFullYear(),('0'+ (newdate.getMonth()+1)).slice(-2),('0' + newdate.getDate()).slice(-2)].join('-');
+	return [newdate.getFullYear(), ('0' + (newdate.getMonth() + 1)).slice(-2), ('0' + newdate.getDate()).slice(-2)].join('-');
 }
 // lookup function for embargo codes
-var embargoCode = function(code) {
+var embargoCode = function (code) {
 	switch (code) {
 		case '0': return '0';
 		case '1': return '184';
@@ -322,13 +323,13 @@ var embargoCode = function(code) {
 	}
 };
 
-var concatAdvisor = function(advisor) {
+var concatAdvisor = function (advisor) {
 	var str = '';
 	str += advisor.name.fname + ' ';
 	if (typeof advisor.name.middle === 'string') {
 		if (advisor.name.middle.length > 1 && advisor.name.middle[advisor.name.middle.length - 1] === '.') {
 			str += advisor.name.middle + ' ';
-		} else  {
+		} else {
 			str += advisor.name.middle + '. ';
 		}
 	}
@@ -336,13 +337,13 @@ var concatAdvisor = function(advisor) {
 	return str;
 };
 
-var createAdvisors = function(member) {
+var createAdvisors = function (member) {
 	var advisors = member.advisor;
 	var committee = member.cmte_member || [];
 	var advisorArray = [];
 
 	if (advisors.constructor === Array) {
-		advisors.forEach(function(item) {
+		advisors.forEach(function (item) {
 			advisorArray.push(concatAdvisor(item));
 		});
 	} else {
@@ -350,7 +351,7 @@ var createAdvisors = function(member) {
 	}
 
 	if (committee.constructor === Array) {
-		committee.forEach(function(item) {
+		committee.forEach(function (item) {
 			advisorArray.push(concatAdvisor(item));
 		});
 	} else {
@@ -359,7 +360,12 @@ var createAdvisors = function(member) {
 	return advisorArray;
 };
 
-var addPeriodToMiddle = function(name) {
+var addPeriodToMiddle = function (name) {
+	// console.log(typeof name);
+	// console.log(name);
+	name = Object.values(name).join(' ').trim()
+	// name = name.trim()
+	console.log(name);
 	if (name.length === 1) {
 		return name + '.';
 	} else {
@@ -367,14 +373,28 @@ var addPeriodToMiddle = function(name) {
 	}
 };
 
-function checkNested(obj /*, level1, level2, ... levelN*/) {
-  var args = Array.prototype.slice.call(arguments, 1);
+var findEmailValue = function (data) {
+	value = '';
+	value = _.isUndefined(data.authorship.author.contact.school_email) ? value : data.authorship.author.contact.school_email;
+	value = _.isUndefined(data.authorship.author.contact.email) ? value : data.authorship.author.contact.email;
+	value = _.isUndefined(data.authorship.author.contact.school_email) ? value : data.authorship.author.contact.school_email;
+	console.log(value);
+	if (Array.isArray(data.authorship.author.contact)) {
+		value = _.isUndefined(data.authorship.author.contact[0].email) ? value : data.authorship.author.contact[0].email;
+		value = _.isUndefined(data.authorship.author.contact[1].email) ? value : data.authorship.author.contact[1].email;
+	}
 
-  for (var i = 0; i < args.length; i++) {
-    if (!obj || !obj.hasOwnProperty(args[i])) {
-      return false;
-    }
-    obj = obj[args[i]];
-  }
-  return true;
+	return value
+}
+
+function checkNested(obj /*, level1, level2, ... levelN*/) {
+	var args = Array.prototype.slice.call(arguments, 1);
+
+	for (var i = 0; i < args.length; i++) {
+		if (!obj || !obj.hasOwnProperty(args[i])) {
+			return false;
+		}
+		obj = obj[args[i]];
+	}
+	return true;
 }
